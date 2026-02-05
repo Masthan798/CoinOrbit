@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
 import { ArrowLeftIcon, ArrowRightIcon, ChevronDown, ChevronUp, Star } from 'lucide-react';
 import { coingeckoFetch } from '../../api/coingeckoClient';
@@ -18,6 +19,7 @@ const data = [
 ];
 
 const MarketCap = () => {
+  const navigate = useNavigate();
   const TOTAL_COINS = 14000;
   const [favorites, setFavorites] = useState([]);
   const [Allcoins, SetallCoins] = useState([]);
@@ -25,6 +27,7 @@ const MarketCap = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [toggle, setToggle] = useState(() => {
     const saved = localStorage.getItem('marketCapHighlights');
     return saved !== null ? JSON.parse(saved) : false;
@@ -59,14 +62,20 @@ const MarketCap = () => {
   useEffect(() => {
     const fetchAllcoins = async () => {
       setLoading(true);
+      setError(null);
       try {
         const response = await coingeckoFetch(
           `/coins/markets?vs_currency=inr&order=market_cap_desc&per_page=${perPage}&page=${currentPage}&sparkline=true&price_change_percentage=1h,24h,7d`
         );
-        SetallCoins(response)
+        if (response && Array.isArray(response)) {
+          SetallCoins(response);
+        } else {
+          throw new Error("No data received from CoinGecko");
+        }
       }
-      catch (error) {
-        console.log(error);
+      catch (err) {
+        console.error("Market Data Fetch Error:", err);
+        setError(err.message || "Connection to CoinGecko failed");
       } finally {
         setLoading(false);
       }
@@ -170,13 +179,13 @@ const MarketCap = () => {
             >
               <motion.div
                 variants={containerVariants}
-                className='grid grid-cols-1 lg:grid-cols-3 gap-8 w-full'
+                className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 w-full'
               >
 
 
 
                 {/* Column 1: Stats */}
-                <motion.div variants={itemVariants} className='flex flex-col gap-2 h-[210px]'>
+                <motion.div variants={itemVariants} className='flex flex-col gap-2 min-h-[210px] sm:h-[210px]'>
                   <div className='flex items-center justify-between gap-4 p-3 border-gray-500 border-2 rounded-xl w-full flex-1 hover:border-green-500 transition-all duration-300 bg-card/20 min-w-0'>
 
                     <div className='flex flex-col min-w-0'>
@@ -214,7 +223,7 @@ const MarketCap = () => {
 
 
                 {/* Column 2: Trending */}
-                <motion.div variants={itemVariants} className='flex flex-col gap-1 w-full h-[210px] p-4 border-gray-500 border-2 rounded-xl overflow-hidden bg-card/20'>
+                <motion.div variants={itemVariants} className='flex flex-col gap-1 w-full min-h-[210px] sm:h-[210px] p-4 border-gray-500 border-2 rounded-xl overflow-hidden bg-card/20'>
                   <div className='flex items-center justify-between border-b border-gray-500 pb-2 mb-1'>
                     <p className='text-base font-medium whitespace-nowrap lg:text-lg sm:text-sm'>🔥 Trending</p>
                     <span className='text-[10px] text-muted cursor-pointer hover:text-white transition-colors sm:text-sm lg:text-lg'>View More</span>
@@ -225,7 +234,7 @@ const MarketCap = () => {
                   ) : (
                     <div className='flex flex-col justify-between flex-1 overflow-hidden py-1'>
                       {highlights.slice(0, 3).map((coin, idx) => (
-                        <div key={coin.id || idx} className='flex items-center justify-between p-1.5 hover:bg-white/5 rounded-lg cursor-pointer transition-all min-w-0'>
+                        <div key={coin.id || idx} className='flex items-center justify-between p-1.5 hover:bg-white/5 rounded-lg cursor-pointer transition-all min-w-0' onClick={() => navigate(`cryptocurrencies/marketcap/${coin.id}`)}>
                           <div className='flex items-center gap-2 min-w-0'>
                             <img src={coin.image} alt="" className='w-5 h-5 rounded-full flex-shrink-0' />
                             <p className='text-sm text-muted hover:text-white truncate'>{coin.name}</p>
@@ -242,7 +251,7 @@ const MarketCap = () => {
                 </motion.div>
 
                 {/* Column 3: Top Gainers */}
-                <motion.div variants={itemVariants} className='flex flex-col gap-1 w-full h-[210px] p-4 border-gray-500 border-2 rounded-xl overflow-hidden bg-card/20'>
+                <motion.div variants={itemVariants} className='flex flex-col gap-1 w-full min-h-[210px] sm:h-[210px] p-4 border-gray-500 border-2 rounded-xl overflow-hidden bg-card/20'>
                   <div className='flex items-center justify-between border-b border-gray-500 pb-2 mb-1'>
                     <p className='text-base font-medium whitespace-nowrap lg:text-lg sm:text-sm'>🚀 Top Gainers</p>
                     <span className='text-[10px] text-muted cursor-pointer hover:text-white transition-colors sm:text-sm lg:text-lg'>View More</span>
@@ -256,7 +265,7 @@ const MarketCap = () => {
                         .sort((a, b) => b.price_change_percentage_24h - a.price_change_percentage_24h)
                         .slice(0, 3)
                         .map((coin, idx) => (
-                          <div key={coin.id || idx} className='flex items-center justify-between p-1.5 hover:bg-white/5 rounded-lg cursor-pointer transition-all min-w-0'>
+                          <div key={coin.id || idx} className='flex items-center justify-between p-1.5 hover:bg-white/5 rounded-lg cursor-pointer transition-all min-w-0' onClick={() => navigate(`cryptocurrencies/marketcap/${coin.id}`)}>
                             <div className='flex items-center gap-2 min-w-0'>
                               <img src={coin.image} alt="" className='w-5 h-5 rounded-full flex-shrink-0' />
                               <p className='text-sm text-muted hover:text-white truncate'>{coin.name}</p>
@@ -304,7 +313,31 @@ const MarketCap = () => {
                 <td colSpan="9" className="py-20 text-center">
                   <div className="flex flex-col items-center gap-4">
                     <div className="w-10 h-10 border-4 border-muted border-t-white rounded-full animate-spin"></div>
-                    <p className="text-muted animate-pulse">Loading market data...</p>
+                    <p className="text-muted animate-pulse font-medium">Synchronizing with CoinGecko...</p>
+                  </div>
+                </td>
+              </tr>
+            ) : error ? (
+              <tr>
+                <td colSpan="9" className="py-20 text-center">
+                  <div className="flex flex-col items-center gap-6">
+                    <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center">
+                      <ArrowRightIcon className="text-red-500 rotate-90" size={32} />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <h3 className="text-xl font-bold text-white uppercase italic tracking-wider">Data Feed Offline</h3>
+                      <p className="text-sm text-muted max-w-sm mx-auto">
+                        {error.includes('429')
+                          ? "Rate limit exceeded. CoinGecko has temporarily throttled requests. Please wait a minute or check your API key."
+                          : error}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => window.location.reload()}
+                      className="px-8 py-2.5 bg-white/5 hover:bg-white/10 text-white text-xs font-black uppercase tracking-widest rounded-full transition-all border border-white/10 shadow-xl"
+                    >
+                      Retry Connection
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -314,7 +347,11 @@ const MarketCap = () => {
               </tr>
             ) : (
               Allcoins.map((coin, index) => (
-                <tr key={coin.id || index} className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer'>
+                <tr
+                  key={coin.id || index}
+                  onClick={() => navigate(`/cryptocurrencies/marketcap/${coin.id}`)}
+                  className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer'
+                >
                   <td className='py-4 px-2 sticky left-0 bg-main z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px]'>
                     <div className='flex items-center gap-2'>
                       <Star

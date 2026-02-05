@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion'
 import { ExchagesData } from '../../services/AllcoinsData';
 import Pagination from '../../Components/Pagination/Pagination';
@@ -24,21 +25,29 @@ const itemVariants = {
 };
 
 const CryptoExchanges = () => {
+  const navigate = useNavigate();
   const TOTAL_EXCHANGES = 194;
   const [exchageData, setExchageData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
 
   useEffect(() => {
     const fetchExhageData = async () => {
       setLoading(true);
+      setError(null);
       try {
         const response = await ExchagesData(perPage, currentPage);
-        setExchageData(response)
+        if (response && Array.isArray(response)) {
+          setExchageData(response);
+        } else {
+          throw new Error("No data received from CoinGecko");
+        }
       }
       catch (error) {
-        console.log(error);
+        console.error("Exchange Data Fetch Error:", error);
+        setError(error.message || "Failed to load exchange data");
       }
       finally {
         setLoading(false);
@@ -77,7 +86,33 @@ const CryptoExchanges = () => {
                 <td colSpan="7" className="py-20 text-center">
                   <div className="flex flex-col items-center gap-4">
                     <div className="w-10 h-10 border-4 border-muted border-t-white rounded-full animate-spin"></div>
-                    <p className="text-muted animate-pulse">Loading exchange data...</p>
+                    <p className="text-muted animate-pulse font-medium">Synchronizing with CoinGecko...</p>
+                  </div>
+                </td>
+              </tr>
+            ) : error ? (
+              <tr>
+                <td colSpan="7" className="py-20 text-center">
+                  <div className="flex flex-col items-center gap-6">
+                    <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center">
+                      <div className="w-8 h-8 flex items-center justify-center text-red-500">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="rotate-90"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <h3 className="text-xl font-bold text-white uppercase italic tracking-wider">Feed Interrupted</h3>
+                      <p className="text-sm text-muted max-w-sm mx-auto">
+                        {error.includes('429')
+                          ? "API rate limit reached. The feed will resume automatically in a few seconds."
+                          : error}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => window.location.reload()}
+                      className="px-8 py-2.5 bg-white/5 hover:bg-white/10 text-white text-xs font-black uppercase tracking-widest rounded-full transition-all border border-white/10 shadow-xl"
+                    >
+                      Refetch Data
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -87,7 +122,11 @@ const CryptoExchanges = () => {
               </tr>
             ) : (
               exchageData.map((coin, index) => (
-                <tr key={coin.trust_score_rank || index} className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer'>
+                <tr
+                  key={coin.trust_score_rank || index}
+                  onClick={() => navigate(`/exchanges/cryptoexchanges/${coin.id}`)}
+                  className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer'
+                >
                   <td className='py-4 px-4 sticky left-0 bg-main z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px] text-left'>
                     <div className='flex items-center gap-2'>
                       <span>{coin.trust_score_rank}</span>
