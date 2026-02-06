@@ -43,3 +43,8 @@ export function CoinOHLCData(coinId, days = '7') {
 export function CoinMarketChartRangeData(coinId, from, to) {
     return coingeckoFetch(`/coins/${coinId}/market_chart/range?vs_currency=usd&from=${from}&to=${to}`);
 }
+
+
+export function ExchageDetailesData(ExchageId){
+    return coingeckoFetch(`exchanges/${ExchageId}/tickers?coin_ids=all&include_exchange_logo=true&depth=true`)
+}

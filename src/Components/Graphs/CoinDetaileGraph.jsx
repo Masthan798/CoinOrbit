@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import {
     XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -24,6 +24,14 @@ const CoinDetaileGraph = () => {
     const [chartData, setChartData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const chartRef = useRef(null);
+
+    // Zoom state
+    const [left, setLeft] = useState('dataMin');
+    const [right, setRight] = useState('dataMax');
+    const [top, setTop] = useState('auto');
+    const [bottom, setBottom] = useState('auto');
+    const [cursorTime, setCursorTime] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -113,6 +121,79 @@ const CoinDetaileGraph = () => {
 
         fetchData();
     }, [coinId, timeframe, dataType, chartType]);
+
+    // Reset zoom when timeframe or data type changes
+    useEffect(() => {
+        setLeft('dataMin');
+        setRight('dataMax');
+        setTop('auto');
+        setBottom('auto');
+    }, [timeframe, dataType]);
+
+    const handleWheel = (e) => {
+        if (!chartData || chartData.length === 0 || !e) return;
+
+        const zoomFactor = e.deltaY > 0 ? 1.05 : 0.95; // Slightly smoother factor
+
+        // Block the entire website from scrolling
+        if (e.cancelable) e.preventDefault();
+
+        // Calculate focus point logic...
+        const currentLeft = left === 'dataMin' ? chartData[0].time : left;
+        const currentRight = right === 'dataMax' ? chartData[chartData.length - 1].time : right;
+        const range = currentRight - currentLeft;
+
+        const focusPoint = cursorTime || (currentLeft + currentRight) / 2;
+
+        const newRange = range * zoomFactor;
+
+        // Limits
+        if (newRange < 60000 && zoomFactor < 1) return;
+        if (newRange > (chartData[chartData.length - 1].time - chartData[0].time) * 3 && zoomFactor > 1) {
+            setLeft('dataMin');
+            setRight('dataMax');
+            setTop('auto');
+            setBottom('auto');
+            return;
+        }
+
+        const leftRatio = (focusPoint - currentLeft) / range;
+        const rightRatio = (currentRight - focusPoint) / range;
+
+        const nextLeft = focusPoint - (newRange * leftRatio);
+        const nextRight = focusPoint + (newRange * rightRatio);
+
+        setLeft(nextLeft);
+        setRight(nextRight);
+
+        const visibleData = chartData.filter(d => d.time >= nextLeft && d.time <= nextRight);
+        if (visibleData.length > 0) {
+            const vals = visibleData.map(d => d.value);
+            const min = Math.min(...vals);
+            const max = Math.max(...vals);
+            setBottom(min * 0.995);
+            setTop(max * 1.005);
+        }
+    };
+
+    // Native event listener for non-passive wheel events (to block page scroll)
+    useEffect(() => {
+        const chartElem = chartRef.current;
+        if (chartElem) {
+            chartElem.addEventListener('wheel', handleWheel, { passive: false });
+        }
+        return () => {
+            if (chartElem) {
+                chartElem.removeEventListener('wheel', handleWheel);
+            }
+        };
+    }, [handleWheel]);
+
+    const handleMouseMove = (e) => {
+        if (e && e.activeLabel) {
+            setCursorTime(e.activeLabel);
+        }
+    };
 
     const formatXAxis = (tickItem) => {
         const date = new Date(tickItem);
@@ -214,7 +295,7 @@ const CoinDetaileGraph = () => {
                 </div>
             </div>
 
-            <div className="flex-1 w-full min-h-[400px] relative">
+            <div className="flex-1 w-full min-h-[400px] relative" ref={chartRef}>
                 {loading && (
                     <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-2xl">
                         <div className="w-10 h-10 border-2 border-white/10 border-t-white rounded-full animate-spin"></div>
@@ -243,7 +324,11 @@ const CoinDetaileGraph = () => {
                     </div>
                 ) : (
                     <ResponsiveContainer width="100%" height="100%">
-                        <ComposedChart data={chartData}>
+                        <ComposedChart
+                            data={chartData}
+                            onMouseMove={handleMouseMove}
+                            onMouseLeave={() => setCursorTime(null)}
+                        >
                             <defs>
                                 <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="5%" stopColor="#ef4444" stopOpacity={0.2} />
@@ -262,15 +347,20 @@ const CoinDetaileGraph = () => {
                                 tickLine={false}
                                 tick={{ fill: '#4b5563', fontSize: 10, fontWeight: 700 }}
                                 minTickGap={60}
+                                domain={[left, right]}
+                                type="number"
+                                scale="time"
+                                allowDataOverflow
                             />
                             <YAxis
                                 yAxisId="value"
                                 orientation="right"
-                                domain={['auto', 'auto']}
+                                domain={[bottom, top]}
                                 axisLine={false}
                                 tickLine={false}
                                 tick={{ fill: '#4b5563', fontSize: 10, fontWeight: 700 }}
-                                tickFormatter={(val) => `$${val.toLocaleString(undefined, { notation: 'compact' })}`}
+                                tickFormatter={(val) => `$${val?.toLocaleString(undefined, { notation: 'compact' })}`}
+                                allowDataOverflow
                             />
                             <YAxis
                                 yAxisId="vol"
