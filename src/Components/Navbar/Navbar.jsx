@@ -31,7 +31,13 @@ const Navbar = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const isActive = (path) => path && location.pathname === path;
+    const isActive = (path) => {
+        if (!path) return false;
+        if (path === "/") {
+            return location.pathname === "/" || location.pathname.startsWith("/cryptocurrencies/marketcap");
+        }
+        return location.pathname === path || (location.pathname.startsWith(path) && path !== "/");
+    };
 
     const handleMouseEnter = (e, label) => {
         if (!isCollapsed) return;
