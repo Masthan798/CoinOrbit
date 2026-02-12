@@ -1,4 +1,7 @@
-const MAIN_BASE_URL = (import.meta.env.VITE_BASE_URL || "https://api.coingecko.com/api/v3").trim().replace(/\/+$/, "");
+const IS_DEV = import.meta.env.DEV;
+const MAIN_BASE_URL = IS_DEV 
+  ? '/api/v3' 
+  : (import.meta.env.VITE_BASE_URL || "https://api.coingecko.com/api/v3").trim().replace(/\/+$/, "");
 const API_KEY = (import.meta.env.VITE_COINGECKO_API_KEY || "").trim();
 
 // In-memory cache to store API responses
