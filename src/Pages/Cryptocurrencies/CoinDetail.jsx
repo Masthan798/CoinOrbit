@@ -4,7 +4,9 @@ import { coingeckoFetch } from '../../api/coingeckoClient';
 import { motion } from 'framer-motion';
 import { CoinDetailData } from '../../services/AllcoinsData';
 import { BellIcon, StarIcon } from 'lucide-react';
-import CoinDetaileGraph from '../../Components/Graphs/CoinDetaileGraph';
+import CoinDetailGraph from '../../Components/Graphs/CoinDetailGraph';
+import CoinInfoBlock from '../../Components/Coins/CoinInfoBlock';
+import CoinPerformanceBlock from '../../Components/Coins/CoinPerformanceBlock';
 
 
 const containerVariants = {
@@ -251,8 +253,23 @@ const CoinDetail = () => {
                     </div>
 
                     {/* Chart Component Container */}
-                    <div className='lg:col-span-2 p-2 border-gray-800 border-2 rounded-3xl bg-card/5 overflow-hidden'>
-                        <CoinDetaileGraph />
+                    <div className='lg:col-span-2 flex flex-col gap-6'>
+                        <div className='p-2 border-gray-800 border-2 rounded-3xl bg-card/5 overflow-hidden h-full'>
+                            <CoinDetailGraph />
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* New Info & Performance Grid - Separate Row below */}
+                <motion.div variants={containerVariants} className='grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6'>
+                    {/* Left: Coin Info (1 col) */}
+                    <div className='md:col-span-1 border-gray-800 border-2 rounded-3xl bg-[#0b0e11] overflow-hidden p-6'>
+                        <CoinInfoBlock coin={coin} />
+                    </div>
+
+                    {/* Right: Performance & News (2 cols) */}
+                    <div className='md:col-span-2 border-gray-800 border-2 rounded-3xl bg-[#0b0e11] overflow-hidden p-6'>
+                        <CoinPerformanceBlock coin={coin} />
                     </div>
                 </motion.div>
             </motion.div>

@@ -240,62 +240,66 @@ const CoinDetaileGraph = () => {
     return (
         <div className="w-full h-full flex flex-col gap-6 p-4 bg-[#0d0e12] rounded-3xl border border-white/5">
             <div className="flex flex-col sm:flex-row flex-wrap items-center justify-between gap-4 border-b border-white/5 pb-4">
-                <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl w-full sm:w-auto justify-between sm:justify-start">
-                    <div className="flex items-center gap-1">
+                <div className="flex items-center gap-4">
+                    <h3 className="text-lg font-bold text-white px-2">Price & Market Cap Chart</h3>
+                    <div className="flex bg-white/5 p-1 rounded-lg">
                         <button
                             onClick={() => setDataType('prices')}
-                            className={`px-3 sm:px-4 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all ${dataType === 'prices' ? 'bg-[#2d2f39] text-white shadow-lg' : 'text-gray-500 hover:text-white'}`}
+                            className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${dataType === 'prices' ? 'bg-[#3b82f6] text-white shadow-lg shadow-blue-500/20' : 'text-gray-400 hover:text-white'}`}
                         >
                             Price
                         </button>
                         <button
                             onClick={() => setDataType('market_caps')}
-                            className={`px-3 sm:px-4 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all ${dataType === 'market_caps' ? 'bg-[#2d2f39] text-white shadow-lg' : 'text-gray-500 hover:text-white'}`}
+                            className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${dataType === 'market_caps' ? 'bg-[#3b82f6] text-white shadow-lg shadow-blue-500/20' : 'text-gray-400 hover:text-white'}`}
                         >
                             Market Cap
                         </button>
                     </div>
-                    <div className="flex items-center gap-1">
-                        <div className="w-[1px] h-4 bg-white/10 mx-1 sm:mx-2" />
+                </div>
+
+                <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl">
                         <button
                             onClick={() => setChartType('line')}
-                            className={`p-1.5 rounded-lg transition-all ${chartType === 'line' ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-white'}`}
+                            className={`p-1.5 rounded-lg transition-all ${chartType === 'line' ? 'bg-white/10 text-blue-400' : 'text-gray-500 hover:text-white'}`}
                             title="Line Chart"
                         >
-                            <TrendingUp size={14} className="sm:w-4 sm:h-4" />
+                            <TrendingUp size={14} />
                         </button>
                         <button
                             onClick={() => setChartType('ohlc')}
-                            className={`p-1.5 rounded-lg transition-all ${chartType === 'ohlc' ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-white'}`}
+                            className={`p-1.5 rounded-lg transition-all ${chartType === 'ohlc' ? 'bg-white/10 text-blue-400' : 'text-gray-500 hover:text-white'}`}
                             title="OHLC Chart"
                         >
-                            <BarChart3 size={14} className="sm:w-4 sm:h-4" />
+                            <BarChart3 size={14} />
                         </button>
                     </div>
-                </div>
 
-                <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl w-full sm:w-auto overflow-x-auto no-scrollbar">
-                    <div className="flex items-center gap-1 min-w-max">
-                        {timeframes.map((tf) => (
-                            <button
-                                key={tf.label}
-                                onClick={() => setTimeframe(tf)}
-                                className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-[9px] sm:text-[10px] font-black transition-all ${timeframe.label === tf.label ? 'bg-blue-500/20 text-blue-400' : 'text-gray-500 hover:text-white'}`}
-                            >
-                                {tf.label}
-                            </button>
-                        ))}
-                    </div>
-                    <div className="w-[1px] h-4 bg-white/10 mx-1 sm:mx-2 flex-shrink-0" />
-                    <div className="flex items-center gap-0.5 sm:gap-1 flex-shrink-0">
-                        <button className="p-1.5 text-gray-500 hover:text-white transition-all"><Calendar size={13} className="sm:w-3.5 sm:h-3.5" /></button>
-                        <button className="p-1.5 text-gray-500 hover:text-white transition-all"><Download size={13} className="sm:w-3.5 sm:h-3.5" /></button>
-                        <button className="p-1.5 text-gray-500 hover:text-white transition-all"><Maximize2 size={13} className="sm:w-3.5 sm:h-3.5" /></button>
+                    <div className="w-[1px] h-4 bg-white/10 mx-1" />
+
+                    <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl w-full sm:w-auto overflow-x-auto no-scrollbar">
+                        <div className="flex items-center gap-1 min-w-max">
+                            {timeframes.map((tf) => (
+                                <button
+                                    key={tf.label}
+                                    onClick={() => setTimeframe(tf)}
+                                    className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-[9px] sm:text-[10px] font-black transition-all ${timeframe.label === tf.label ? 'bg-blue-500/20 text-blue-400' : 'text-gray-500 hover:text-white'}`}
+                                >
+                                    {tf.label}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="w-[1px] h-4 bg-white/10 mx-1 sm:mx-2 flex-shrink-0" />
+                        <div className="flex items-center gap-0.5 sm:gap-1 flex-shrink-0">
+                            <button className="p-1.5 text-gray-500 hover:text-white transition-all"><Download size={13} className="sm:w-3.5 sm:h-3.5" /></button>
+                            <button className="p-1.5 text-gray-500 hover:text-white transition-all"><Maximize2 size={13} className="sm:w-3.5 sm:h-3.5" /></button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div className="flex-1 w-full min-h-[400px] relative" ref={chartRef}>
+            <div className="flex-1 w-full min-h-[550px] relative" ref={chartRef}>
                 {loading && (
                     <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-2xl">
                         <div className="w-10 h-10 border-2 border-white/10 border-t-white rounded-full animate-spin"></div>
