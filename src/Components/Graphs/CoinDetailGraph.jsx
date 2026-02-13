@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import {
     XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-    ComposedChart, Area, Bar, Cell, ReferenceLine
+    ComposedChart, Area, Bar, Cell, ReferenceLine, Brush
 } from 'recharts';
 import { CoinMarketChartData, CoinOHLCData } from '../../services/AllcoinsData';
 import { TrendingUp, BarChart3, Maximize2, Download, Calendar, MessageSquare, Zap } from 'lucide-react';
@@ -16,8 +16,9 @@ const timeframes = [
     { label: 'Max', value: 'max', interval: 'daily' },
 ];
 
-const CoinDetaileGraph = () => {
-    const { coinId } = useParams();
+const CoinDetailGraph = ({ coinId: propCoinId, chartHeight = "min-h-[550px]" }) => {
+    const { coinId: paramCoinId } = useParams();
+    const coinId = propCoinId || paramCoinId;
     const [dataType, setDataType] = useState('prices'); // 'prices' | 'market_caps'
     const [chartType, setChartType] = useState('line'); // 'line' | 'ohlc'
     const [timeframe, setTimeframe] = useState(timeframes[0]);
@@ -299,7 +300,7 @@ const CoinDetaileGraph = () => {
                 </div>
             </div>
 
-            <div className="flex-1 w-full min-h-[550px] relative" ref={chartRef}>
+            <div className={`flex-1 w-full ${chartHeight} relative`} ref={chartRef}>
                 {loading && (
                     <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-2xl">
                         <div className="w-10 h-10 border-2 border-white/10 border-t-white rounded-full animate-spin"></div>
@@ -411,9 +412,17 @@ const CoinDetaileGraph = () => {
                                     </Bar>
                                 </>
                             )}
+                            <Brush
+                                dataKey="time"
+                                height={30}
+                                stroke="#8884d8"
+                                fill="#0b0e11"
+                                tickFormatter={() => ''}
+                            />
                         </ComposedChart>
                     </ResponsiveContainer>
-                )}
+                )
+                }
 
                 <div className="absolute bottom-10 right-10 opacity-40 pointer-events-none flex items-center gap-2">
                     <div className="w-6 h-6 bg-[#3b82f6] rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.5)]">
@@ -421,9 +430,9 @@ const CoinDetaileGraph = () => {
                     </div>
                     <span className="text-sm font-black tracking-tighter text-white uppercase italic">COIN<span className="text-blue-500">ORBIT</span></span>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 
-export default CoinDetaileGraph;
+export default CoinDetailGraph;
