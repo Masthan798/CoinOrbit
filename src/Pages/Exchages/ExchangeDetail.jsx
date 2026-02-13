@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { coingeckoFetch } from '../../api/coingeckoClient';
 import { motion } from 'framer-motion'
-import { Info, ChevronUp, ChevronDown, ArrowRight as ArrowRightIcon } from 'lucide-react';
+import { Info, ArrowRight as ArrowRightIcon } from 'lucide-react';
 import Pagination from '../../Components/Pagination/Pagination';
 import ExchangeDetailsGraph from '../../Components/Graphs/ExchangeDetailsGraph';
 import ExchangeStats from '../../Components/Graphs/ExchangeStats';

@@ -55,11 +55,6 @@ export function ExchageDetailesDataCharts(ExchageId,days){
 }
 
 export function CoinNewsData(coinId) {
-    // Using a mock or aggregator since CoinGecko /news might be restrictive or general.
-    // For now using CoinGecko's status updates or similar if available, or just general news.
-    // actually CoinGecko has a /news endpoint but it's general. content is not always specific to a coin ID in the free API easily without filtering
-    // We will use the /status_updates endpoint which is specific to coin, although "News" is better.
-    // Let's try to mock it or use a public crypto news RSS converted to JSON if possible,
-    // but sticking to CoinGecko: /coins/{id}/status_updates
+  
     return coingeckoFetch(`/coins/${coinId}/status_updates?per_page=5&page=1`);
 }
