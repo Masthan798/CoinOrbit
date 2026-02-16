@@ -66,9 +66,43 @@ const CoinConversionDetail = () => {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] text-white">
-                <div className="w-10 h-10 border-4 border-muted border-t-blue-500 rounded-full animate-spin mb-4"></div>
-                <p>Loading...</p>
+            <div className="w-full min-h-screen p-4 md:p-6 flex flex-col gap-6 bg-main text-white pb-20 animate-pulse">
+                {/* Breadcrumbs Skeleton */}
+                <div className="h-4 bg-gray-800 rounded w-64"></div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* LEFT COLUMN Skeleton */}
+                    <div className="col-span-1 flex flex-col gap-6">
+                        {/* Coin Identity Card Skeleton */}
+                        <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col gap-6 h-[500px]">
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 bg-gray-800 rounded-full"></div>
+                                <div className="flex flex-col gap-2">
+                                    <div className="h-6 w-32 bg-gray-800 rounded"></div>
+                                    <div className="h-4 w-16 bg-gray-800 rounded"></div>
+                                </div>
+                            </div>
+                            <div className="h-10 w-48 bg-gray-800 rounded"></div>
+                            <div className="h-4 w-full bg-gray-800 rounded"></div>
+                            <div className="space-y-4 mt-4">
+                                {[...Array(6)].map((_, i) => (
+                                    <div key={i} className="flex justify-between">
+                                        <div className="h-4 w-24 bg-gray-800 rounded"></div>
+                                        <div className="h-4 w-16 bg-gray-800 rounded"></div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* RIGHT COLUMN Skeleton */}
+                    <div className="lg:col-span-2 flex flex-col gap-6">
+                        {/* Converter Box Skeleton */}
+                        <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 md:p-10 h-64"></div>
+                        {/* Chart Section Skeleton */}
+                        <div className="h-[500px] w-full bg-[#0b0e11] rounded-3xl border border-gray-800 p-2"></div>
+                    </div>
+                </div>
             </div>
         );
     }

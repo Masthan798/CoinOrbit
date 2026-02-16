@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { LineChart, Line, ResponsiveContainer } from 'recharts';
-import { ArrowLeftIcon, ArrowRightIcon, ChevronDown, ChevronUp, Star } from 'lucide-react';
+import { LineChart, Line, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { ArrowLeftIcon, ArrowRightIcon, ChevronDown, ChevronUp, Star, Flame, Rocket } from 'lucide-react';
 import { CategoriesData } from '../../services/AllcoinsData';
 import { motion, AnimatePresence } from 'framer-motion';
 import Pagination from '../../Components/Pagination/Pagination';
+import CardSkeleton from '../../Components/Loadings/CardSkeleton';
+import TableSkeleton from '../../Components/Loadings/TableSkeleton';
+
 import Toggle from '../../Components/Toggles/Toggle';
 
 
@@ -84,6 +87,7 @@ const Categories = () => {
   });
   const totalPages = Math.ceil(TOTAL_COINS / perPage);
   const [error, setError] = useState(null);
+  const [sparklineData, setSparklineData] = useState(null);
 
   const toggleHighlights = () => {
     const newState = !toggle;
@@ -111,6 +115,26 @@ const Categories = () => {
     fetchCategories();
   }, [])
 
+  // Fetch sparkline data for stats cards
+  useEffect(() => {
+    const fetchSparklineData = async () => {
+      try {
+        // Fetch 7-day market chart data (using BTC as proxy for market trends)
+        const response = await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7');
+        const data = await response.json();
+        if (data.market_caps && data.total_volumes) {
+          setSparklineData({
+            market_caps: data.market_caps.map(item => item[1]),
+            total_volumes: data.total_volumes.map(item => item[1]),
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching sparkline data:", error);
+      }
+    };
+    fetchSparklineData();
+  }, []);
+
   const toggleFavorite = (rank) => {
     setFavorites(prev =>
       prev.includes(rank) ? prev.filter(r => r !== rank) : [...prev, rank]
@@ -120,6 +144,29 @@ const Categories = () => {
   const paginatedCategories = categories.slice(
     (currentPage - 1) * perPage,
     currentPage * perPage
+  );
+
+  // Sparkline component for mini charts
+  const Sparkline = ({ data, color, height = 40 }) => (
+    <div style={{ height }} className="w-24">
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart data={data.map(v => ({ value: v }))}>
+          <defs>
+            <linearGradient id={`gradient-${color}-cat`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={color} stopOpacity={0.3} />
+              <stop offset="95%" stopColor={color} stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <Area
+            type="monotone"
+            dataKey="value"
+            stroke={color}
+            strokeWidth={2}
+            fill={`url(#gradient-${color}-cat)`}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
   );
 
 
@@ -156,90 +203,97 @@ const Categories = () => {
                 className='grid grid-cols-1 lg:grid-cols-3 gap-8 w-full'
               >
 
+                {loading ? (
+                  <>
+                    <CardSkeleton />
+                    <CardSkeleton />
+                    <CardSkeleton />
+                  </>
+                ) : (
+                  <>
+                    <div className='flex flex-col gap-2 h-[210px]'>
 
-                <motion.div variants={itemVariants} className='flex flex-col gap-2 h-[210px]'>
-
-                  <div className='flex items-center justify-between gap-4 p-4 border-gray-500 border-2 rounded-xl w-full flex-1'>
-                    <div className='flex flex-col min-w-0'>
-                      <span className='text-xl truncate block font-bold'>
-                        ₹{categories.reduce((acc, cat) => acc + (cat.market_cap || 0), 0).toLocaleString()}
-                      </span>
-                      <p className='text-sm text-muted'>Categories Total Market Cap</p>
-                    </div>
-                    <div className='w-24 h-16'>
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={data}>
-                          <Line type="monotone" dataKey="value" stroke="#16c784" strokeWidth={2} dot={false} />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-
-                  <div className='flex items-center justify-between gap-4 p-4 border-gray-500 border-2 rounded-xl w-full flex-1'>
-                    <div className='flex flex-col min-w-0'>
-                      <span className='text-xl truncate block font-bold'>
-                        ₹{categories.reduce((acc, cat) => acc + (cat.volume_24h || 0), 0).toLocaleString()}
-                      </span>
-                      <p className='text-sm text-muted'>Total 24h Volume</p>
-                    </div>
-                    <div className='w-24 h-16'>
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={data}>
-                          <Line type="monotone" dataKey="value" stroke="#ea3943" strokeWidth={2} dot={false} />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-                </motion.div>
-
-
-
-                <motion.div variants={itemVariants} className='flex flex-col gap-1 w-full h-[210px] p-4 border-gray-500 border-2 rounded-xl overflow-hidden'>
-                  <div className='flex items-center justify-between border-b border-gray-500 p-2'>
-                    <p className='text-lg font-medium sm:text-sm lg:text-lg'>🔥 Trending Categories</p>
-                    <span className='text-xs text-muted cursor-pointer hover:text-white transition-colors sm:text-sm lg:text-lg'>View More</span>
-                  </div>
-
-                  <div className='flex flex-col gap-1 overflow-y-auto [&::-webkit-scrollbar]:hidden'>
-                    {categories.slice(0, 3).map((cat, idx) => (
-                      <div key={cat.id || idx} className='flex items-center justify-between p-2 hover:bg-card hover-soft rounded-xl cursor-pointer transition-all'>
-                        <div className='flex items-center gap-2'>
-                          <p className='text-sm text-muted hover:text-white'>{cat.name}</p>
-                        </div>
-                        <div className='flex items-center gap-2'>
-                          <span className={`text-xs ${cat.market_cap_change_24h < 0 ? 'text-red-500' : 'text-green-500'}`}>
-                            {cat.market_cap_change_24h?.toFixed(1)}%
+                      <div className='flex items-center justify-between gap-4 p-3 border-gray-800 border-2 rounded-xl w-full flex-1 hover:border-green-500 transition-all duration-300 bg-[#0b0e11] min-w-0'>
+                        <div className='flex flex-col min-w-0'>
+                          <span className='text-xl truncate block font-bold text-white'>
+                            ₹{categories.reduce((acc, cat) => acc + (cat.market_cap || 0), 0).toLocaleString()}
                           </span>
+                          <p className='text-sm text-muted'>Categories Total Market Cap</p>
+                        </div>
+                        <div className='w-24 h-16'>
+                          {sparklineData?.market_caps && (
+                            <Sparkline data={sparklineData.market_caps} color="#22c55e" height={60} />
+                          )}
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </motion.div>
 
-                <motion.div variants={itemVariants} className='flex flex-col gap-1 w-full h-[210px] p-4 border-gray-500 border-2 rounded-xl overflow-hidden'>
-                  <div className='flex items-center justify-between border-b border-gray-500 p-2'>
-                    <p className='text-lg font-medium sm:text-sm lg:text-lg'>🚀 Top Gaining Categories</p>
-                    <span className='text-xs text-muted cursor-pointer hover:text-white transition-colors sm:text-sm lg:text-lg'>View More</span>
-                  </div>
+                      <div className='flex items-center justify-between gap-4 p-3 border-gray-800 border-2 rounded-xl w-full flex-1 hover:border-red-500 transition-all duration-300 bg-[#0b0e11] min-w-0'>
+                        <div className='flex flex-col min-w-0'>
+                          <span className='text-xl truncate block font-bold text-white'>
+                            ₹{categories.reduce((acc, cat) => acc + (cat.volume_24h || 0), 0).toLocaleString()}
+                          </span>
+                          <p className='text-sm text-muted'>Total 24h Volume</p>
+                        </div>
+                        <div className='w-24 h-16'>
+                          {sparklineData?.total_volumes && (
+                            <Sparkline data={sparklineData.total_volumes} color="#ef4444" height={60} />
+                          )}
+                        </div>
+                      </div>
+                    </div>
 
-                  <div className='flex flex-col gap-1 overflow-y-auto [&::-webkit-scrollbar]:hidden'>
-                    {[...categories]
-                      .sort((a, b) => b.market_cap_change_24h - a.market_cap_change_24h)
-                      .slice(0, 3)
-                      .map((cat, idx) => (
-                        <div key={cat.id || idx} className='flex items-center justify-between p-2 hover:bg-card hover-soft rounded-xl cursor-pointer transition-all'>
-                          <div className='flex items-center gap-2'>
-                            <p className='text-sm text-muted hover:text-white'>{cat.name}</p>
-                          </div>
-                          <div className='flex items-center gap-2'>
-                            <span className='text-xs text-green-500 font-medium'>
-                              +{cat.market_cap_change_24h?.toFixed(1)}%
+
+
+                    <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col h-[210px]  transition-all duration-300 group">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                          <Flame className="text-orange-500" size={20} />
+                          <h3 className="text-lg font-bold text-white">Trending Categories</h3>
+                        </div>
+                        <span className="text-xs text-gray-400 hover:text-white cursor-pointer transition-colors">View More</span>
+                      </div>
+
+                      <div className='flex flex-col flex-1 justify-center'>
+                        {categories.slice(0, 3).map((cat, idx) => (
+                          <div key={cat.id || idx} className='flex items-center justify-between p-2 border-b border-gray-800 last:border-0 hover:bg-card transition-colors cursor-pointer rounded-lg'>
+                            <div className='flex items-center gap-3'>
+                              <span className='text-sm font-medium text-gray-300'>{cat.name}</span>
+                            </div>
+                            <span className={`text-xs font-bold ${cat.market_cap_change_24h < 0 ? 'text-red-500' : 'text-green-500'}`}>
+                              {cat.market_cap_change_24h?.toFixed(1)}%
                             </span>
                           </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col h-[210px]  transition-all duration-300 group">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                          <Rocket className="text-green-500" size={20} />
+                          <h3 className="text-lg font-bold text-white">Top Gaining Categories</h3>
                         </div>
-                      ))}
-                  </div>
-                </motion.div>
+                        <span className="text-xs text-gray-400 hover:text-white cursor-pointer transition-colors">View More</span>
+                      </div>
+
+                      <div className='flex flex-col flex-1 justify-center'>
+                        {[...categories]
+                          .sort((a, b) => b.market_cap_change_24h - a.market_cap_change_24h)
+                          .slice(0, 3)
+                          .map((cat, idx) => (
+                            <div key={cat.id || idx} className='flex items-center justify-between p-2 border-b border-gray-800 last:border-0 hover:bg-card transition-colors cursor-pointer rounded-lg'>
+                              <div className='flex items-center gap-3'>
+                                <span className='text-sm font-medium text-gray-300'>{cat.name}</span>
+                              </div>
+                              <span className='text-xs font-bold text-green-500'>
+                                +{cat.market_cap_change_24h?.toFixed(1)}%
+                              </span>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  </>
+                )}
 
               </motion.div>
             </motion.div>
@@ -263,11 +317,8 @@ const Categories = () => {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="6" className="py-20 text-center">
-                  <div className="flex flex-col items-center gap-4">
-                    <div className="w-10 h-10 border-4 border-muted border-t-white rounded-full animate-spin"></div>
-                    <p className="text-muted animate-pulse">Loading category data...</p>
-                  </div>
+                <td colSpan="6" className="p-0">
+                  <TableSkeleton rows={10} columns={6} />
                 </td>
               </tr>
             ) : error ? (
@@ -282,8 +333,8 @@ const Categories = () => {
               </tr>
             ) : (
               paginatedCategories.map((coin, index) => (
-                <tr key={coin.id || index} className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer'>
-                  <td className='py-4 px-2 sticky left-0 bg-main z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px]'>
+                <tr key={coin.id || index} className='border-b border-gray-800 hover:bg-card transition-colors cursor-pointer group'>
+                  <td className='py-4 px-2 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px]'>
                     <div className='flex items-center gap-2'>
                       <Star
                         onClick={(e) => {
@@ -298,7 +349,7 @@ const Categories = () => {
                       <span>{(currentPage - 1) * perPage + index + 1}</span>
                     </div>
                   </td>
-                  <td className='py-4 px-2 sticky left-[60px] md:left-[80px] bg-main z-10 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px]'>
+                  <td className='py-4 px-2 sticky left-[60px] md:left-[80px] bg-main group-hover:bg-card transition-colors z-10 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px]'>
                     <div className='flex items-center gap-2'>
                       <div className='flex flex-col gap-0.5'>
                         <span className='font-bold truncate max-w-[180px]'>{coin.name}</span>

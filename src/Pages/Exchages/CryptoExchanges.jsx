@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion'
 import { ExchagesData } from '../../services/AllcoinsData';
 import Pagination from '../../Components/Pagination/Pagination';
+import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -83,11 +84,8 @@ const CryptoExchanges = () => {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="7" className="py-20 text-center">
-                  <div className="flex flex-col items-center gap-4">
-                    <div className="w-10 h-10 border-4 border-muted border-t-white rounded-full animate-spin"></div>
-                    <p className="text-muted animate-pulse font-medium">Synchronizing with CoinGecko...</p>
-                  </div>
+                <td colSpan="7" className="p-0">
+                  <TableSkeleton rows={10} columns={7} />
                 </td>
               </tr>
             ) : error ? (
@@ -125,14 +123,14 @@ const CryptoExchanges = () => {
                 <tr
                   key={coin.trust_score_rank || index}
                   onClick={() => navigate(`/exchanges/cryptoexchanges/${coin.id}`)}
-                  className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer'
+                  className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer group'
                 >
-                  <td className='py-4 px-4 sticky left-0 bg-main z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px] text-left'>
+                  <td className='py-4 px-4 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px] text-left'>
                     <div className='flex items-center gap-2'>
                       <span>{coin.trust_score_rank}</span>
                     </div>
                   </td>
-                  <td className='py-4 px-4 sticky left-[60px] md:left-[80px] bg-main z-10 w-[140px] min-w-[140px] md:w-[200px] md:min-w-[200px] text-left'>
+                  <td className='py-4 px-4 sticky left-[60px] md:left-[80px] bg-main group-hover:bg-card transition-colors z-10 w-[140px] min-w-[140px] md:w-[200px] md:min-w-[200px] text-left'>
                     <div className='flex items-center gap-2'>
                       <img src={coin.image} alt={coin.name} className='w-6 h-6 rounded-full' />
                       <div className='flex flex-col gap-0.5'>

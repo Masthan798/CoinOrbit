@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion';
 import { PerpDerivativesData } from '../../services/AllcoinsData';
 import Pagination from '../../Components/Pagination/Pagination';
+import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -86,11 +87,8 @@ const PerpDEXs = () => {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="9" className="py-20 text-center">
-                  <div className="flex flex-col items-center gap-4">
-                    <div className="w-10 h-10 border-4 border-muted border-t-white rounded-full animate-spin"></div>
-                    <p className="text-muted animate-pulse">Loading perpetual DEXs data...</p>
-                  </div>
+                <td colSpan="9" className="p-0">
+                  <TableSkeleton rows={10} columns={9} />
                 </td>
               </tr>
             ) : error ? (
@@ -105,11 +103,11 @@ const PerpDEXs = () => {
               </tr>
             ) : (
               paginatedData.map((coin, index) => (
-                <tr key={`${coin.market}-${coin.symbol}-${index}`} className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer'>
-                  <td className='py-4 px-4 sticky left-0 bg-main z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px] text-left'>
+                <tr key={`${coin.market}-${coin.symbol}-${index}`} className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer group'>
+                  <td className='py-4 px-4 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px] text-left'>
                     <span>{(currentPage - 1) * perPage + index + 1}</span>
                   </td>
-                  <td className='py-4 px-4 sticky left-[60px] md:left-[80px] bg-main z-10 w-[140px] min-w-[140px] md:w-[250px] md:min-w-[250px] text-left'>
+                  <td className='py-4 px-4 sticky left-[60px] md:left-[80px] bg-main group-hover:bg-card transition-colors z-10 w-[140px] min-w-[140px] md:w-[250px] md:min-w-[250px] text-left'>
                     <div className='flex flex-col gap-0.5'>
                       <span className='font-bold truncate max-w-[200px]'>{coin.market}</span>
                       <span className='text-[10px] text-muted uppercase leading-none'>{coin.symbol}</span>

@@ -286,8 +286,21 @@ const CompareCoins = () => {
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center p-8 border border-gray-800 rounded-md">
-                  <div className="w-8 h-8 border-2 border-muted border-t-white rounded-full animate-spin"></div>
+                <div className='flex flex-col gap-6 items-center w-full px-4 py-6 border-gray-800 border rounded-md relative overflow-hidden bg-card/10 animate-pulse h-[250px]'>
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 bg-gray-800 rounded-full"></div>
+                    <div className="h-4 w-24 bg-gray-800 rounded"></div>
+                    <div className="w-6 h-6 bg-gray-800 rounded-full"></div>
+                    <div className="h-4 w-24 bg-gray-800 rounded"></div>
+                  </div>
+                  <div className="flex flex-col items-center gap-2 mt-4">
+                    <div className="h-10 w-48 bg-gray-800 rounded"></div>
+                    <div className="h-6 w-32 bg-gray-800 rounded"></div>
+                  </div>
+                  <div className="w-full mt-auto space-y-2">
+                    <div className="h-10 w-full bg-gray-800 rounded"></div>
+                    <div className="h-10 w-full bg-gray-800 rounded"></div>
+                  </div>
                 </div>
               )
             }
