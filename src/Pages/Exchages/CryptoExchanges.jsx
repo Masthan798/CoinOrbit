@@ -98,7 +98,7 @@ const CryptoExchanges = () => {
       <div className='w-full'>
         <Breadcrumbs
           crumbs={[
-            { label: 'Exchanges', path: '/' },
+            { label: 'Exchanges', path: '/exchanges' },
             { label: 'Spot Exchanges' }
           ]}
         />

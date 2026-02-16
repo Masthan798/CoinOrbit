@@ -155,7 +155,7 @@ const HighlightsDetail = () => {
                 <Breadcrumbs
                     crumbs={[
                         { label: 'Cryptocurrencies', path: '/' },
-                        { label: 'Highlights', path: '/cryptocurrencies/categories' },
+                        { label: 'Highlights', path: '/categories' },
                         { label: type.charAt(0).toUpperCase() + type.slice(1).replace('-', ' ') }
                     ]}
                 />

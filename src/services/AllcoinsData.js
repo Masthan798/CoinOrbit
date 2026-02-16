@@ -1,7 +1,7 @@
 import { coingeckoFetch } from "../api/coingeckoClient";
 
-export function AllcoinsData(){
-    return coingeckoFetch("/coins/markets?vs_currency=inr&order=market_cap_desc&per_page=215&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d")
+export function AllcoinsData(per_page = 100, page = 1, vs_currency = 'usd', price_change = '1h,24h,7d,30d'){
+    return coingeckoFetch(`/coins/markets?vs_currency=${vs_currency}&order=market_cap_desc&per_page=${per_page}&page=${page}&sparkline=false&price_change_percentage=${price_change}`)
 }
 
 

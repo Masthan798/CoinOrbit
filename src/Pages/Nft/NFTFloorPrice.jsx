@@ -6,7 +6,7 @@ const NFTFloorPrice = () => {
     <div className='p-4 flex flex-col gap-4'>
       <Breadcrumbs
         crumbs={[
-          { label: 'NFTs', path: '/' },
+          { label: 'NFTs', path: '/nft-floor' },
           { label: 'Floor Prices' }
         ]}
       />

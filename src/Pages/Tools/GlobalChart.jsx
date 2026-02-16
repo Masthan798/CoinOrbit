@@ -69,7 +69,7 @@ const GlobalChart = () => {
       : 'hover:border-gray-600';
 
     return (
-      <div className={`bg-[#0b0e11] border border-gray-800 p-6 rounded-3xl flex items-center justify-between gap-4 group ${hoverBorderClass} transition-all relative overflow-hidden h-40`}>
+      <div className={`bg-[#0b0e11] border border-gray-800 p-4 sm:p-6 rounded-3xl flex items-center justify-between gap-4 group ${hoverBorderClass} transition-all relative overflow-hidden h-40`}>
         <div className="flex flex-col z-10 h-full justify-between">
           <div>
             <p className="text-gray-400 text-sm font-medium mb-1">{label}</p>
@@ -120,7 +120,8 @@ const GlobalChart = () => {
         <div className="flex flex-col gap-2">
           <Breadcrumbs
             crumbs={[
-              { label: 'Tools', path: '/' },
+              { label: 'Market Cap', path: '/' },
+              { label: 'Tools', path: '/allcoins' },
               { label: 'Global Charts' }
             ]}
           />

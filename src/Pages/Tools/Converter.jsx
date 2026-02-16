@@ -170,8 +170,8 @@ const Converter = () => {
 
         <Breadcrumbs
           crumbs={[
-            { label: 'Tools', path: '/' },
-            { label: 'Converter' }
+            { label: 'Cryptocurrencies', path: '/' },
+            { label: 'Converter', path: '/converter' }
           ]}
         />
 
@@ -256,7 +256,7 @@ const Converter = () => {
               <button
                 key={idx}
                 onClick={() => {
-                  navigate(`/tools/converter/${pair.coin}/${pair.currency}`);
+                  navigate(`/converter/${pair.coin}/${pair.currency}`);
                 }}
                 className="text-left text-sm text-gray-400 hover:text-white hover:underline transition-all py-1"
               >
@@ -274,8 +274,7 @@ const Converter = () => {
               <button
                 key={idx}
                 onClick={() => {
-                  setSelectedCurrency(curr);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  navigate(`/prices/${curr}`);
                 }}
                 className="text-left text-sm text-gray-400 hover:text-white hover:underline transition-all py-1"
               >
