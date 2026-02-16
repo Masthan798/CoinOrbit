@@ -7,6 +7,7 @@ import { BellIcon, StarIcon } from 'lucide-react';
 import CoinDetailGraph from '../../Components/Graphs/CoinDetailGraph';
 import CoinInfoBlock from '../../Components/Coins/CoinInfoBlock';
 import CoinPerformanceBlock from '../../Components/Coins/CoinPerformanceBlock';
+import Breadcrumbs from '../../Components/common/Breadcrumbs';
 
 
 const containerVariants = {
@@ -134,13 +135,13 @@ const CoinDetail = () => {
             className="p-6 bg-main rounded-xl min-h-full overflow-y-auto no-scrollbar flex flex-col gap-8"
         >
             {/* Breadcrumbs */}
-            <motion.div variants={itemVariants} className='flex items-center gap-2 text-sm'>
-                <span className='text-muted cursor-pointer hover:text-white transition-colors' onClick={() => navigate('/')}>Cryptocurrencies</span>
-                <span className='text-muted'>/</span>
-                <span className='text-muted cursor-pointer hover:text-white transition-colors' onClick={() => navigate('/')}>marketcap</span>
-                <span className='text-muted'>/</span>
-                <span className='text-white font-semibold'>{coin.name}</span>
-            </motion.div>
+            <Breadcrumbs
+                crumbs={[
+                    { label: 'Cryptocurrencies', path: '/' },
+                    { label: 'Market Cap', path: '/cryptocurrencies/marketcap' },
+                    { label: coin.name }
+                ]}
+            />
 
             {/* Main Data Grid: Header + Supplementary Cards */}
             <motion.div variants={itemVariants} className='w-full'>

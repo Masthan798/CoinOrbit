@@ -7,6 +7,7 @@ import GlobalStablecoinsChart from '../../Components/Graphs/GlobalStablecoinsCha
 import GlobalAltcoinsChart from '../../Components/Graphs/GlobalAltcoinsChart';
 import { TrendingUp, Activity, Layers, Coins } from 'lucide-react';
 import { AreaChart, Area, ResponsiveContainer, YAxis } from 'recharts';
+import Breadcrumbs from '../../Components/common/Breadcrumbs';
 
 const GlobalChart = () => {
   const [globalData, setGlobalData] = useState(null);
@@ -117,11 +118,12 @@ const GlobalChart = () => {
 
         {/* Breadcrumb / Header */}
         <div className="flex flex-col gap-2">
-          <div className='flex items-center gap-2 text-sm mb-2'>
-            <span className='text-muted cursor-pointer'>Tools</span>
-            <span className='text-muted'>/</span>
-            <span className='text-white cursor-pointer'>Global Charts</span>
-          </div>
+          <Breadcrumbs
+            crumbs={[
+              { label: 'Tools', path: '/' },
+              { label: 'Global Charts' }
+            ]}
+          />
           <h1 className="text-3xl font-bold text-white">Global Cryptocurrency Market Charts</h1>
           <p className="text-muted max-w-3xl">
             The global cryptocurrency market cap today is <span className="text-white font-bold">{globalData ? formatCurrency(globalData.total_market_cap.usd) : '...'}</span>,

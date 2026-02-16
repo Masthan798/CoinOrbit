@@ -6,6 +6,7 @@ import CompareGraph from '../../Components/Graphs/CompareGraph'
 import CoinSelector from '../../Components/Inputs/CoinSelector'
 import ComparisonPieChart from '../../Components/Graphs/ComparisonPieChart'
 import PopularComparisons from '../../Components/Coins/PopularComparisons'
+import Breadcrumbs from '../../Components/common/Breadcrumbs';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -181,11 +182,12 @@ const CompareCoins = () => {
 
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="hidden" className='w-full flex flex-col justify-start items-start bg-main min-h-full p-4 pb-8 rounded-xl gap-8'>
-      <div className='flex items-center gap-2 text-sm'>
-        <span className='text-muted cursor-pointer'>Tools</span>
-        <span className='text-muted'>/</span>
-        <span className='text-white cursor-pointer'>CompareCoins</span>
-      </div>
+      <Breadcrumbs
+        crumbs={[
+          { label: 'Tools', path: '/' },
+          { label: 'Compare' }
+        ]}
+      />
       <motion.div variants={itemVariants} className='w-full flex flex-col md:flex-row items-center justify-between gap-6 md:gap-0'>
 
 

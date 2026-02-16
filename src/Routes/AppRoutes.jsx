@@ -5,6 +5,7 @@ import Chains from "../Pages/Cryptocurrencies/Chains"
 import CryptoTreasuries from "../Pages/Cryptocurrencies/CryptoTreasuries"
 import MarketCap from "../Pages/Cryptocurrencies/MarketCap"
 import CoinDetail from "../Pages/Cryptocurrencies/CoinDetail"
+import HighlightsDetail from "../Pages/Cryptocurrencies/HighlightsDetail"
 import CryptoExchanges from "../Pages/Exchages/CryptoExchanges"
 import DxE from "../Pages/Exchages/DxE"
 import Derivatives from "../Pages/Exchages/Derivatives"
@@ -37,6 +38,8 @@ const AppRouter = () => {
                 <Route path="/cryptocurrencies/chains" element={<Chains />} />
                 <Route path="/cryptocurrencies/cryptotreasuries" element={<CryptoTreasuries />} />
                 <Route path="/cryptocurrencies/marketcap/:coinId" element={<CoinDetail />} />
+                <Route path="/cryptocurrencies/marketcap/:coinId" element={<CoinDetail />} />
+                <Route path="/cryptocurrencies/highlights/:type" element={<HighlightsDetail />} />
                 <Route path="/" element={<MarketCap />} />
 
 

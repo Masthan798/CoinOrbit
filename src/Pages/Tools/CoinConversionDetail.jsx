@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowRightLeft, Star, Share2, Bell, Info } from 'lucide-react';
 import { coingeckoFetch } from '../../api/coingeckoClient';
 import CoinDetailGraph from '../../Components/Graphs/CoinDetailGraph';
+import Breadcrumbs from '../../Components/common/Breadcrumbs';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -132,13 +133,13 @@ const CoinConversionDetail = () => {
             className="w-full min-h-full p-4 md:p-6 flex flex-col gap-6 bg-main text-white pb-20"
         >
             {/* Breadcrumbs */}
-            <div className='flex items-center gap-2 text-xs md:text-sm text-muted'>
-                <span className='cursor-pointer hover:text-white transition-colors' onClick={() => navigate('/tools/converter')}>Cryptocurrencies</span>
-                <span>/</span>
-                <span className='cursor-pointer hover:text-white transition-colors' onClick={() => navigate(`/tools/converter/${coinId}/${currencyCode}`)}>{coinData.name}</span>
-                <span>/</span>
-                <span className='text-white font-semibold'>{coinData.symbol.toUpperCase()} / {currencyCode.toUpperCase()}</span>
-            </div>
+            <Breadcrumbs
+                crumbs={[
+                    { label: 'Tools', path: '/' },
+                    { label: 'Converter', path: '/tools/converter' },
+                    { label: `${coinData.name} (${coinData.symbol.toUpperCase()} / ${currencyCode.toUpperCase()})` }
+                ]}
+            />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
