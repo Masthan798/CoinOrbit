@@ -78,10 +78,24 @@ const MarketCap = () => {
           });
         }
 
-        // 3. Fetch Trending Coins
+        // 3. Fetch Trending Coins with Prices
         const trendingRes = await fetch('https://api.coingecko.com/api/v3/search/trending', options);
         const trendingJson = await trendingRes.json();
-        if (trendingJson.coins) setTrendingData(trendingJson.coins.slice(0, 3));
+        if (trendingJson.coins) {
+          const topTrending = trendingJson.coins.slice(0, 3);
+          const ids = topTrending.map(c => c.item.id).join(',');
+
+          // Fetch simple prices and 24h change for these trending coins
+          const priceRes = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`, options);
+          const priceJson = await priceRes.json();
+
+          const trendingWithPrices = topTrending.map(coin => ({
+            ...coin,
+            price: priceJson[coin.item.id]?.usd,
+            change: priceJson[coin.item.id]?.usd_24h_change
+          }));
+          setTrendingData(trendingWithPrices);
+        }
 
         // 4. Fetch Top Gainers (from top 100 markets)
         const marketsRes = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=24h', options);
@@ -89,9 +103,6 @@ const MarketCap = () => {
         if (Array.isArray(marketsJson)) {
           const sorted = [...marketsJson].sort((a, b) => b.price_change_percentage_24h - a.price_change_percentage_24h);
           setGainersData(sorted.slice(0, 3));
-
-          // Also set highlights for any legacy logic if needed, or remove later
-          setHighlights(marketsJson);
         }
 
       } catch (err) {
@@ -184,9 +195,14 @@ const MarketCap = () => {
     localStorage.setItem('marketCapHighlights', JSON.stringify(newState));
   }
 
-  const formatCurrency = (val) => {
-    if (!val) return 'N/A';
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(val);
+  const formatCurrency = (val, maximumFractionDigits = 0) => {
+    if (val === undefined || val === null) return '...';
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: maximumFractionDigits
+    }).format(val);
   };
 
   const handleSort = (key) => {
@@ -340,19 +356,30 @@ const MarketCap = () => {
                           <Flame className="text-orange-500" size={20} />
                           <h3 className="text-lg font-bold text-white">Trending</h3>
                         </div>
-                        <Link to="/trending" className="text-xs text-gray-400 hover:text-white flex items-center gap-1 transition-colors">
+                        <Link to="/highlights/trending" className="text-xs text-gray-400 hover:text-white flex items-center gap-1 transition-colors">
                           View More <ArrowRight size={12} />
                         </Link>
                       </div>
 
-                      <div className="flex flex-col flex-1 justify-center">
+                      <div className="flex flex-col flex-1 justify-center divide-y divide-gray-800">
                         {trendingData.map((coin) => (
-                          <div key={coin.item.id} className="flex items-center justify-between p-2 border-b border-gray-800 last:border-0 hover:bg-card transition-colors cursor-pointer rounded-lg">
+                          <div
+                            key={coin.item.id}
+                            onClick={() => navigate(`/marketcap/${coin.item.id}`)}
+                            className="flex items-center justify-between p-2 hover:bg-white/5 transition-colors cursor-pointer rounded-lg px-2 group/item"
+                          >
                             <div className="flex items-center gap-3">
                               <img src={coin.item.thumb} alt={coin.item.name} className="w-5 h-5" />
                               <span className="text-sm font-medium text-gray-300">{coin.item.symbol}</span>
                             </div>
-                            <span className="text-xs font-bold text-gray-300">#{coin.item.market_cap_rank}</span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-bold text-white">{formatCurrency(coin.price, 2)}</span>
+                              {coin.change !== undefined && (
+                                <span className={`text-[10px] font-bold ${coin.change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                  {coin.change >= 0 ? '+' : ''}{coin.change.toFixed(1)}%
+                                </span>
+                              )}
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -365,14 +392,18 @@ const MarketCap = () => {
                           <Rocket className="text-green-500" size={20} />
                           <h3 className="text-lg font-bold text-white">Top Gainers</h3>
                         </div>
-                        <Link to="/gainers-losers" className="text-xs text-gray-400 hover:text-white flex items-center gap-1 transition-colors">
+                        <Link to="/highlights/gainers-losers" className="text-xs text-gray-400 hover:text-white flex items-center gap-1 transition-colors">
                           View More <ArrowRight size={12} />
                         </Link>
                       </div>
 
-                      <div className="flex flex-col flex-1 justify-center">
+                      <div className="flex flex-col flex-1 justify-center divide-y divide-gray-800">
                         {gainersData.map((coin) => (
-                          <div key={coin.id} className="flex items-center justify-between p-2 border-b border-gray-800 last:border-0 hover:bg-card transition-colors cursor-pointer rounded-lg">
+                          <div
+                            key={coin.id}
+                            onClick={() => navigate(`/marketcap/${coin.id}`)}
+                            className="flex items-center justify-between p-2 hover:bg-white/5 transition-colors cursor-pointer rounded-lg px-2 group/item"
+                          >
                             <div className="flex items-center gap-3">
                               <img src={coin.image} alt={coin.name} className="w-5 h-5 rounded-full" />
                               <span className="text-sm font-medium text-gray-300">{coin.symbol.toUpperCase()}</span>
@@ -468,7 +499,7 @@ const MarketCap = () => {
               getSortedCoins().map((coin, index) => (
                 <tr
                   key={coin.id || index}
-                  onClick={() => navigate(`/cryptocurrencies/marketcap/${coin.id}`)}
+                  onClick={() => navigate(`/marketcap/${coin.id}`)}
                   className='border-b border-gray-800 hover:bg-card transition-colors cursor-pointer group'
                 >
                   <td className='py-4 px-2 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px]'>

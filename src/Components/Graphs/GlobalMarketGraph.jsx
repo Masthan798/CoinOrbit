@@ -82,7 +82,7 @@ const GlobalMarketGraph = ({ apiKey }) => {
     };
 
     return (
-        <div className="w-full h-full flex flex-col gap-6 p-6 bg-[#0d0e12] rounded-3xl border border-white/5 relative overflow-hidden">
+        <div className="w-full h-full flex flex-col gap-4 sm:gap-6 p-2 sm:p-6 bg-[#0d0e12] rounded-3xl border border-white/5 relative overflow-hidden">
             {/* Header & Controls */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/5 pb-4">
                 <div>

@@ -205,7 +205,7 @@ const Categories = () => {
         <Breadcrumbs
           crumbs={[
             { label: 'Cryptocurrencies', path: '/' },
-            { label: 'Highlights' }
+            { label: 'Highlights', path: '/highlights' }
           ]}
         />
       </div>
@@ -255,39 +255,39 @@ const Categories = () => {
                   title="Trending Coins"
                   icon={<Flame size={18} className="text-orange-500" />}
                   data={trendingCoins.slice(0, 10)}
-                  moreLink="/cryptocurrencies/highlights/trending"
+                  moreLink="/highlights/trending"
                 />
                 <HighlightCard
                   title="Top Gainers"
                   icon={<TrendingUp size={18} className="text-green-500" />}
                   data={topGainers}
-                  moreLink="/cryptocurrencies/highlights/top-gainers"
+                  moreLink="/highlights/top-gainers"
                 />
                 <HighlightCard
                   title="Top Losers"
                   icon={<TrendingDown size={18} className="text-red-500" />}
                   data={topLosers}
-                  moreLink="/cryptocurrencies/highlights/top-losers"
+                  moreLink="/highlights/top-losers"
                 />
                 <HighlightCard
                   title="New Coins"
                   icon={<Star size={18} className="text-yellow-500" />}
                   // Mocking 'New Coins' using trending data for now as strictly new coins api is cleaner in paid plans
                   data={trendingCoins.slice(5, 15)}
-                  moreLink="/cryptocurrencies/highlights/new-coins"
+                  moreLink="/highlights/new-coins"
                 />
                 <HighlightCard
                   title="Highest Volume"
                   icon={<Zap size={18} className="text-blue-500" />}
                   type="volume"
                   data={highestVolume}
-                  moreLink="/cryptocurrencies/highlights/highest-volume"
+                  moreLink="/highlights/highest-volume"
                 />
                 <HighlightCard
                   title="Price Change since ATH"
                   icon={<Rocket size={18} className="text-purple-500" />}
                   data={athChange}
-                  moreLink="/cryptocurrencies/highlights/ath-change"
+                  moreLink="/highlights/ath-change"
                 />
               </>
             )}

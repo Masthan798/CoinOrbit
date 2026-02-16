@@ -138,7 +138,7 @@ const CoinDetail = () => {
             <Breadcrumbs
                 crumbs={[
                     { label: 'Cryptocurrencies', path: '/' },
-                    { label: 'Market Cap', path: '/cryptocurrencies/marketcap' },
+                    { label: 'Market Cap', path: '/marketcap' },
                     { label: coin.name }
                 ]}
             />

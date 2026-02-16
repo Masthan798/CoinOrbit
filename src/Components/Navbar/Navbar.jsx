@@ -34,7 +34,7 @@ const Navbar = () => {
     const isActive = (path) => {
         if (!path) return false;
         if (path === "/") {
-            return location.pathname === "/" || location.pathname.startsWith("/cryptocurrencies/marketcap");
+            return location.pathname === "/" || location.pathname.startsWith("/marketcap");
         }
         return location.pathname === path || (location.pathname.startsWith(path) && path !== "/");
     };
@@ -79,39 +79,39 @@ const Navbar = () => {
             type: "Cryptocurrencies",
             items: [
                 { icon: <Coins size={20} />, label: "By Market Cap", path: "/" },
-                { icon: <Layers size={20} />, label: "Categories", path: "/cryptocurrencies/categories" },
-                { icon: <Link size={20} />, label: "Chains", path: "/cryptocurrencies/chains" },
-                { icon: <Landmark size={20} />, label: "Crypto Treasuries", path: "/cryptocurrencies/cryptotreasuries" },
+                { icon: <Layers size={20} />, label: "Categories", path: "/categories" },
+                { icon: <Link size={20} />, label: "Chains", path: "/chains" },
+                { icon: <Landmark size={20} />, label: "Crypto Treasuries", path: "/cryptotreasuries" },
             ]
 
         },
         {
             type: "Exchanges",
             items: [
-                { icon: <ArrowLeftRight size={20} />, label: "Crypto Exchanges", path: "/exchanges/cryptoexchanges" },
-                { icon: <Cpu size={20} />, label: "Decentralized Exchanges", path: "/exchanges/decentrilizedexchages" },
-                { icon: <Percent size={20} />, label: "Derivatives", path: "/exchanges/derivatives" },
-                { icon: <LineChart size={20} />, label: "Perp DEXs", path: "/exchanges/perpdexs" },
+                { icon: <ArrowLeftRight size={20} />, label: "Crypto Exchanges", path: "/exchanges" },
+                { icon: <Cpu size={20} />, label: "Decentralized Exchanges", path: "/dex" },
+                { icon: <Percent size={20} />, label: "Derivatives", path: "/derivatives" },
+                { icon: <LineChart size={20} />, label: "Perp DEXs", path: "/perpdexs" },
             ]
 
         },
         {
             type: "NFT",
             items: [
-                { icon: <Tag size={20} />, label: "NFT Floor Price", path: "/nft/nftfloorprice" },
-                { icon: <Image size={20} />, label: "NFT Related Coins", path: "/nft/nftrelatedcoins" },
-                { icon: <Eye size={20} />, label: "NFT Watchlist", path: "/nft/nftwatchlist" },
-                { icon: <Globe size={20} />, label: "NFT Global Chart", path: "/nft/nftglobalchart" },
+                { icon: <Tag size={20} />, label: "NFT Floor Price", path: "/nft-floor" },
+                { icon: <Image size={20} />, label: "NFT Related Coins", path: "/nft-coins" },
+                { icon: <Eye size={20} />, label: "NFT Watchlist", path: "/nft-watchlist" },
+                { icon: <Globe size={20} />, label: "NFT Global Chart", path: "/nft-charts" },
             ]
 
         },
         {
             type: "TOOLS",
             items: [
-                { icon: <List size={20} />, label: "All Coins", path: "/tools/allcoins" },
-                { icon: <Calculator size={20} />, label: "Converter", path: "/tools/converter" },
-                { icon: <Scale size={20} />, label: "Compare Coins and NFT", path: "/tools/comparecoins" },
-                { icon: <PieChart size={20} />, label: "Global Chart", path: "/tools/globalchart" },
+                { icon: <List size={20} />, label: "All Coins", path: "/allcoins" },
+                { icon: <Calculator size={20} />, label: "Converter", path: "/converter" },
+                { icon: <Scale size={20} />, label: "Compare Coins and NFT", path: "/compare" },
+                { icon: <PieChart size={20} />, label: "Global Chart", path: "/global-charts" },
             ]
 
         },
@@ -123,154 +123,247 @@ const Navbar = () => {
         { icon: <HelpCircle size={20} />, label: "Help & Support", path: "/support" },
     ];
 
-    return (
-        <motion.div
-            initial={false}
-            animate={isCollapsed ? "collapsed" : "expanded"}
-            variants={sidebarVariants}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="flex flex-col bg-card border-r border-soft h-screen sticky top-0"
-        >
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-            {/* Header Row */}
-            <div className="p-4 flex items-center justify-between overflow-hidden">
-                <AnimatePresence mode="wait">
-                    {!isCollapsed && (
-                        <motion.div
-                            key="logo"
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -20 }}
-                            transition={{ duration: 0.2 }}
-                            className="flex-shrink-0"
-                        >
-                            <svg width="180" height="40" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-                                <text x="0" y="30" fontSize="28" fontWeight="700" fill="#FFFFFF">CoinOrbit</text>
-                                <text x="0" y="50" fontSize="10" fontWeight="400" fill="#A1A1A1" letterSpacing="0.05em">Coin Analysis Platform</text>
-                            </svg>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+    // ... existing isActive, handleMouseEnter, handleMouseLeave, variants, navItems, bottomNavItems ...
+
+    const mobileMenuVariants = {
+        closed: { x: "-100%", transition: { type: "spring", stiffness: 300, damping: 30 } },
+        open: { x: 0, transition: { type: "spring", stiffness: 300, damping: 30 } }
+    };
+
+    return (
+        <>
+            {/* Mobile Top Navbar */}
+            <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-card border-b border-soft z-[100] flex items-center justify-between px-4">
+                <div className="flex items-center gap-2" onClick={() => navigate("/")}>
+                    <svg width="140" height="30" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+                        <text x="0" y="40" fontSize="32" fontWeight="700" fill="#FFFFFF">CoinOrbit</text>
+                    </svg>
+                </div>
                 <button
-                    onClick={() => setIsCollapsed(!isCollapsed)}
-                    className={`p-2 rounded-lg hover-soft text-muted hover:text-white transition-colors flex-shrink-0 ${isCollapsed ? 'mx-auto' : ''}`}
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    className="p-2 text-muted hover:text-white transition-colors"
                 >
-                    {isCollapsed ? <PanelLeftOpen size={22} /> : <PanelLeftClose size={22} />}
+                    {isMobileMenuOpen ? <PanelLeftClose size={24} /> : <PanelLeftOpen size={24} />}
                 </button>
             </div>
 
-            {/* Navigation Items */}
-            <nav className="flex-1 px-3 py-4 space-y-2 overflow-y-auto no-scrollbar">
-                {navItems.map((category, index) => (
-                    <div key={index} className="mb-4">
-                        <div className={`flex items-center justify-center gap-2 mb-2 ${isCollapsed ? 'px-0' : 'px-2'}`}>
-                            <span className="w-full h-[1px] bg-white/10"></span>
-                            <AnimatePresence>
-                                {!isCollapsed && (
-                                    <motion.p
-                                        variants={categoryVariants}
-                                        initial="collapsed"
-                                        animate="expanded"
-                                        exit="collapsed"
-                                        className="text-[10px] uppercase tracking-wider text-gray-500 font-medium whitespace-nowrap"
-                                    >
-                                        {category.type}
-                                    </motion.p>
-                                )}
-                            </AnimatePresence>
-                            <span className="w-full h-[1px] bg-white/10"></span>
-                        </div>
-                        <div className="space-y-1">
-                            {category.items.map((item, itemIndex) => (
-                                <div key={itemIndex} className="relative group">
-                                    <button
-                                        onClick={() => item.path && navigate(item.path)}
-                                        onMouseEnter={(e) => handleMouseEnter(e, item.label)}
-                                        onMouseLeave={handleMouseLeave}
-                                        className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all hover-soft ${isActive(item.path) ? 'text-white bg-white/10' : 'text-muted hover:text-white'} ${isCollapsed ? 'justify-center mx-auto' : ''}`}
-                                    >
-                                        <motion.span
-                                            variants={itemVariants}
-                                            className={`flex-shrink-0 flex items-center justify-center w-6 transition-colors duration-200 ${isActive(item.path) ? 'text-white' : 'group-hover:text-white'}`}
+            {/* Mobile Menu Overlay */}
+            <AnimatePresence>
+                {isMobileMenuOpen && (
+                    <>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[110]"
+                        />
+                        <motion.div
+                            initial="closed"
+                            animate="open"
+                            exit="closed"
+                            variants={mobileMenuVariants}
+                            className="lg:hidden fixed top-0 left-0 bottom-0 w-[280px] bg-card border-r border-soft z-[120] flex flex-col pt-4 shadow-2xl"
+                        >
+                            <div className="px-6 mb-6 flex items-center justify-between">
+                                <span className="text-xl font-bold bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent">Menu</span>
+                                <button onClick={() => setIsMobileMenuOpen(false)} className="text-muted"><PanelLeftClose size={20} /></button>
+                            </div>
+
+                            <nav className="flex-1 px-4 overflow-y-auto no-scrollbar pb-8">
+                                {navItems.map((category, index) => (
+                                    <div key={index} className="mb-6">
+                                        <p className="px-4 text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-3">{category.type}</p>
+                                        <div className="space-y-1">
+                                            {category.items.map((item, itemIdx) => (
+                                                <button
+                                                    key={itemIdx}
+                                                    onClick={() => {
+                                                        item.path && navigate(item.path);
+                                                        setIsMobileMenuOpen(false);
+                                                    }}
+                                                    className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all ${isActive(item.path) ? 'bg-white/10 text-white' : 'text-muted'}`}
+                                                >
+                                                    {item.icon}
+                                                    <span className="font-medium text-sm">{item.label}</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                                <div className="mt-4 pt-4 border-t border-soft space-y-1">
+                                    {bottomNavItems.map((item, idx) => (
+                                        <button
+                                            key={idx}
+                                            onClick={() => {
+                                                item.path && navigate(item.path);
+                                                setIsMobileMenuOpen(false);
+                                            }}
+                                            className="w-full flex items-center gap-3 p-3 rounded-xl text-muted"
                                         >
                                             {item.icon}
-                                        </motion.span>
-                                        <AnimatePresence>
-                                            {!isCollapsed && (
-                                                <motion.span
-                                                    variants={contentVariants}
-                                                    initial="collapsed"
-                                                    animate="expanded"
-                                                    exit="collapsed"
-                                                    className="font-medium whitespace-nowrap text-sm"
-                                                >
-                                                    {item.label}
-                                                </motion.span>
-                                            )}
-                                        </AnimatePresence>
-                                    </button>
+                                            <span className="font-medium text-sm">{item.label}</span>
+                                        </button>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
-                    </div>
-                ))}
-            </nav>
+                            </nav>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
 
-            {/* Bottom Section */}
-            <div className="px-3 py-4 border-t border-soft space-y-2">
-                {bottomNavItems.map((item, index) => (
-                    <div key={index} className="relative group">
-                        <button
-                            onClick={() => item.path && navigate(item.path)}
-                            onMouseEnter={(e) => handleMouseEnter(e, item.label)}
-                            onMouseLeave={handleMouseLeave}
-                            className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all hover-soft ${isActive(item.path) ? 'text-white bg-white/10' : 'text-muted hover:text-white'} ${isCollapsed ? 'justify-center mx-auto' : ''}`}
-                        >
-                            <motion.span
-                                variants={itemVariants}
-                                className={`flex-shrink-0 flex items-center justify-center w-6 transition-colors duration-200 ${isActive(item.path) ? 'text-white' : 'group-hover:text-white'}`}
+            {/* Desktop Sidebar */}
+            <motion.div
+                initial={false}
+                animate={isCollapsed ? "collapsed" : "expanded"}
+                variants={sidebarVariants}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className="hidden lg:flex flex-col bg-card border-r border-soft h-screen sticky top-0"
+            >
+
+                {/* Header Row */}
+                <div className="p-4 flex items-center justify-between overflow-hidden">
+                    <AnimatePresence mode="wait">
+                        {!isCollapsed && (
+                            <motion.div
+                                key="logo"
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                transition={{ duration: 0.2 }}
+                                className="flex-shrink-0 cursor-pointer"
+                                onClick={() => navigate("/")}
                             >
-                                {item.icon}
-                            </motion.span>
-                            <AnimatePresence>
-                                {!isCollapsed && (
-                                    <motion.span
-                                        variants={contentVariants}
-                                        initial="collapsed"
-                                        animate="expanded"
-                                        exit="collapsed"
-                                        className="font-medium whitespace-nowrap text-sm"
-                                    >
-                                        {item.label}
-                                    </motion.span>
-                                )}
-                            </AnimatePresence>
-                        </button>
-                    </div>
-                ))}
-            </div>
-
-            {/* Floating Tooltip with Portal */}
-            {isCollapsed && hoveredItem && createPortal(
-                <AnimatePresence>
-                    <motion.div
-                        key="tooltip"
-                        initial={{ opacity: 0, x: -10, y: "-50%" }}
-                        animate={{ opacity: 1, x: 0, y: "-50%" }}
-                        exit={{ opacity: 0, x: -10, y: "-50%" }}
-                        className="fixed px-3 py-2 bg-[#1a1a1a] text-white text-xs font-medium rounded-lg shadow-2xl border border-white/10 z-[99999] pointer-events-none whitespace-nowrap"
-                        style={{
-                            top: hoveredItem.top,
-                            left: hoveredItem.left,
-                        }}
+                                <svg width="180" height="40" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+                                    <text x="0" y="30" fontSize="28" fontWeight="700" fill="#FFFFFF">CoinOrbit</text>
+                                    <text x="0" y="50" fontSize="10" fontWeight="400" fill="#A1A1A1" letterSpacing="0.05em">Coin Analysis Platform</text>
+                                </svg>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                    <button
+                        onClick={() => setIsCollapsed(!isCollapsed)}
+                        className={`p-2 rounded-lg hover-soft text-muted hover:text-white transition-colors flex-shrink-0 ${isCollapsed ? 'mx-auto' : ''}`}
                     >
-                        {hoveredItem.label}
-                        <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 bg-[#1a1a1a] border-l border-b border-white/10 rotate-45" />
-                    </motion.div>
-                </AnimatePresence>,
-                document.body
-            )}
-        </motion.div >
+                        {isCollapsed ? <PanelLeftOpen size={22} /> : <PanelLeftClose size={22} />}
+                    </button>
+                </div>
+
+                {/* Navigation Items */}
+                <nav className="flex-1 px-3 py-4 space-y-2 overflow-y-auto no-scrollbar">
+                    {navItems.map((category, index) => (
+                        <div key={index} className="mb-4">
+                            <div className={`flex items-center justify-center gap-2 mb-2 ${isCollapsed ? 'px-0' : 'px-2'}`}>
+                                <span className="w-full h-[1px] bg-white/10"></span>
+                                <AnimatePresence>
+                                    {!isCollapsed && (
+                                        <motion.p
+                                            variants={categoryVariants}
+                                            initial="collapsed"
+                                            animate="expanded"
+                                            exit="collapsed"
+                                            className="text-[10px] uppercase tracking-wider text-gray-500 font-medium whitespace-nowrap"
+                                        >
+                                            {category.type}
+                                        </motion.p>
+                                    )}
+                                </AnimatePresence>
+                                <span className="w-full h-[1px] bg-white/10"></span>
+                            </div>
+                            <div className="space-y-1">
+                                {category.items.map((item, itemIndex) => (
+                                    <div key={itemIndex} className="relative group">
+                                        <button
+                                            onClick={() => item.path && navigate(item.path)}
+                                            onMouseEnter={(e) => handleMouseEnter(e, item.label)}
+                                            onMouseLeave={handleMouseLeave}
+                                            className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all hover-soft ${isActive(item.path) ? 'text-white bg-white/10' : 'text-muted hover:text-white'} ${isCollapsed ? 'justify-center mx-auto' : ''}`}
+                                        >
+                                            <motion.span
+                                                variants={itemVariants}
+                                                className={`flex-shrink-0 flex items-center justify-center w-6 transition-colors duration-200 ${isActive(item.path) ? 'text-white' : 'group-hover:text-white'}`}
+                                            >
+                                                {item.icon}
+                                            </motion.span>
+                                            <AnimatePresence>
+                                                {!isCollapsed && (
+                                                    <motion.span
+                                                        variants={contentVariants}
+                                                        initial="collapsed"
+                                                        animate="expanded"
+                                                        exit="collapsed"
+                                                        className="font-medium whitespace-nowrap text-sm"
+                                                    >
+                                                        {item.label}
+                                                    </motion.span>
+                                                )}
+                                            </AnimatePresence>
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </nav>
+
+                {/* Bottom Section */}
+                <div className="px-3 py-4 border-t border-soft space-y-2">
+                    {bottomNavItems.map((item, index) => (
+                        <div key={index} className="relative group">
+                            <button
+                                onClick={() => item.path && navigate(item.path)}
+                                onMouseEnter={(e) => handleMouseEnter(e, item.label)}
+                                onMouseLeave={handleMouseLeave}
+                                className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all hover-soft ${isActive(item.path) ? 'text-white bg-white/10' : 'text-muted hover:text-white'} ${isCollapsed ? 'justify-center mx-auto' : ''}`}
+                            >
+                                <motion.span
+                                    variants={itemVariants}
+                                    className={`flex-shrink-0 flex items-center justify-center w-6 transition-colors duration-200 ${isActive(item.path) ? 'text-white' : 'group-hover:text-white'}`}
+                                >
+                                    {item.icon}
+                                </motion.span>
+                                <AnimatePresence>
+                                    {!isCollapsed && (
+                                        <motion.span
+                                            variants={contentVariants}
+                                            initial="collapsed"
+                                            animate="expanded"
+                                            exit="collapsed"
+                                            className="font-medium whitespace-nowrap text-sm"
+                                        >
+                                            {item.label}
+                                        </motion.span>
+                                    )}
+                                </AnimatePresence>
+                            </button>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Floating Tooltip with Portal */}
+                {isCollapsed && hoveredItem && createPortal(
+                    <AnimatePresence>
+                        <motion.div
+                            key="tooltip"
+                            initial={{ opacity: 0, x: -10, y: "-50%" }}
+                            animate={{ opacity: 1, x: 0, y: "-50%" }}
+                            exit={{ opacity: 0, x: -10, y: "-50%" }}
+                            className="fixed px-3 py-2 bg-[#1a1a1a] text-white text-xs font-medium rounded-lg shadow-2xl border border-white/10 z-[99999] pointer-events-none whitespace-nowrap"
+                            style={{
+                                top: hoveredItem.top,
+                                left: hoveredItem.left,
+                            }}
+                        >
+                            {hoveredItem.label}
+                            <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 bg-[#1a1a1a] border-l border-b border-white/10 rotate-45" />
+                        </motion.div>
+                    </AnimatePresence>,
+                    document.body
+                )}
+            </motion.div >
+        </>
     );
 };
 
