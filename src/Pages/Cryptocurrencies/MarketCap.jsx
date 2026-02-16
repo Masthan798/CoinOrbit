@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom';
 import { LineChart, Line, ResponsiveContainer, AreaChart, Area } from 'recharts';
-import { ArrowLeftIcon, ArrowRightIcon, ChevronDown, ChevronUp, Star, Flame, Rocket, ArrowRight } from 'lucide-react';
+import { ArrowLeftIcon, ArrowRightIcon, ChevronDown, ChevronUp, Star, Flame, Rocket, ArrowRight, ArrowUpRight } from 'lucide-react';
 import { coingeckoFetch } from '../../api/coingeckoClient';
 import Pagination from '../../Components/Pagination/Pagination';
 import { motion, AnimatePresence } from 'framer-motion';
 import Toggle from '../../Components/Toggles/Toggle';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import CardSkeleton from '../../Components/Loadings/CardSkeleton';
+import Breadcrumbs from '../../Components/common/Breadcrumbs';
 
 
 const data = [
@@ -30,6 +31,7 @@ const MarketCap = () => {
   const [perPage, setPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [toggle, setToggle] = useState(() => {
     const saved = localStorage.getItem('marketCapHighlights');
     return saved !== null ? JSON.parse(saved) : true; // Default to true if not saved
@@ -187,6 +189,37 @@ const MarketCap = () => {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(val);
   };
 
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getSortedCoins = () => {
+    if (!sortConfig.key) return Allcoins;
+
+    return [...Allcoins].sort((a, b) => {
+      let aVal = a[sortConfig.key];
+      let bVal = b[sortConfig.key];
+
+      if (typeof aVal === 'string') aVal = aVal.toLowerCase();
+      if (typeof bVal === 'string') bVal = bVal.toLowerCase();
+
+      if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+  };
+
+  const SortIcon = ({ columnKey }) => {
+    if (sortConfig.key !== columnKey) return <ArrowUpRight size={14} className="opacity-20 flex-shrink-0" />;
+    return sortConfig.direction === 'asc'
+      ? <ChevronUp size={14} className="text-blue-500 flex-shrink-0" />
+      : <ChevronDown size={14} className="text-blue-500 flex-shrink-0" />;
+  };
+
   // Improved Sparkline Logic for Mini Charts (Internal Component)
   const Sparkline = ({ data, color, height = 40 }) => (
     <div style={{ height }} className="w-24">
@@ -215,8 +248,17 @@ const MarketCap = () => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className='w-full flex flex-col justify-start items-center bg-main min-h-full p-4 pb-8 rounded-xl gap-12'
+      className='w-full flex flex-col justify-start items-center bg-main min-h-full p-4 pb-8 rounded-xl gap-8'
     >
+      <div className='w-full'>
+        <Breadcrumbs
+          crumbs={[
+            { label: 'Cryptocurrencies', path: '/' },
+            { label: 'Market Cap' }
+          ]}
+        />
+      </div>
+
       <motion.div variants={itemVariants} className='w-full flex items-center justify-between'>
 
         <div className='flex flex-col gap-1'>
@@ -360,14 +402,30 @@ const MarketCap = () => {
         <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
           <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
             <tr>
-              <th className='py-4 px-2 sticky left-0 bg-main z-30 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px]'>#</th>
-              <th className='py-4 px-2 sticky left-[60px] md:left-[80px] bg-main z-30 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px]'>Coin</th>
-              <th className='py-4 px-2 w-[10%]'>Price</th>
-              <th className='py-4 px-2 w-[8%]'>1h</th>
-              <th className='py-4 px-2 w-[8%]'>24h</th>
-              <th className='py-4 px-2 w-[8%]'>7d</th>
-              <th className='py-4 px-2 w-[15%]'>24h Volume</th>
-              <th className='py-4 px-2 w-[15%]'>Market Cap</th>
+              <th className='py-4 px-2 sticky left-0 bg-main z-30 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('market_cap_rank')}>
+                <div className="flex items-center gap-1"># <SortIcon columnKey="market_cap_rank" /></div>
+              </th>
+              <th className='py-4 px-2 sticky left-[60px] md:left-[80px] bg-main z-30 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('name')}>
+                <div className="flex items-center gap-1">Coin <SortIcon columnKey="name" /></div>
+              </th>
+              <th className='py-4 px-2 w-[10%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('current_price')}>
+                <div className="flex items-center gap-1">Price <SortIcon columnKey="current_price" /></div>
+              </th>
+              <th className='py-4 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_1h_in_currency')}>
+                <div className="flex items-center gap-1">1h <SortIcon columnKey="price_change_percentage_1h_in_currency" /></div>
+              </th>
+              <th className='py-4 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_24h')}>
+                <div className="flex items-center gap-1">24h <SortIcon columnKey="price_change_percentage_24h" /></div>
+              </th>
+              <th className='py-4 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_7d_in_currency')}>
+                <div className="flex items-center gap-1">7d <SortIcon columnKey="price_change_percentage_7d_in_currency" /></div>
+              </th>
+              <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('total_volume')}>
+                <div className="flex items-center gap-1">24h Volume <SortIcon columnKey="total_volume" /></div>
+              </th>
+              <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('market_cap')}>
+                <div className="flex items-center gap-1">Market Cap <SortIcon columnKey="market_cap" /></div>
+              </th>
               <th className='py-4 px-2 w-[15%]'>Last 7 Days</th>
             </tr>
           </thead>
@@ -407,7 +465,7 @@ const MarketCap = () => {
                 <td colSpan="9" className="py-20 text-center text-muted">No coins found for this page.</td>
               </tr>
             ) : (
-              Allcoins.map((coin, index) => (
+              getSortedCoins().map((coin, index) => (
                 <tr
                   key={coin.id || index}
                   onClick={() => navigate(`/cryptocurrencies/marketcap/${coin.id}`)}

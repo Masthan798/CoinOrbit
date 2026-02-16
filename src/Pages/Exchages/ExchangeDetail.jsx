@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { coingeckoFetch } from '../../api/coingeckoClient';
 import { motion } from 'framer-motion'
-import { Info, ArrowRight as ArrowRightIcon } from 'lucide-react';
+import { Info, ArrowRight as ArrowRightIcon, ChevronUp, ChevronDown, ArrowUpRight } from 'lucide-react';
 import Pagination from '../../Components/Pagination/Pagination';
 import ExchangeDetailsGraph from '../../Components/Graphs/ExchangeDetailsGraph';
 import ExchangeStats from '../../Components/Graphs/ExchangeStats';
@@ -12,6 +12,7 @@ import ExchangeTrustStats from '../../Components/Exchanges/ExchangeTrustStats';
 import { ResponsiveContainer, AreaChart, Area } from 'recharts';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import CardSkeleton from '../../Components/Loadings/CardSkeleton';
+import Breadcrumbs from '../../Components/common/Breadcrumbs';
 
 
 
@@ -78,6 +79,7 @@ const ExchangeDetail = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [perPage, setPerPage] = useState(50);
     const [volumeSparkline, setVolumeSparkline] = useState(null);
+    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
 
     const tabs = ['Spot', 'Perpetuals', 'Features'];
@@ -227,6 +229,46 @@ const ExchangeDetail = () => {
         fetchExchangeData();
     }, [exchangeId, currentPage, perPage, activeTab])
 
+    const handleSort = (key) => {
+        let direction = 'asc';
+        if (sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+    };
+
+    const getSortedExhangeData = () => {
+        if (!sortConfig.key) return exhangeData;
+
+        return [...exhangeData].sort((a, b) => {
+            let aVal = a[sortConfig.key];
+            let bVal = b[sortConfig.key];
+
+            // Special handling for nested properties
+            if (sortConfig.key === 'price') aVal = a.converted_last?.usd;
+            if (sortConfig.key === 'price') bVal = b.converted_last?.usd;
+            if (sortConfig.key === 'volume') aVal = a.converted_volume?.usd;
+            if (sortConfig.key === 'volume') bVal = b.converted_volume?.usd;
+
+            // For nested bid_ask_spread_percentage it's already top level in ticker object usually
+            // but let's be safe if it's nested in some versions
+
+            if (typeof aVal === 'string') aVal = aVal.toLowerCase();
+            if (typeof bVal === 'string') bVal = bVal.toLowerCase();
+
+            if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+            if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+    };
+
+    const SortIcon = ({ columnKey }) => {
+        if (sortConfig.key !== columnKey) return <ArrowUpRight size={14} className="opacity-20 flex-shrink-0" />;
+        return sortConfig.direction === 'asc'
+            ? <ChevronUp size={14} className="text-blue-500 flex-shrink-0" />
+            : <ChevronDown size={14} className="text-blue-500 flex-shrink-0" />;
+    };
+
 
     if (loading) {
         return (
@@ -278,13 +320,14 @@ const ExchangeDetail = () => {
 
             <div className="flex flex-col gap-8">
 
-                <div className='flex items-center gap-2 text-sm'>
-                    <span className='text-muted cursor-pointer' onClick={() => navigate('/')}>Exchanges</span>
-                    <span className='text-muted'>/</span>
-                    <span className='text-muted cursor-pointer' onClick={() => navigate('/exchanges/cryptoexchanges')}>cryptoexchanges</span>
-                    <span className='text-muted'>/</span>
-                    <span className='text-white font-semibold'>{exchange.name}</span>
-                </div>
+                {/* Breadcrumbs */}
+                <Breadcrumbs
+                    crumbs={[
+                        { label: 'Exchanges', path: '/' },
+                        { label: 'Spot', path: '/exchanges/cryptoexchanges' },
+                        { label: exchange.name }
+                    ]}
+                />
 
                 {/* Exchange Header */}
                 <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-4 max-w-full overflow-hidden'>
@@ -417,22 +460,38 @@ const ExchangeDetail = () => {
                         <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
                             <tr>
                                 <th className='py-4 px-2 sticky left-0 bg-main z-30 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px]'>#</th>
-                                <th className='py-4 px-2 sticky left-[60px] md:left-[80px] bg-main z-30 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px]'>Coin</th>
+                                <th className='py-4 px-2 sticky left-[60px] md:left-[80px] bg-main z-30 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('base')}>
+                                    <div className="flex items-center gap-1">Coin <SortIcon columnKey="base" /></div>
+                                </th>
                                 <th className='py-4 px-2 w-[10%]'>Pair</th>
-                                <th className='py-4 px-2 w-[8%]'>Price</th>
-                                <th className='py-4 px-2 w-[8%]'>spread</th>
+                                <th className='py-4 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price')}>
+                                    <div className="flex items-center gap-1">Price <SortIcon columnKey="price" /></div>
+                                </th>
+                                <th className='py-4 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('bid_ask_spread_percentage')}>
+                                    <div className="flex items-center gap-1">spread <SortIcon columnKey="bid_ask_spread_percentage" /></div>
+                                </th>
                                 {activeTab === 'Perpetuals' ? (
                                     <>
-                                        <th className='py-4 px-2 w-[15%]'>Open Interest (USD)</th>
-                                        <th className='py-4 px-2 w-[15%]'>Funding Rate</th>
+                                        <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('open_interest_usd')}>
+                                            <div className="flex items-center gap-1">Open Interest (USD) <SortIcon columnKey="open_interest_usd" /></div>
+                                        </th>
+                                        <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('funding_rate')}>
+                                            <div className="flex items-center gap-1">Funding Rate <SortIcon columnKey="funding_rate" /></div>
+                                        </th>
                                     </>
                                 ) : (
                                     <>
-                                        <th className='py-4 px-2 w-[8%]'>+2% depth</th>
-                                        <th className='py-4 px-2 w-[15%]'>-2% depth</th>
+                                        <th className='py-4 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('cost_to_move_up_usd')}>
+                                            <div className="flex items-center gap-1">+2% depth <SortIcon columnKey="cost_to_move_up_usd" /></div>
+                                        </th>
+                                        <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('cost_to_move_down_usd')}>
+                                            <div className="flex items-center gap-1">-2% depth <SortIcon columnKey="cost_to_move_down_usd" /></div>
+                                        </th>
                                     </>
                                 )}
-                                <th className='py-4 px-2 w-[15%]'>24h Volume</th>
+                                <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('volume')}>
+                                    <div className="flex items-center gap-1">24h Volume <SortIcon columnKey="volume" /></div>
+                                </th>
                                 <th className='py-4 px-2 w-[15%]'>Volume %</th>
                                 <th className='py-4 px-2 w-[15%]'>Last Updated</th>
 
@@ -474,7 +533,7 @@ const ExchangeDetail = () => {
                                     <td colSpan="9" className="py-20 text-center text-muted">No coins found for this page.</td>
                                 </tr>
                             ) : (
-                                exhangeData.map((ticker, index) => (
+                                getSortedExhangeData().map((ticker, index) => (
                                     <tr
                                         key={`${ticker.base}-${ticker.target}-${index}`}
                                         onClick={() => navigate(`/cryptocurrencies/marketcap/${ticker.coin_id}`)}

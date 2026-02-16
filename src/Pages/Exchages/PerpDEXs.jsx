@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { PerpDerivativesData } from '../../services/AllcoinsData';
 import Pagination from '../../Components/Pagination/Pagination';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
+import Breadcrumbs from '../../Components/common/Breadcrumbs';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -60,7 +61,16 @@ const PerpDEXs = () => {
   );
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible" className='w-full flex flex-col justify-start items-center bg-main min-h-full p-4 pb-8 rounded-xl gap-12'>
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" className='w-full flex flex-col justify-start items-center bg-main min-h-full p-4 pb-8 rounded-xl gap-8'>
+
+      <div className='w-full'>
+        <Breadcrumbs
+          crumbs={[
+            { label: 'Exchanges', path: '/' },
+            { label: 'Perpetual DEXs' }
+          ]}
+        />
+      </div>
 
       <motion.div variants={itemVariants} className='w-full flex items-center justify-between'>
         <div className='flex flex-col gap-1'>

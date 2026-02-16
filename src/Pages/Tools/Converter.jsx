@@ -5,9 +5,11 @@ import { ArrowRightLeft } from 'lucide-react';
 import { coingeckoFetch } from '../../api/coingeckoClient';
 import CoinSelector from '../../Components/Inputs/CoinSelector';
 import CurrencySelector from '../../Components/Inputs/CurrencySelector';
+import Breadcrumbs from '../../Components/common/Breadcrumbs';
 
 const Converter = () => {
   const navigate = useNavigate();
+  // ... rest of state
   const [coinsList, setCoinsList] = useState([]);
   const [loadingList, setLoadingList] = useState(true);
 
@@ -166,11 +168,12 @@ const Converter = () => {
       <div className="w-full max-w-7xl flex flex-col gap-8">
 
 
-        <div className='flex items-center gap-2 text-sm'>
-          <span className='text-muted cursor-pointer'>Tools</span>
-          <span className='text-muted'>/</span>
-          <span className='text-white cursor-pointer'>Converter</span>
-        </div>
+        <Breadcrumbs
+          crumbs={[
+            { label: 'Tools', path: '/' },
+            { label: 'Converter' }
+          ]}
+        />
 
         {/* Header */}
         <div className="flex flex-col gap-2">

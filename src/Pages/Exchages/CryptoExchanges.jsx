@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion'
+import { ChevronUp, ChevronDown, ArrowUpRight } from 'lucide-react';
 import { ExchagesData } from '../../services/AllcoinsData';
 import Pagination from '../../Components/Pagination/Pagination';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
+import Breadcrumbs from '../../Components/common/Breadcrumbs';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -33,6 +35,7 @@ const CryptoExchanges = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
   useEffect(() => {
     const fetchExhageData = async () => {
@@ -58,8 +61,48 @@ const CryptoExchanges = () => {
     fetchExhageData();
   }, [currentPage, perPage])
 
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getSortedExchanges = () => {
+    if (!sortConfig.key) return exchageData;
+
+    return [...exchageData].sort((a, b) => {
+      let aVal = a[sortConfig.key];
+      let bVal = b[sortConfig.key];
+
+      if (typeof aVal === 'string') aVal = aVal.toLowerCase();
+      if (typeof bVal === 'string') bVal = bVal.toLowerCase();
+
+      if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+  };
+
+  const SortIcon = ({ columnKey }) => {
+    if (sortConfig.key !== columnKey) return <ArrowUpRight size={14} className="opacity-20 flex-shrink-0" />;
+    return sortConfig.direction === 'asc'
+      ? <ChevronUp size={14} className="text-blue-500 flex-shrink-0" />
+      : <ChevronDown size={14} className="text-blue-500 flex-shrink-0" />;
+  };
+
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible" className='w-full flex flex-col justify-start items-center bg-main min-h-full p-4 pb-8 rounded-xl gap-12'>
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" className='w-full flex flex-col justify-start items-center bg-main min-h-full p-4 pb-8 rounded-xl gap-8'>
+
+      <div className='w-full'>
+        <Breadcrumbs
+          crumbs={[
+            { label: 'Exchanges', path: '/' },
+            { label: 'Spot Exchanges' }
+          ]}
+        />
+      </div>
 
       <motion.div variants={itemVariants} className='w-full flex items-center justify-between'>
         <div className='flex flex-col gap-1'>
@@ -72,13 +115,25 @@ const CryptoExchanges = () => {
         <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
           <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
             <tr>
-              <th className='py-4 px-4 sticky left-0 bg-main z-30 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px] text-left'>#</th>
-              <th className='py-4 px-4 sticky left-[60px] md:left-[80px] bg-main z-30 w-[140px] min-w-[140px] md:w-[200px] md:min-w-[200px] text-left'>Exchange</th>
-              <th className='py-4 px-4 w-[120px] text-center'>Trust Score</th>
-              <th className='py-4 px-4 w-[140px] text-center'>Established</th>
-              <th className='py-4 px-4 w-[150px] text-left'>Country</th>
+              <th className='py-4 px-4 sticky left-0 bg-main z-30 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px] text-left transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('trust_score_rank')}>
+                <div className="flex items-center gap-1"># <SortIcon columnKey="trust_score_rank" /></div>
+              </th>
+              <th className='py-4 px-4 sticky left-[60px] md:left-[80px] bg-main z-30 w-[140px] min-w-[140px] md:w-[200px] md:min-w-[200px] text-left transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('name')}>
+                <div className="flex items-center gap-1">Exchange <SortIcon columnKey="name" /></div>
+              </th>
+              <th className='py-4 px-4 w-[120px] text-center transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('trust_score')}>
+                <div className="flex items-center justify-center gap-1">Trust Score <SortIcon columnKey="trust_score" /></div>
+              </th>
+              <th className='py-4 px-4 w-[140px] text-center transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('year_established')}>
+                <div className="flex items-center justify-center gap-1">Established <SortIcon columnKey="year_established" /></div>
+              </th>
+              <th className='py-4 px-4 w-[150px] text-left transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('country')}>
+                <div className="flex items-center gap-1">Country <SortIcon columnKey="country" /></div>
+              </th>
               <th className='py-4 px-4 w-[150px] text-left'>Trading Incentives</th>
-              <th className='py-4 px-4 w-[180px] text-right'>24h Volume</th>
+              <th className='py-4 px-4 w-[180px] text-right transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('trade_volume_24h_btc')}>
+                <div className="flex items-center justify-end gap-1">24h Volume <SortIcon columnKey="trade_volume_24h_btc" /></div>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -119,7 +174,7 @@ const CryptoExchanges = () => {
                 <td colSpan="7" className="py-20 text-center text-muted">No exchanges found.</td>
               </tr>
             ) : (
-              exchageData.map((coin, index) => (
+              getSortedExchanges().map((coin, index) => (
                 <tr
                   key={coin.trust_score_rank || index}
                   onClick={() => navigate(`/exchanges/cryptoexchanges/${coin.id}`)}

@@ -58,3 +58,7 @@ export function CoinNewsData(coinId) {
   
     return coingeckoFetch(`/coins/${coinId}/status_updates?per_page=5&page=1`);
 }
+
+export function TrendingCoinsData() {
+    return coingeckoFetch('/search/trending');
+}
