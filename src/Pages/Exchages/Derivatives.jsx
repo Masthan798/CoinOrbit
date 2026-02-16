@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { DerivativesData } from '../../services/AllcoinsData';
 import Pagination from '../../Components/Pagination/Pagination';
+import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -84,11 +85,8 @@ const Derivatives = () => {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="8" className="py-20 text-center">
-                  <div className="flex flex-col items-center gap-4">
-                    <div className="w-10 h-10 border-4 border-muted border-t-white rounded-full animate-spin"></div>
-                    <p className="text-muted animate-pulse">Loading derivatives data...</p>
-                  </div>
+                <td colSpan="8" className="p-0">
+                  <TableSkeleton rows={10} columns={8} />
                 </td>
               </tr>
             ) : error ? (
@@ -103,11 +101,11 @@ const Derivatives = () => {
               </tr>
             ) : (
               paginatedData.map((coin, index) => (
-                <tr key={coin.id || index} className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer'>
-                  <td className='py-4 px-4 sticky left-0 bg-main z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px]'>
+                <tr key={coin.id || index} className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer group'>
+                  <td className='py-4 px-4 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px]'>
                     <span>{(currentPage - 1) * perPage + index + 1}</span>
                   </td>
-                  <td className='py-4 px-4 sticky left-[60px] md:left-[80px] bg-main z-10 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px]'>
+                  <td className='py-4 px-4 sticky left-[60px] md:left-[80px] bg-main group-hover:bg-card transition-colors z-10 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px]'>
                     <div className='flex items-center gap-2'>
                       <img src={coin.image} alt={coin.name} className='w-6 h-6 rounded-full' />
                       <div className='flex flex-col gap-0.5'>

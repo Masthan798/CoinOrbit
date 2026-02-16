@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
-import { LineChart, Line, ResponsiveContainer } from 'recharts';
-import { ArrowLeftIcon, ArrowRightIcon, ChevronDown, ChevronUp, Star } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { LineChart, Line, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { ArrowLeftIcon, ArrowRightIcon, ChevronDown, ChevronUp, Star, Flame, Rocket, ArrowRight } from 'lucide-react';
 import { coingeckoFetch } from '../../api/coingeckoClient';
 import Pagination from '../../Components/Pagination/Pagination';
 import { motion, AnimatePresence } from 'framer-motion';
 import Toggle from '../../Components/Toggles/Toggle';
+import TableSkeleton from '../../Components/Loadings/TableSkeleton';
+import CardSkeleton from '../../Components/Loadings/CardSkeleton';
 
 
 const data = [
@@ -23,16 +25,29 @@ const MarketCap = () => {
   const TOTAL_COINS = 14000;
   const [favorites, setFavorites] = useState([]);
   const [Allcoins, SetallCoins] = useState([]);
-  const [highlights, setHighlights] = useState([]);
+  const [highlights, setHighlights] = useState([]); // Kept for now if other logic uses it, but main cards use new state
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [toggle, setToggle] = useState(() => {
     const saved = localStorage.getItem('marketCapHighlights');
-    return saved !== null ? JSON.parse(saved) : false;
+    return saved !== null ? JSON.parse(saved) : true; // Default to true if not saved
   });
   const [highlightsLoading, setHighlightsLoading] = useState(true);
+
+  // New State for Global Stats
+  const [globalData, setGlobalData] = useState(null);
+  const [sparklineData, setSparklineData] = useState(null);
+  const [trendingData, setTrendingData] = useState([]);
+  const [gainersData, setGainersData] = useState([]);
+
+  // User provided API Key (Consider moving to env var)
+  const API_KEY = 'CG-YuB3NdXKuFv58irhTuLNk2S9';
+  const options = {
+    method: 'GET',
+    headers: { 'x-cg-demo-api-key': API_KEY }
+  };
 
   const totalPages = Math.ceil(TOTAL_COINS / perPage);
 
@@ -43,20 +58,47 @@ const MarketCap = () => {
   };
 
   useEffect(() => {
-    const fetchHighlights = async () => {
+    const fetchGlobalStats = async () => {
       setHighlightsLoading(true);
       try {
-        const response = await coingeckoFetch(
-          `/coins/markets?vs_currency=inr&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=24h`
-        );
-        setHighlights(response);
-      } catch (error) {
-        console.error("Highlights Fetch Error:", error);
+        // 1. Fetch Global Data
+        const globalRes = await fetch('https://api.coingecko.com/api/v3/global', options);
+        const globalJson = await globalRes.json();
+        if (globalJson.data) setGlobalData(globalJson.data);
+
+        // 2. Fetch 7-Day Sparkline Data (BTC Proxy)
+        const sparkRes = await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?days=7&vs_currency=usd', options);
+        const sparkJson = await sparkRes.json();
+        if (sparkJson.market_caps) {
+          setSparklineData({
+            market_caps: sparkJson.market_caps.map(item => item[1]),
+            total_volumes: sparkJson.total_volumes.map(item => item[1]),
+          });
+        }
+
+        // 3. Fetch Trending Coins
+        const trendingRes = await fetch('https://api.coingecko.com/api/v3/search/trending', options);
+        const trendingJson = await trendingRes.json();
+        if (trendingJson.coins) setTrendingData(trendingJson.coins.slice(0, 3));
+
+        // 4. Fetch Top Gainers (from top 100 markets)
+        const marketsRes = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=24h', options);
+        const marketsJson = await marketsRes.json();
+        if (Array.isArray(marketsJson)) {
+          const sorted = [...marketsJson].sort((a, b) => b.price_change_percentage_24h - a.price_change_percentage_24h);
+          setGainersData(sorted.slice(0, 3));
+
+          // Also set highlights for any legacy logic if needed, or remove later
+          setHighlights(marketsJson);
+        }
+
+      } catch (err) {
+        console.error("Error fetching global stats:", err);
       } finally {
         setHighlightsLoading(false);
       }
     };
-    fetchHighlights();
+    fetchGlobalStats();
   }, []);
 
   useEffect(() => {
@@ -140,9 +182,33 @@ const MarketCap = () => {
     localStorage.setItem('marketCapHighlights', JSON.stringify(newState));
   }
 
+  const formatCurrency = (val) => {
+    if (!val) return 'N/A';
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(val);
+  };
 
-
-
+  // Improved Sparkline Logic for Mini Charts (Internal Component)
+  const Sparkline = ({ data, color, height = 40 }) => (
+    <div style={{ height }} className="w-24">
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart data={data.map(v => ({ value: v }))}>
+          <defs>
+            <linearGradient id={`gradient-${color}-mc`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={color} stopOpacity={0.3} />
+              <stop offset="95%" stopColor={color} stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <Area
+            type="monotone"
+            dataKey="value"
+            stroke={color}
+            strokeWidth={2}
+            fill={`url(#gradient-${color}-mc)`}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  );
 
   return (
     <motion.div
@@ -155,14 +221,17 @@ const MarketCap = () => {
 
         <div className='flex flex-col gap-1'>
           <h1 className='text-3xl'>Cryptocurrency Prices by Market Cap</h1>
-          <p className='text-s text-muted'>The global cryptocurrency market cap today is $3.16 Trillion, a 2.1% change in the last 24 hours.</p>
+          <p className='text-s text-muted'>
+            The global cryptocurrency market cap today is <span className="text-white font-bold">{globalData ? formatCurrency(globalData.total_market_cap.usd) : '...'}</span>,
+            a <span className={globalData?.market_cap_change_percentage_24h_usd >= 0 ? "text-green-500" : "text-red-500"}>
+              {globalData?.market_cap_change_percentage_24h_usd?.toFixed(2)}%
+            </span> change in the last 24 hours.
+          </p>
         </div>
 
         <div className='flex items-center gap-2 '>
           <Toggle isOn={toggle} handleToggle={toggleHiglights} label="Highlights" />
         </div>
-
-
 
       </motion.div>
 
@@ -179,107 +248,102 @@ const MarketCap = () => {
             >
               <motion.div
                 variants={containerVariants}
-                className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 w-full'
+                className='grid grid-cols-1 lg:grid-cols-3 gap-6 w-full'
               >
+                {highlightsLoading ? (
+                  <>
+                    <CardSkeleton />
+                    <CardSkeleton />
+                    <CardSkeleton />
+                  </>
+                ) : (
+                  <>
+                    {/* Column 1: Stats */}
+                    <div className='flex flex-col gap-2 min-h-[210px] sm:h-[210px]'>
+                      <div className='flex items-center justify-between gap-4 p-3 border-gray-800 border-2 rounded-xl w-full flex-1 hover:border-green-500 transition-all duration-300 bg-[#0b0e11] min-w-0'>
 
-
-
-                {/* Column 1: Stats */}
-                <motion.div variants={itemVariants} className='flex flex-col gap-2 min-h-[210px] sm:h-[210px]'>
-                  <div className='flex items-center justify-between gap-4 p-3 border-gray-500 border-2 rounded-xl w-full flex-1 hover:border-green-500 transition-all duration-300 bg-card/20 min-w-0'>
-
-                    <div className='flex flex-col min-w-0'>
-                      <span className='text-xl truncate block font-bold'>
-                        {highlightsLoading ? "---" : `₹${highlights.reduce((acc, coin) => acc + (coin.market_cap || 0), 0).toLocaleString()}`}
-                      </span>
-                      <p className='text-sm text-muted'>Total Market Cap</p>
-                    </div>
-                    <div className='w-24 h-16'>
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={highlights[0]?.sparkline_in_7d?.price?.slice(-10).map(v => ({ value: v })) || data}>
-                          <Line type="monotone" dataKey="value" stroke="#16c784" strokeWidth={2} dot={false} />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-
-                  <div className='flex items-center justify-between gap-4 p-3 border-gray-500 border-2 rounded-xl w-full flex-1 hover:border-red-500 transition-all duration-300 bg-card/20 min-w-0'>
-
-                    <div className='flex flex-col min-w-0'>
-                      <span className='text-xl truncate block font-bold'>
-                        {highlightsLoading ? "---" : `₹${highlights.reduce((acc, coin) => acc + (coin.total_volume || 0), 0).toLocaleString()}`}
-                      </span>
-                      <p className='text-sm text-muted'>Total 24h Volume</p>
-                    </div>
-                    <div className='w-24 h-16'>
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={highlights[1]?.sparkline_in_7d?.price?.slice(-10).map(v => ({ value: v })) || data}>
-                          <Line type="monotone" dataKey="value" stroke="#ea3943" strokeWidth={2} dot={false} />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-                </motion.div>
-
-
-                {/* Column 2: Trending */}
-                <motion.div variants={itemVariants} className='flex flex-col gap-1 w-full min-h-[210px] sm:h-[210px] p-4 border-gray-500 border-2 rounded-xl overflow-hidden bg-card/20'>
-                  <div className='flex items-center justify-between border-b border-gray-500 pb-2 mb-1'>
-                    <p className='text-base font-medium whitespace-nowrap lg:text-lg sm:text-sm'>🔥 Trending</p>
-                    <span className='text-[10px] text-muted cursor-pointer hover:text-white transition-colors sm:text-sm lg:text-lg'>View More</span>
-                  </div>
-
-                  {highlightsLoading ? (
-                    <div className="flex-1 flex items-center justify-center py-4"><div className="w-6 h-6 border-2 border-muted border-t-white rounded-full animate-spin"></div></div>
-                  ) : (
-                    <div className='flex flex-col justify-between flex-1 overflow-hidden py-1'>
-                      {highlights.slice(0, 3).map((coin, idx) => (
-                        <div key={coin.id || idx} className='flex items-center justify-between p-1.5 hover:bg-white/5 rounded-lg cursor-pointer transition-all min-w-0' onClick={() => navigate(`cryptocurrencies/marketcap/${coin.id}`)}>
-                          <div className='flex items-center gap-2 min-w-0'>
-                            <img src={coin.image} alt="" className='w-5 h-5 rounded-full flex-shrink-0' />
-                            <p className='text-sm text-muted hover:text-white truncate'>{coin.name}</p>
-                          </div>
-                          <div className='flex items-center gap-2 ml-1 flex-shrink-0'>
-                            <span className={`text-sm font-medium ${coin.price_change_percentage_24h < 0 ? 'text-red-500' : 'text-green-500'}`}>
-                              {coin.price_change_percentage_24h?.toFixed(1)}%
-                            </span>
-                          </div>
+                        <div className='flex flex-col min-w-0'>
+                          <span className='text-xl truncate block font-bold text-white'>
+                            {globalData ? formatCurrency(globalData.total_market_cap.usd) : '...'}
+                          </span>
+                          <p className='text-sm text-muted'>Total Market Cap</p>
                         </div>
-                      ))}
+                        <div className='w-24 h-16'>
+                          {sparklineData?.market_caps && (
+                            <Sparkline data={sparklineData.market_caps} color="#22c55e" height={60} />
+                          )}
+                        </div>
+                      </div>
+
+                      <div className='flex items-center justify-between gap-4 p-3 border-gray-800 border-2 rounded-xl w-full flex-1 hover:border-red-500 transition-all duration-300 bg-[#0b0e11] min-w-0'>
+
+                        <div className='flex flex-col min-w-0'>
+                          <span className='text-xl truncate block font-bold text-white'>
+                            {globalData ? formatCurrency(globalData.total_volume.usd) : '...'}
+                          </span>
+                          <p className='text-sm text-muted'>Total 24h Volume</p>
+                        </div>
+                        <div className='w-24 h-16'>
+                          {sparklineData?.total_volumes && (
+                            <Sparkline data={sparklineData.total_volumes} color="#ef4444" height={60} />
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  )}
-                </motion.div>
 
-                {/* Column 3: Top Gainers */}
-                <motion.div variants={itemVariants} className='flex flex-col gap-1 w-full min-h-[210px] sm:h-[210px] p-4 border-gray-500 border-2 rounded-xl overflow-hidden bg-card/20'>
-                  <div className='flex items-center justify-between border-b border-gray-500 pb-2 mb-1'>
-                    <p className='text-base font-medium whitespace-nowrap lg:text-lg sm:text-sm'>🚀 Top Gainers</p>
-                    <span className='text-[10px] text-muted cursor-pointer hover:text-white transition-colors sm:text-sm lg:text-lg'>View More</span>
-                  </div>
+                    {/* Card 2: Trending Coins */}
+                    <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col h-[210px] transition-all duration-300 group">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                          <Flame className="text-orange-500" size={20} />
+                          <h3 className="text-lg font-bold text-white">Trending</h3>
+                        </div>
+                        <Link to="/trending" className="text-xs text-gray-400 hover:text-white flex items-center gap-1 transition-colors">
+                          View More <ArrowRight size={12} />
+                        </Link>
+                      </div>
 
-                  {highlightsLoading ? (
-                    <div className="flex-1 flex items-center justify-center py-4"><div className="w-6 h-6 border-2 border-muted border-t-white rounded-full animate-spin"></div></div>
-                  ) : (
-                    <div className='flex flex-col justify-between flex-1 overflow-hidden py-1'>
-                      {[...highlights]
-                        .sort((a, b) => b.price_change_percentage_24h - a.price_change_percentage_24h)
-                        .slice(0, 3)
-                        .map((coin, idx) => (
-                          <div key={coin.id || idx} className='flex items-center justify-between p-1.5 hover:bg-white/5 rounded-lg cursor-pointer transition-all min-w-0' onClick={() => navigate(`cryptocurrencies/marketcap/${coin.id}`)}>
-                            <div className='flex items-center gap-2 min-w-0'>
-                              <img src={coin.image} alt="" className='w-5 h-5 rounded-full flex-shrink-0' />
-                              <p className='text-sm text-muted hover:text-white truncate'>{coin.name}</p>
+                      <div className="flex flex-col flex-1 justify-center">
+                        {trendingData.map((coin) => (
+                          <div key={coin.item.id} className="flex items-center justify-between p-2 border-b border-gray-800 last:border-0 hover:bg-card transition-colors cursor-pointer rounded-lg">
+                            <div className="flex items-center gap-3">
+                              <img src={coin.item.thumb} alt={coin.item.name} className="w-5 h-5" />
+                              <span className="text-sm font-medium text-gray-300">{coin.item.symbol}</span>
                             </div>
-                            <div className='flex items-center gap-2 ml-1 flex-shrink-0'>
-                              <span className='text-sm font-medium text-green-500'>
-                                +{coin.price_change_percentage_24h?.toFixed(1)}%
-                              </span>
-                            </div>
+                            <span className="text-xs font-bold text-gray-300">#{coin.item.market_cap_rank}</span>
                           </div>
                         ))}
+                      </div>
                     </div>
-                  )}
-                </motion.div>
+
+                    {/* Card 3: Top Gainers */}
+                    <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col h-[210px]  transition-all duration-300 group">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                          <Rocket className="text-green-500" size={20} />
+                          <h3 className="text-lg font-bold text-white">Top Gainers</h3>
+                        </div>
+                        <Link to="/gainers-losers" className="text-xs text-gray-400 hover:text-white flex items-center gap-1 transition-colors">
+                          View More <ArrowRight size={12} />
+                        </Link>
+                      </div>
+
+                      <div className="flex flex-col flex-1 justify-center">
+                        {gainersData.map((coin) => (
+                          <div key={coin.id} className="flex items-center justify-between p-2 border-b border-gray-800 last:border-0 hover:bg-card transition-colors cursor-pointer rounded-lg">
+                            <div className="flex items-center gap-3">
+                              <img src={coin.image} alt={coin.name} className="w-5 h-5 rounded-full" />
+                              <span className="text-sm font-medium text-gray-300">{coin.symbol.toUpperCase()}</span>
+                            </div>
+                            <span className="text-xs font-bold text-green-500">
+                              +{coin.price_change_percentage_24h?.toFixed(2)}%
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                )}
 
               </motion.div>
             </motion.div>
@@ -310,11 +374,8 @@ const MarketCap = () => {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="9" className="py-20 text-center">
-                  <div className="flex flex-col items-center gap-4">
-                    <div className="w-10 h-10 border-4 border-muted border-t-white rounded-full animate-spin"></div>
-                    <p className="text-muted animate-pulse font-medium">Synchronizing with CoinGecko...</p>
-                  </div>
+                <td colSpan="9" className="p-0">
+                  <TableSkeleton rows={10} columns={9} />
                 </td>
               </tr>
             ) : error ? (
@@ -350,9 +411,9 @@ const MarketCap = () => {
                 <tr
                   key={coin.id || index}
                   onClick={() => navigate(`/cryptocurrencies/marketcap/${coin.id}`)}
-                  className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer'
+                  className='border-b border-gray-800 hover:bg-card transition-colors cursor-pointer group'
                 >
-                  <td className='py-4 px-2 sticky left-0 bg-main z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px]'>
+                  <td className='py-4 px-2 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px]'>
                     <div className='flex items-center gap-2'>
                       <Star
                         onClick={(e) => {
@@ -367,7 +428,7 @@ const MarketCap = () => {
                       <span>{coin.market_cap_rank}</span>
                     </div>
                   </td>
-                  <td className='py-4 px-2 sticky left-[60px] md:left-[80px] bg-main z-10 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px]'>
+                  <td className='py-4 px-2 sticky left-[60px] md:left-[80px] bg-main group-hover:bg-card transition-colors z-10 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px]'>
                     <div className='flex items-center gap-2'>
                       <img src={coin.image} alt={coin.name} className='w-6 h-6' />
                       <div className='flex flex-col gap-0.5'>

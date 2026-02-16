@@ -15,7 +15,7 @@ const timeframes = [
 ];
 
 const GlobalDominanceChart = () => {
-    const [timeframe, setTimeframe] = useState(timeframes[5]); // Default Max
+    const [timeframe, setTimeframe] = useState(timeframes[0]); // Default to 24H
     const [chartData, setChartData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);

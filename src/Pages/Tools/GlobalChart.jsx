@@ -6,10 +6,12 @@ import GlobalDefiChart from '../../Components/Graphs/GlobalDefiChart';
 import GlobalStablecoinsChart from '../../Components/Graphs/GlobalStablecoinsChart';
 import GlobalAltcoinsChart from '../../Components/Graphs/GlobalAltcoinsChart';
 import { TrendingUp, Activity, Layers, Coins } from 'lucide-react';
+import { AreaChart, Area, ResponsiveContainer, YAxis } from 'recharts';
 
 const GlobalChart = () => {
   const [globalData, setGlobalData] = useState(null);
   const [defiData, setDefiData] = useState(null);
+  const [sparklineData, setSparklineData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // User provided API Key
@@ -33,6 +35,16 @@ const GlobalChart = () => {
         const defiJson = await defiRes.json();
         if (defiJson.data) setDefiData(defiJson.data);
 
+        // 3. Fetch 7-Day Sparkline Data (BTC Proxy)
+        const sparkRes = await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?days=7&vs_currency=usd', options);
+        const sparkJson = await sparkRes.json();
+        if (sparkJson.market_caps) {
+          setSparklineData({
+            market_caps: sparkJson.market_caps.map(item => item[1]),
+            total_volumes: sparkJson.total_volumes.map(item => item[1]),
+          });
+        }
+
       } catch (err) {
         console.error("Error fetching global data:", err);
       } finally {
@@ -48,18 +60,51 @@ const GlobalChart = () => {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(val);
   };
 
-  const StatCard = ({ label, value, subValue, icon: Icon, color }) => (
-    <div className="bg-[#0b0e11] border border-gray-800 p-6 rounded-3xl flex items-center justify-between gap-4 group hover:border-gray-600 transition-all">
-      <div className="flex-1">
-        <p className="text-gray-400 text-sm font-medium mb-1">{label}</p>
-        <h4 className="text-2xl font-bold text-white mb-2 break-all">{value}</h4>
-        {subValue && <p className={`text-xs font-bold ${subValue.toString().includes('-') ? 'text-red-500' : 'text-green-500'}`}>{subValue}</p>}
+  const StatCard = ({ label, value, subValue, icon: Icon, color, chartData }) => {
+    const isPositive = chartData ? chartData[chartData.length - 1] >= chartData[0] : true;
+    const trendColor = isPositive ? '#22c55e' : '#ef4444';
+    const hoverBorderClass = chartData
+      ? (isPositive ? 'hover:border-green-500' : 'hover:border-red-500')
+      : 'hover:border-gray-600';
+
+    return (
+      <div className={`bg-[#0b0e11] border border-gray-800 p-6 rounded-3xl flex items-center justify-between gap-4 group ${hoverBorderClass} transition-all relative overflow-hidden h-40`}>
+        <div className="flex flex-col z-10 h-full justify-between">
+          <div>
+            <p className="text-gray-400 text-sm font-medium mb-1">{label}</p>
+            <h4 className="text-2xl font-bold text-white break-all">{value}</h4>
+          </div>
+          {subValue && <p className={`text-xs font-bold ${subValue.toString().includes('-') ? 'text-red-500' : 'text-green-500'}`}>{subValue}</p>}
+        </div>
+
+        <div className={`w-12 h-12 shrink-0 rounded-2xl flex items-center justify-center bg-${color}-500/10 border border-${color}-500/20 group-hover:scale-110 transition-transform z-10 self-start`}>
+          <Icon className={`text-${color}-500`} size={24} />
+        </div>
+
+        {chartData && (
+          <div className="absolute inset-x-0 bottom-0 h-20 opacity-30 group-hover:opacity-50 transition-opacity pointer-events-none">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={chartData.map(v => ({ value: v }))}>
+                <defs>
+                  <linearGradient id={`gradient-${label.replace(/\s+/g, '')}`} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={trendColor} stopOpacity={0.5} />
+                    <stop offset="95%" stopColor={trendColor} stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <Area
+                  type="monotone"
+                  dataKey="value"
+                  stroke={trendColor}
+                  fill={`url(#gradient-${label.replace(/\s+/g, '')})`}
+                  strokeWidth={2}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        )}
       </div>
-      <div className={`w-12 h-12 shrink-0 rounded-2xl flex items-center justify-center bg-${color}-500/10 border border-${color}-500/20 group-hover:scale-110 transition-transform`}>
-        <Icon className={`text-${color}-500`} size={24} />
-      </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <motion.div
@@ -89,7 +134,19 @@ const GlobalChart = () => {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {loading ? (
-            [...Array(4)].map((_, i) => <div key={i} className="h-32 bg-[#0b0e11] animate-pulse rounded-3xl border border-gray-800" />)
+            [...Array(4)].map((_, i) => (
+              <div key={i} className="bg-[#0b0e11] border border-gray-800 p-6 rounded-3xl flex items-center justify-between gap-4 h-40 animate-pulse relative overflow-hidden">
+                <div className="flex flex-col h-full justify-between z-10 w-full">
+                  <div className="space-y-2">
+                    <div className="h-4 w-24 bg-gray-800 rounded"></div>
+                    <div className="h-8 w-32 bg-gray-800 rounded"></div>
+                  </div>
+                  <div className="h-3 w-16 bg-gray-800 rounded"></div>
+                </div>
+                <div className="w-12 h-12 shrink-0 rounded-2xl bg-gray-800 self-start"></div>
+                <div className="absolute inset-x-0 bottom-0 h-16 bg-gray-800/10"></div>
+              </div>
+            ))
           ) : (
             <>
               <StatCard
@@ -98,6 +155,7 @@ const GlobalChart = () => {
                 subValue={`${globalData?.market_cap_change_percentage_24h_usd?.toFixed(2)}% (24h)`}
                 icon={TrendingUp}
                 color="blue"
+                chartData={sparklineData?.market_caps}
               />
               <StatCard
                 label="24h Volume"
@@ -105,6 +163,7 @@ const GlobalChart = () => {
                 subValue="Total Trading Volume"
                 icon={Activity}
                 color="purple"
+                chartData={sparklineData?.total_volumes}
               />
               <StatCard
                 label="BTC Dominance"

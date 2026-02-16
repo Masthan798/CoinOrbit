@@ -76,9 +76,48 @@ const CoinDetail = () => {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[400px]">
-                <div className="w-10 h-10 border-4 border-muted border-t-white rounded-full animate-spin"></div>
-                <p className="mt-4 text-muted">Loading {coinId} details...</p>
+            <div className="p-6 bg-main rounded-xl min-h-screen flex flex-col gap-8 animate-pulse">
+                {/* Breadcrumbs Skeleton */}
+                <div className="h-4 bg-gray-800 rounded w-64"></div>
+
+                {/* Header Grid Skeleton */}
+                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 w-full'>
+                    {/* Main Info Card Skeleton */}
+                    <div className="p-6 border-gray-800 border-2 rounded-2xl bg-card/30 h-32 flex flex-col justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 bg-gray-800 rounded-full"></div>
+                            <div className="flex flex-col gap-2">
+                                <div className="h-4 w-24 bg-gray-800 rounded"></div>
+                                <div className="h-3 w-16 bg-gray-800 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                    {/* 4 Stats Cards Skeletons */}
+                    {[...Array(4)].map((_, i) => (
+                        <div key={i} className="p-6 border-gray-800 border-2 rounded-2xl bg-card/10 h-32 flex flex-col justify-center gap-3">
+                            <div className="h-6 w-3/4 bg-gray-800 rounded"></div>
+                            <div className="h-3 w-1/2 bg-gray-800 rounded"></div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Main Content Grid Skeleton */}
+                <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
+                    {/* Left Stats Column Skeleton */}
+                    <div className='flex flex-col gap-6 w-full'>
+                        <div className='w-full p-8 border-gray-800 border-2 rounded-3xl bg-card/20 h-[600px]'></div>
+                    </div>
+                    {/* Right Chart Column Skeleton */}
+                    <div className='lg:col-span-2 flex flex-col gap-6'>
+                        <div className='p-2 border-gray-800 border-2 rounded-3xl bg-card/5 h-[600px]'></div>
+                    </div>
+                </div>
+
+                {/* Bottom Info Grid Skeleton */}
+                <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
+                    <div className='md:col-span-1 border-gray-800 border-2 rounded-3xl bg-[#0b0e11] h-64'></div>
+                    <div className='md:col-span-2 border-gray-800 border-2 rounded-3xl bg-[#0b0e11] h-64'></div>
+                </div>
             </div>
         );
     }

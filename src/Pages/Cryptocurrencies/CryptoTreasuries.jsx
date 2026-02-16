@@ -3,6 +3,8 @@ import { motion } from 'framer-motion'
 import { TreasuriesData } from '../../services/AllcoinsData';
 import { coingeckoFetch } from '../../api/coingeckoClient';
 import Pagination from '../../Components/Pagination/Pagination';
+import TableSkeleton from '../../Components/Loadings/TableSkeleton';
+import StatsCardSkeleton from '../../Components/Loadings/StatsCardSkeleton';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -101,44 +103,52 @@ const CryptoTreasuries = () => {
           variants={containerVariants}
           className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 w-full'
         >
-          <motion.div variants={itemVariants} className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-xl bg-card/30 hover:bg-card/50 transition-all duration-300'>
-            <p className='text-2xl font-bold sm:text-2xl'>{treasuries.length}</p>
-            <span className='text-sm text-muted'>Total Entities</span>
-          </motion.div>
+          {loading ? (
+            Array(5).fill(0).map((_, index) => (
+              <StatsCardSkeleton key={index} />
+            ))
+          ) : (
+            <>
+              <motion.div variants={itemVariants} className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-xl bg-card/30 hover:bg-card/50 transition-all duration-300'>
+                <p className='text-2xl font-bold sm:text-2xl'>{treasuries.length}</p>
+                <span className='text-sm text-muted'>Total Entities</span>
+              </motion.div>
 
-          <motion.div variants={itemVariants} className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-xl bg-card/30 hover:bg-card/50 transition-all duration-300'>
-            <p className='text-2xl font-bold sm:text-2xl'>
-              {[...new Set(treasuries.map(t => t.country))].length}
-            </p>
-            <span className='text-sm text-muted'>Countries</span>
-          </motion.div>
+              <motion.div variants={itemVariants} className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-xl bg-card/30 hover:bg-card/50 transition-all duration-300'>
+                <p className='text-2xl font-bold sm:text-2xl'>
+                  {[...new Set(treasuries.map(t => t.country))].length}
+                </p>
+                <span className='text-sm text-muted'>Countries</span>
+              </motion.div>
 
-          <motion.div variants={itemVariants} className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-xl bg-card/30 hover:bg-card/50 transition-all duration-300'>
-            <p className='text-2xl font-bold'>
-              {Number(summary.total_holdings).toLocaleString()}
-            </p>
-            <div className='flex items-center gap-2'>
-              <span className='text-sm text-muted'>Total Holdings</span>
-              <span className='text-xs text-muted'>ⓘ</span>
-            </div>
-          </motion.div>
+              <motion.div variants={itemVariants} className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-xl bg-card/30 hover:bg-card/50 transition-all duration-300'>
+                <p className='text-2xl font-bold'>
+                  {Number(summary.total_holdings).toLocaleString()}
+                </p>
+                <div className='flex items-center gap-2'>
+                  <span className='text-sm text-muted'>Total Holdings</span>
+                  <span className='text-xs text-muted'>ⓘ</span>
+                </div>
+              </motion.div>
 
-          <motion.div variants={itemVariants} className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-xl bg-card/30 hover:bg-card/50 transition-all duration-300'>
-            <p className='text-2xl font-bold'>
-              ${(summary.total_value_usd / 1e9).toFixed(1)}B
-            </p>
-            <div className='flex items-center gap-2'>
-              <span className='text-sm text-muted'>Total Value in USD</span>
-              <span className='text-xs text-muted'>ⓘ</span>
-            </div>
-          </motion.div>
+              <motion.div variants={itemVariants} className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-xl bg-card/30 hover:bg-card/50 transition-all duration-300'>
+                <p className='text-2xl font-bold'>
+                  ${(summary.total_value_usd / 1e9).toFixed(1)}B
+                </p>
+                <div className='flex items-center gap-2'>
+                  <span className='text-sm text-muted'>Total Value in USD</span>
+                  <span className='text-xs text-muted'>ⓘ</span>
+                </div>
+              </motion.div>
 
-          <motion.div variants={itemVariants} className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-xl bg-card/30 hover:bg-card/50 transition-all duration-300'>
-            <p className='text-2xl font-bold sm:text-2xl'>
-              {summary.market_cap}
-            </p>
-            <span className='text-sm text-muted'>Market Cap Dominance</span>
-          </motion.div>
+              <motion.div variants={itemVariants} className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-xl bg-card/30 hover:bg-card/50 transition-all duration-300'>
+                <p className='text-2xl font-bold sm:text-2xl'>
+                  {summary.market_cap}
+                </p>
+                <span className='text-sm text-muted'>Market Cap Dominance</span>
+              </motion.div>
+            </>
+          )}
 
         </motion.div>
       </motion.div>
@@ -162,11 +172,8 @@ const CryptoTreasuries = () => {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="9" className="py-20 text-center">
-                  <div className="flex flex-col items-center gap-4">
-                    <div className="w-10 h-10 border-4 border-muted border-t-white rounded-full animate-spin"></div>
-                    <p className="text-muted animate-pulse">Loading treasury data...</p>
-                  </div>
+                <td colSpan="9" className="p-0">
+                  <TableSkeleton rows={10} columns={9} />
                 </td>
               </tr>
             ) : currentItems.length === 0 ? (
@@ -179,11 +186,11 @@ const CryptoTreasuries = () => {
                 const percentage = entity.percentage_of_total_supply || 0;
 
                 return (
-                  <tr key={entity.id || index} className='border-b border-gray-800 hover:bg-card/10 transition-colors'>
-                    <td className='py-4 px-2 sticky left-0 bg-main z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px]'>
+                  <tr key={entity.id || index} className='border-b border-gray-800 hover:bg-card transition-colors group'>
+                    <td className='py-4 px-2 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px]'>
                       {indexOfFirstItem + index + 1}
                     </td>
-                    <td className='py-4 px-2 sticky left-[60px] md:left-[80px] bg-main z-10 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px]'>
+                    <td className='py-4 px-2 sticky left-[60px] md:left-[80px] bg-main group-hover:bg-card transition-colors z-10 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px]'>
                       <div className='flex flex-col'>
                         <span className='font-bold text-white'>{entity.name || "Unknown"}</span>
                         <span className='text-xs text-muted uppercase'>{entity.symbol || "N/A"}</span>
