@@ -38,18 +38,11 @@ const MarketCap = () => {
   });
   const [highlightsLoading, setHighlightsLoading] = useState(true);
 
-  // New State for Global Stats
+  // Global Stats State
   const [globalData, setGlobalData] = useState(null);
   const [sparklineData, setSparklineData] = useState(null);
   const [trendingData, setTrendingData] = useState([]);
   const [gainersData, setGainersData] = useState([]);
-
-  // User provided API Key (Consider moving to env var)
-  const API_KEY = 'CG-YuB3NdXKuFv58irhTuLNk2S9';
-  const options = {
-    method: 'GET',
-    headers: { 'x-cg-demo-api-key': API_KEY }
-  };
 
   const totalPages = Math.ceil(TOTAL_COINS / perPage);
 
@@ -64,51 +57,45 @@ const MarketCap = () => {
       setHighlightsLoading(true);
       try {
         // 1. Fetch Global Data
-        const globalRes = await fetch('https://api.coingecko.com/api/v3/global', options);
-        const globalJson = await globalRes.json();
-        if (globalJson.data) setGlobalData(globalJson.data);
+        const globalJson = await coingeckoFetch('/global');
+        if (globalJson?.data) setGlobalData(globalJson.data);
 
         // 2. Fetch 7-Day Sparkline Data (BTC Proxy)
-        const sparkRes = await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?days=7&vs_currency=usd', options);
-        const sparkJson = await sparkRes.json();
-        if (sparkJson.market_caps) {
+        const sparkJson = await coingeckoFetch('/coins/bitcoin/market_chart?days=7&vs_currency=usd');
+        if (sparkJson?.market_caps) {
           setSparklineData({
             market_caps: sparkJson.market_caps.map(item => item[1]),
             total_volumes: sparkJson.total_volumes.map(item => item[1]),
           });
         }
 
-        // 3. Fetch Trending Coins with Prices
-        const trendingRes = await fetch('https://api.coingecko.com/api/v3/search/trending', options);
-        const trendingJson = await trendingRes.json();
-        if (trendingJson.coins) {
+        // 3. Fetch Trending Coins
+        const trendingJson = await coingeckoFetch('/search/trending');
+        if (trendingJson?.coins) {
           const topTrending = trendingJson.coins.slice(0, 3);
           const ids = topTrending.map(c => c.item.id).join(',');
 
-          // Fetch simple prices and 24h change for these trending coins
-          const priceRes = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`, options);
-          const priceJson = await priceRes.json();
+          // Fetch simple prices for trending coins
+          const priceJson = await coingeckoFetch(`/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`);
 
           const trendingWithPrices = topTrending.map(coin => ({
             ...coin,
-            price: priceJson[coin.item.id]?.usd,
-            change: priceJson[coin.item.id]?.usd_24h_change
+            price: priceJson?.[coin.item.id]?.usd,
+            change: priceJson?.[coin.item.id]?.usd_24h_change
           }));
           setTrendingData(trendingWithPrices);
         }
 
-        // 4. Fetch Top Gainers (from top 100 markets)
-        const marketsRes = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=24h', options);
-        const marketsJson = await marketsRes.json();
+        // 4. Fetch Top Gainers
+        const marketsJson = await coingeckoFetch('/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=24h');
         if (Array.isArray(marketsJson)) {
-          const sorted = [...marketsJson].sort((a, b) => b.price_change_percentage_24h - a.price_change_percentage_24h);
+          const sorted = [...marketsJson].sort((a, b) => (b.price_change_percentage_24h || 0) - (a.price_change_percentage_24h || 0));
           setGainersData(sorted.slice(0, 3));
         }
-
       } catch (err) {
         console.error("Error fetching global stats:", err);
       } finally {
-        setHighlightsLoading(false);
+        setTimeout(() => setHighlightsLoading(false), 300);
       }
     };
     fetchGlobalStats();
@@ -264,7 +251,7 @@ const MarketCap = () => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className='w-full flex flex-col justify-start items-center bg-main min-h-full p-4 pb-8 rounded-xl gap-8'
+      className='w-full flex flex-col justify-start items-center bg-main min-h-full p-2 sm:p-4 pb-8 rounded-xl gap-8'
     >
       <div className='w-full'>
         <Breadcrumbs
@@ -275,15 +262,15 @@ const MarketCap = () => {
         />
       </div>
 
-      <motion.div variants={itemVariants} className='w-full flex items-center justify-between'>
+      <motion.div variants={itemVariants} className='w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4'>
 
         <div className='flex flex-col gap-1'>
-          <h1 className='text-3xl'>Cryptocurrency Prices by Market Cap</h1>
-          <p className='text-s text-muted'>
-            The global cryptocurrency market cap today is <span className="text-white font-bold">{globalData ? formatCurrency(globalData.total_market_cap.usd) : '...'}</span>,
-            a <span className={globalData?.market_cap_change_percentage_24h_usd >= 0 ? "text-green-500" : "text-red-500"}>
+          <h1 className='text-2xl sm:text-3xl font-bold'>Cryptocurrency Prices</h1>
+          <p className='text-xs sm:text-s text-muted'>
+            Global cap: <span className="text-white font-bold">{globalData ? formatCurrency(globalData.total_market_cap.usd) : '...'}</span>
+            <span className={`ml-1 ${globalData?.market_cap_change_percentage_24h_usd >= 0 ? "text-green-500" : "text-red-500"}`}>
               {globalData?.market_cap_change_percentage_24h_usd?.toFixed(2)}%
-            </span> change in the last 24 hours.
+            </span>
           </p>
         </div>
 
@@ -306,7 +293,7 @@ const MarketCap = () => {
             >
               <motion.div
                 variants={containerVariants}
-                className='grid grid-cols-1 lg:grid-cols-3 gap-6 w-full'
+                className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full'
               >
                 {highlightsLoading ? (
                   <>
@@ -317,7 +304,7 @@ const MarketCap = () => {
                 ) : (
                   <>
                     {/* Column 1: Stats */}
-                    <div className='flex flex-col gap-2 min-h-[210px] sm:h-[210px]'>
+                    <div className='flex flex-col gap-2 min-h-[180px] sm:min-h-[210px]'>
                       <div className='flex items-center justify-between gap-4 p-3 border-gray-800 border-2 rounded-xl w-full flex-1 hover:border-green-500 transition-all duration-300 bg-[#0b0e11] min-w-0'>
 
                         <div className='flex flex-col min-w-0'>
@@ -429,35 +416,35 @@ const MarketCap = () => {
 
 
 
-      <motion.div variants={itemVariants} className='w-full overflow-x-auto h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative'>
+      <motion.div variants={itemVariants} className='w-full overflow-x-auto h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative rounded-xl border border-gray-800/50'>
         <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
           <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
             <tr>
-              <th className='py-4 px-2 sticky left-0 bg-main z-30 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('market_cap_rank')}>
-                <div className="flex items-center gap-1"># <SortIcon columnKey="market_cap_rank" /></div>
+              <th className='py-2 px-1 sticky left-0 bg-main z-30 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('market_cap_rank')}>
+                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider"># <SortIcon columnKey="market_cap_rank" /></div>
               </th>
-              <th className='py-4 px-2 sticky left-[60px] md:left-[80px] bg-main z-30 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('name')}>
-                <div className="flex items-center gap-1">Coin <SortIcon columnKey="name" /></div>
+              <th className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-main z-30 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('name')}>
+                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">Coin <SortIcon columnKey="name" /></div>
               </th>
-              <th className='py-4 px-2 w-[10%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('current_price')}>
-                <div className="flex items-center gap-1">Price <SortIcon columnKey="current_price" /></div>
+              <th className='py-2 px-2 w-[10%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('current_price')}>
+                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">Price <SortIcon columnKey="current_price" /></div>
               </th>
-              <th className='py-4 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_1h_in_currency')}>
-                <div className="flex items-center gap-1">1h <SortIcon columnKey="price_change_percentage_1h_in_currency" /></div>
+              <th className='py-2 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_1h_in_currency')}>
+                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">1h <SortIcon columnKey="price_change_percentage_1h_in_currency" /></div>
               </th>
-              <th className='py-4 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_24h')}>
-                <div className="flex items-center gap-1">24h <SortIcon columnKey="price_change_percentage_24h" /></div>
+              <th className='py-2 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_24h')}>
+                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">24h <SortIcon columnKey="price_change_percentage_24h" /></div>
               </th>
-              <th className='py-4 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_7d_in_currency')}>
-                <div className="flex items-center gap-1">7d <SortIcon columnKey="price_change_percentage_7d_in_currency" /></div>
+              <th className='py-2 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_7d_in_currency')}>
+                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">7d <SortIcon columnKey="price_change_percentage_7d_in_currency" /></div>
               </th>
-              <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('total_volume')}>
-                <div className="flex items-center gap-1">24h Volume <SortIcon columnKey="total_volume" /></div>
+              <th className='py-2 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('total_volume')}>
+                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">24h Volume <SortIcon columnKey="total_volume" /></div>
               </th>
-              <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('market_cap')}>
-                <div className="flex items-center gap-1">Market Cap <SortIcon columnKey="market_cap" /></div>
+              <th className='py-2 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('market_cap')}>
+                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">Market Cap <SortIcon columnKey="market_cap" /></div>
               </th>
-              <th className='py-4 px-2 w-[15%]'>Last 7 Days</th>
+              <th className='py-2 px-2 w-[15%] text-[10px] md:text-xs uppercase tracking-wider'>Last 7 Days</th>
             </tr>
           </thead>
           <tbody>
@@ -500,16 +487,16 @@ const MarketCap = () => {
                 <tr
                   key={coin.id || index}
                   onClick={() => navigate(`/marketcap/${coin.id}`)}
-                  className='border-b border-gray-800 hover:bg-card transition-colors cursor-pointer group'
+                  className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer group'
                 >
-                  <td className='py-4 px-2 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px]'>
-                    <div className='flex items-center gap-2'>
+                  <td className='py-2 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-xs text-muted'>
+                    <div className='flex items-center gap-1'>
                       <Star
                         onClick={(e) => {
                           e.stopPropagation();
                           toggleFavorite(coin.market_cap_rank);
                         }}
-                        className={`w-4 h-4 cursor-pointer transition-colors ${favorites.includes(coin.market_cap_rank)
+                        className={`w-3 h-3 cursor-pointer transition-colors ${favorites.includes(coin.market_cap_rank)
                           ? 'text-yellow-400 fill-yellow-400'
                           : 'text-gray-500 hover:text-yellow-400'
                           }`}
@@ -517,36 +504,36 @@ const MarketCap = () => {
                       <span>{coin.market_cap_rank}</span>
                     </div>
                   </td>
-                  <td className='py-4 px-2 sticky left-[60px] md:left-[80px] bg-main group-hover:bg-card transition-colors z-10 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px]'>
+                  <td className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px]'>
                     <div className='flex items-center gap-2'>
-                      <img src={coin.image} alt={coin.name} className='w-6 h-6' />
-                      <div className='flex flex-col gap-0.5'>
-                        <span className='font-bold truncate max-w-[180px]'>{coin.name}</span>
-                        <span className='text-xs text-muted uppercase'>{coin.symbol}</span>
+                      <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6' />
+                      <div className='flex flex-col gap-0.5 min-w-0'>
+                        <span className='font-bold truncate text-[11px] sm:text-sm'>{coin.name}</span>
+                        <span className='text-[9px] sm:text-[10px] text-muted uppercase leading-none'>{coin.symbol}</span>
                       </div>
                     </div>
                   </td>
-                  <td className='py-4 px-2'>₹{coin.current_price?.toLocaleString()}</td>
-                  <td className={`py-4 px-2 ${coin.price_change_percentage_1h_in_currency < 0 ? 'text-red-500' : 'text-green-500'}`}>
+                  <td className='py-2 px-2 text-[11px] sm:text-xs font-semibold'>₹{coin.current_price?.toLocaleString()}</td>
+                  <td className={`py-2 px-2 text-[11px] sm:text-xs font-bold ${coin.price_change_percentage_1h_in_currency < 0 ? 'text-red-500' : 'text-green-500'}`}>
                     {coin.price_change_percentage_1h_in_currency?.toFixed(1)}%
                   </td>
-                  <td className={`py-4 px-2 ${coin.price_change_percentage_24h < 0 ? 'text-red-500' : 'text-green-500'}`}>
+                  <td className={`py-2 px-2 text-[11px] sm:text-xs font-bold ${coin.price_change_percentage_24h < 0 ? 'text-red-500' : 'text-green-500'}`}>
                     {coin.price_change_percentage_24h?.toFixed(1)}%
                   </td>
-                  <td className={`py-4 px-2 ${coin.price_change_percentage_7d_in_currency < 0 ? 'text-red-500' : 'text-green-500'}`}>
+                  <td className={`py-2 px-2 text-[11px] sm:text-xs font-bold ${coin.price_change_percentage_7d_in_currency < 0 ? 'text-red-500' : 'text-green-500'}`}>
                     {coin.price_change_percentage_7d_in_currency?.toFixed(1)}%
                   </td>
-                  <td className='py-4 px-2'>₹{coin.total_volume?.toLocaleString()}</td>
-                  <td className='py-4 px-2'>₹{coin.market_cap?.toLocaleString()}</td>
-                  <td className='py-4 px-2'>
-                    <div className='w-28 h-10'>
+                  <td className='py-2 px-2 text-[11px] sm:text-xs text-muted font-mono'>₹{coin.total_volume?.toLocaleString(undefined, { notation: 'compact' })}</td>
+                  <td className='py-2 px-2 text-[11px] sm:text-xs text-muted font-mono'>₹{coin.market_cap?.toLocaleString(undefined, { notation: 'compact' })}</td>
+                  <td className='py-2 px-2'>
+                    <div className='w-20 sm:w-28 h-8 sm:h-10'>
                       <ResponsiveContainer width="100%" height="100%">
                         <LineChart data={coin.sparkline_in_7d?.price?.map(p => ({ value: p })) || []}>
                           <Line
                             type="monotone"
                             dataKey="value"
                             stroke={coin.price_change_percentage_7d_in_currency < 0 ? '#ea3943' : '#16c784'}
-                            strokeWidth={2}
+                            strokeWidth={1.5}
                             dot={false}
                           />
                         </LineChart>

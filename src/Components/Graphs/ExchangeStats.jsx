@@ -3,12 +3,13 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { motion } from 'framer-motion';
 
 const COLORS = ['#d97706', '#f59e0b', '#fcd34d', '#fed7aa', '#fde68a', '#d1d5db', '#9ca3af', '#4b5563'];
+const isMobile = window.innerWidth < 768;
 
 const StatCard = ({ title, data }) => {
     // Custom Legend Component
     const renderLegend = () => {
         return (
-            <div className="flex flex-col gap-2 justify-center w-full max-w-[200px]">
+            <div className="flex flex-col gap-1.5 sm:gap-2 justify-center w-full">
                 {data.map((entry, index) => (
                     <div key={`legend-${index}`} className="flex items-center justify-between text-xs w-full">
                         <div className="flex items-center gap-2">
@@ -16,7 +17,7 @@ const StatCard = ({ title, data }) => {
                                 className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                                 style={{ backgroundColor: COLORS[index % COLORS.length] }}
                             />
-                            <span className="text-gray-300 font-medium truncate max-w-[80px] sm:max-w-[100px]">{entry.name}</span>
+                            <span className="text-gray-300 font-medium truncate max-w-[100px] sm:max-w-[150px]">{entry.name}</span>
                         </div>
                         <span className="text-gray-400 font-mono ml-4 tabular-nums text-right">
                             {entry.percent.toFixed(2)}%
@@ -28,21 +29,21 @@ const StatCard = ({ title, data }) => {
     };
 
     return (
-        <div className="bg-[#0d0e12] border border-white/5 rounded-2xl p-6 flex flex-col h-[320px]">
-            <h3 className="text-white font-bold text-lg mb-4">{title}</h3>
+        <div className="bg-[#0d0e12] border border-white/5 rounded-2xl p-4 sm:p-6 flex flex-col h-auto sm:h-[320px]">
+            <h2 className="text-white font-bold text-base sm:text-lg mb-4">{title}</h2>
 
             {data && data.length > 0 ? (
-                <div className="flex flex-row items-center justify-center gap-4 sm:gap-8 h-full">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 h-full">
                     {/* Chart */}
-                    <div className="relative w-[160px] h-[160px] sm:w-[180px] sm:h-[180px] flex-shrink-0">
+                    <div className="relative w-[150px] h-[150px] sm:w-[180px] sm:h-[180px] flex-shrink-0">
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                                 <Pie
                                     data={data}
                                     cx="50%"
                                     cy="50%"
-                                    innerRadius={45} // Creates the donut hole
-                                    outerRadius={80}
+                                    innerRadius={isMobile ? 40 : 50} // Creates the donut hole
+                                    outerRadius={isMobile ? 70 : 80}
                                     paddingAngle={2}
                                     dataKey="value"
                                     stroke="none"
@@ -156,9 +157,9 @@ const ExchangeStats = ({ tickers }) => {
 
     return (
         <div className="w-full">
-            <h2 className="text-xl text-white font-bold mb-6 flex items-center gap-2">
+            <h2 className="text-lg sm:text-xl text-white font-bold mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center gap-2">
                 <span>Exchange Statistics</span>
-                <span className="text-xs font-normal text-muted bg-white/5 px-2 py-0.5 rounded-full border border-white/5">24h Vol Distribution</span>
+                <span className="text-[10px] sm:text-xs font-normal text-muted bg-white/5 px-2 py-1 rounded-full border border-white/5 w-fit">24h Vol Distribution</span>
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

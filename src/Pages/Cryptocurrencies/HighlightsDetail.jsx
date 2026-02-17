@@ -150,7 +150,7 @@ const HighlightsDetail = () => {
 
 
     return (
-        <div className="w-full flex flex-col justify-start items-center bg-black min-h-full p-4 pb-8 rounded-xl gap-8 text-white">
+        <div className="w-full flex flex-col justify-start items-center bg-black min-h-full p-2 sm:p-4 pb-8 rounded-xl gap-8 text-white">
             <div className="w-full flex flex-col gap-4">
                 <Breadcrumbs
                     crumbs={[
@@ -168,32 +168,32 @@ const HighlightsDetail = () => {
 
             <div className='w-full overflow-x-auto rounded-xl border border-gray-800/50'>
                 <table className='w-full min-w-[1000px] text-left text-sm'>
-                    <thead className='border-b border-gray-800 text-muted bg-[#0b0e11]'>
+                    <thead className='border-b border-gray-800 text-muted bg-[#0b0e11] sticky top-0 z-20'>
                         <tr>
-                            <th className='py-4 px-4 font-medium transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('market_cap_rank')}>
-                                <div className="flex items-center gap-1"># <SortIcon columnKey="market_cap_rank" /></div>
+                            <th className='py-2 px-1 sticky left-0 bg-[#0b0e11] z-30 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] font-medium transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('market_cap_rank')}>
+                                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider"># <SortIcon columnKey="market_cap_rank" /></div>
                             </th>
-                            <th className='py-4 px-4 font-medium transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('name')}>
-                                <div className="flex items-center gap-1">Coin <SortIcon columnKey="name" /></div>
+                            <th className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-[#0b0e11] z-30 w-[120px] min-w-[120px] md:w-[180px] md:min-w-[180px] font-medium transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('name')}>
+                                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">Coin <SortIcon columnKey="name" /></div>
                             </th>
-                            <th className='py-4 px-4 font-medium text-right transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('current_price')}>
-                                <div className="flex items-center justify-end gap-1">Price <SortIcon columnKey="current_price" /></div>
+                            <th className='py-2 px-2 font-medium text-right transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('current_price')}>
+                                <div className="flex items-center justify-end gap-1 text-[10px] md:text-xs uppercase tracking-wider">Price <SortIcon columnKey="current_price" /></div>
                             </th>
-                            <th className='py-4 px-4 font-medium text-right transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_24h')}>
-                                <div className="flex items-center justify-end gap-1">24h <SortIcon columnKey="price_change_percentage_24h" /></div>
+                            <th className='py-2 px-2 font-medium text-right transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_24h')}>
+                                <div className="flex items-center justify-end gap-1 text-[10px] md:text-xs uppercase tracking-wider">24h <SortIcon columnKey="price_change_percentage_24h" /></div>
                             </th>
                             {type !== 'trending' && (
-                                <th className='py-4 px-4 font-medium text-right transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_7d_in_currency')}>
-                                    <div className="flex items-center justify-end gap-1">7d <SortIcon columnKey="price_change_percentage_7d_in_currency" /></div>
+                                <th className='py-2 px-2 font-medium text-right transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_7d_in_currency')}>
+                                    <div className="flex items-center justify-end gap-1 text-[10px] md:text-xs uppercase tracking-wider">7d <SortIcon columnKey="price_change_percentage_7d_in_currency" /></div>
                                 </th>
                             )}
-                            <th className='py-4 px-4 font-medium text-right transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('total_volume')}>
-                                <div className="flex items-center justify-end gap-1">24h Volume <SortIcon columnKey="total_volume" /></div>
+                            <th className='py-2 px-2 font-medium text-right transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('total_volume')}>
+                                <div className="flex items-center justify-end gap-1 text-[10px] md:text-xs uppercase tracking-wider">24h Vol <SortIcon columnKey="total_volume" /></div>
                             </th>
-                            <th className='py-4 px-4 font-medium text-right transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('market_cap')}>
-                                <div className="flex items-center justify-end gap-1">Market Cap <SortIcon columnKey="market_cap" /></div>
+                            <th className='py-2 px-2 font-medium text-right transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('market_cap')}>
+                                <div className="flex items-center justify-end gap-1 text-[10px] md:text-xs uppercase tracking-wider">Cap <SortIcon columnKey="market_cap" /></div>
                             </th>
-                            <th className='py-4 px-4 font-medium text-right'>Last 7 Days</th>
+                            <th className='py-2 px-2 font-medium text-right text-[10px] md:text-xs uppercase tracking-wider'>Last 7 Days</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-800/50">
@@ -208,50 +208,52 @@ const HighlightsDetail = () => {
                                     onClick={() => navigate(`/cryptocurrencies/marketcap/${coin.id}`)}
                                     className='hover:bg-white/5 transition-colors cursor-pointer group'
                                 >
-                                    <td className='py-4 px-4 text-muted'>{coin.market_cap_rank || index + 1}</td>
-                                    <td className='py-4 px-4'>
-                                        <div className='flex items-center gap-3'>
-                                            <img src={coin.image} alt={coin.name} className='w-6 h-6 rounded-full' />
-                                            <div className="flex flex-col">
-                                                <span className='font-bold text-white group-hover:text-blue-400 transition-colors'>{coin.name}</span>
-                                                <span className='text-xs text-muted uppercase'>{coin.symbol}</span>
+                                    <td className='py-2 px-1 sticky left-0 bg-black group-hover:bg-card transition-colors z-10 w-[45px] text-muted text-xs'>{coin.market_cap_rank || index + 1}</td>
+                                    <td className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-black group-hover:bg-card transition-colors z-10 w-[120px]'>
+                                        <div className='flex items-center gap-2'>
+                                            <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6 rounded-full' />
+                                            <div className="flex flex-col min-w-0">
+                                                <span className='font-bold text-white group-hover:text-blue-400 transition-colors truncate text-[11px] sm:text-sm'>{coin.name}</span>
+                                                <span className='text-[9px] sm:text-[10px] text-muted uppercase leading-none'>{coin.symbol}</span>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className='py-4 px-4 text-right'>
+                                    <td className='py-2 px-2 text-right text-[11px] sm:text-xs font-semibold'>
                                         {typeof coin.current_price === 'string' && coin.current_price.includes('$')
                                             ? coin.current_price
                                             : `$${(coin.current_price || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 8 })}`
                                         }
                                     </td>
-                                    <td className={`py-4 px-4 text-right ${(coin.price_change_percentage_24h || 0) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                    <td className={`py-2 px-2 text-right text-[11px] sm:text-xs font-bold ${(coin.price_change_percentage_24h || 0) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                                         {(coin.price_change_percentage_24h || 0).toFixed(1)}%
                                     </td>
                                     {type !== 'trending' && (
-                                        <td className={`py-4 px-4 text-right ${(coin.price_change_percentage_7d_in_currency || 0) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                        <td className={`py-2 px-2 text-right text-[11px] sm:text-xs font-bold ${(coin.price_change_percentage_7d_in_currency || 0) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                                             {(coin.price_change_percentage_7d_in_currency || 0).toFixed(1)}%
                                         </td>
                                     )}
-                                    <td className='py-4 px-4 text-right'>
+                                    <td className='py-2 px-2 text-right text-[11px] sm:text-xs text-muted font-mono'>
                                         {typeof coin.total_volume === 'string'
                                             ? coin.total_volume
-                                            : `$${(coin.total_volume || 0).toLocaleString()}`
+                                            : `$${(coin.total_volume || 0).toLocaleString(undefined, { notation: 'compact' })}`
                                         }
                                     </td>
-                                    <td className='py-4 px-4 text-right'>
+                                    <td className='py-2 px-2 text-right text-[11px] sm:text-xs text-muted font-mono'>
                                         {typeof coin.market_cap === 'string'
                                             ? coin.market_cap
-                                            : `$${(coin.market_cap || 0).toLocaleString()}`
+                                            : `$${(coin.market_cap || 0).toLocaleString(undefined, { notation: 'compact' })}`
                                         }
                                     </td>
-                                    <td className='py-4 px-4 flex justify-end'>
+                                    <td className='py-2 px-2 flex justify-end'>
                                         {coin.sparkline_in_7d?.price ? (
                                             <Sparkline
                                                 data={coin.sparkline_in_7d.price}
                                                 color={(coin.price_change_percentage_24h || 0) >= 0 ? '#22c55e' : '#ef4444'}
+                                                width={80}
+                                                height={30}
                                             />
                                         ) : (
-                                            <span className="text-muted text-xs">N/A</span>
+                                            <span className="text-muted text-[10px]">N/A</span>
                                         )}
                                     </td>
                                 </tr>

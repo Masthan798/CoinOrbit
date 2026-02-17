@@ -16,6 +16,15 @@ const timeframes = [
 ];
 
 const CompareGraph = ({ coin1Id, coin2Id, coin1Name, coin2Name, coin1Color = "#ef4444", coin2Color = "#3b82f6", dataType = 'prices' }) => {
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    const chartHeight = isMobile ? "h-[300px]" : "h-[450px] lg:h-[500px]";
     const [timeframe, setTimeframe] = useState(timeframes[1]); // Default 7D
     const [chartData, setChartData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -120,19 +129,19 @@ const CompareGraph = ({ coin1Id, coin2Id, coin1Name, coin2Name, coin1Color = "#e
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-[#1a1c23]/95 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shadow-2xl min-w-[200px]">
-                    <p className="text-[10px] text-gray-400 font-bold uppercase mb-3 opacity-60 tracking-wider">
+                <div className="bg-[#1a1c23]/95 backdrop-blur-xl border border-white/10 p-2 sm:p-4 rounded-xl sm:rounded-2xl shadow-2xl min-w-[140px] sm:min-w-[200px]">
+                    <p className="text-[9px] sm:text-[10px] text-gray-400 font-bold uppercase mb-2 opacity-60 tracking-wider">
                         {new Date(label).toLocaleString(undefined, {
                             month: 'short', day: 'numeric',
                             hour: '2-digit', minute: '2-digit'
                         })}
                     </p>
                     {payload.map((entry, index) => (
-                        <div key={index} className="flex items-center justify-between gap-4 mb-2">
-                            <span className="text-[11px] font-bold uppercase tracking-tight" style={{ color: entry.color }}>
+                        <div key={index} className="flex items-center justify-between gap-4 mb-1 sm:mb-2">
+                            <span className="text-[9px] sm:text-[11px] font-bold uppercase tracking-tight" style={{ color: entry.color }}>
                                 {entry.name}
                             </span>
-                            <span className="text-sm font-black text-white">
+                            <span className="text-xs sm:text-sm font-black text-white">
                                 {formatValue(entry.value)}
                             </span>
                         </div>
@@ -144,7 +153,7 @@ const CompareGraph = ({ coin1Id, coin2Id, coin1Name, coin2Name, coin1Color = "#e
     };
 
     return (
-        <div className="w-full h-full flex flex-col gap-6 p-4 bg-[#0d0e12] rounded-3xl border border-white/5">
+        <div className="w-full h-full flex flex-col gap-4 sm:gap-6 p-2 sm:p-4 bg-[#0d0e12] rounded-2xl sm:rounded-3xl border border-white/5">
             <div className="flex flex-col sm:flex-row flex-wrap items-center justify-between gap-4 border-b border-white/5 pb-4">
                 <div className="flex items-center gap-4">
                     <h3 className="text-lg font-bold text-white px-2">
@@ -169,7 +178,7 @@ const CompareGraph = ({ coin1Id, coin2Id, coin1Name, coin2Name, coin1Color = "#e
                 </div>
             </div>
 
-            <div className="flex-1 w-full min-h-[400px] relative">
+            <div className={`flex-1 w-full ${chartHeight} relative`}>
                 {loading && (
                     <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-2xl">
                         <div className="w-10 h-10 border-2 border-white/10 border-t-white rounded-full animate-spin"></div>
@@ -182,7 +191,10 @@ const CompareGraph = ({ coin1Id, coin2Id, coin1Name, coin2Name, coin1Color = "#e
                     </div>
                 ) : (
                     <ResponsiveContainer width="100%" height="100%">
-                        <ComposedChart data={chartData}>
+                        <ComposedChart
+                            data={chartData}
+                            margin={{ top: 10, right: isMobile ? 5 : 30, left: isMobile ? -20 : 0, bottom: 0 }}
+                        >
                             <defs>
                                 <linearGradient id="colorValue1" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="5%" stopColor={coin1Color} stopOpacity={0.2} />
@@ -220,7 +232,12 @@ const CompareGraph = ({ coin1Id, coin2Id, coin1Name, coin2Name, coin1Color = "#e
                                 tickLine={false}
                                 hide={true}
                             />
-                            <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#ffffff10', strokeWidth: 1 }} />
+                            <Tooltip
+                                content={<CustomTooltip />}
+                                cursor={{ stroke: '#ffffff10', strokeWidth: 1 }}
+                                allowEscapeViewBox={{ x: false, y: false }}
+                                position={isMobile ? { y: 10 } : undefined}
+                            />
                             <Legend />
 
                             <Area

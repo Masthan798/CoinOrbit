@@ -181,7 +181,7 @@ const CompareCoins = () => {
   const formatCurrency = (val) => val ? `$${val.toLocaleString()}` : 'N/A';
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="hidden" className='w-full flex flex-col justify-start items-start bg-main min-h-full p-4 pb-8 rounded-xl gap-8'>
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="hidden" className='w-full flex flex-col justify-start items-start bg-main min-h-full p-2 sm:p-4 pb-8 rounded-xl gap-8'>
       <Breadcrumbs
         crumbs={[
           { label: 'Tools', path: '/' },
@@ -192,7 +192,7 @@ const CompareCoins = () => {
 
 
 
-        <div className='flex flex-col gap-2 w-full md:w-auto text-center md:text-left'>
+        <div className='flex flex-col gap-2 w-full md:w-auto text-left'>
           <h1 className='text-3xl font-bold'>Compare Cryptocurrencies</h1>
           <p className='text-muted'>Compare price, market cap, trading volume, and more</p>
         </div>

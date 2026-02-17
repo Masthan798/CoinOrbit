@@ -199,7 +199,7 @@ const Categories = () => {
   };
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible" className='w-full flex flex-col justify-start items-center bg-main min-h-full p-4 pb-8 rounded-xl gap-8'>
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" className='w-full flex flex-col justify-start items-center bg-main min-h-full p-2 sm:p-4 pb-8 rounded-xl gap-4 sm:gap-8'>
 
       <div className='w-full'>
         <Breadcrumbs
@@ -213,8 +213,8 @@ const Categories = () => {
       {/* Header & Tabs */}
       <motion.div variants={itemVariants} className='w-full flex flex-col md:flex-row items-start md:items-center justify-between gap-6'>
         <div className='flex flex-col gap-1'>
-          <h1 className='text-3xl font-bold'>Crypto Highlights</h1>
-          <p className='text-sm text-muted'>Which cryptocurrencies are people more interested in? Track and discover the most interesting cryptocurrencies.</p>
+          <h1 className='text-2xl sm:text-3xl font-bold'>Crypto Highlights</h1>
+          <p className='text-xs sm:text-sm text-muted'>Which cryptocurrencies are people more interested in? Track and discover market trends.</p>
         </div>
 
         <div className="flex items-center gap-4 bg-[#0d0e12] p-1 rounded-lg border border-gray-800">
@@ -301,23 +301,23 @@ const Categories = () => {
             exit="hidden"
             className='w-full'
           >
-            <div className='w-full overflow-x-auto h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative rounded-xl border border-gray-800/50'>
+            <div className='w-full overflow-x-auto h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative rounded-xl border border-white/5'>
               <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
                 <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
                   <tr>
-                    <th className='py-4 px-4 sticky left-0 bg-main z-30 w-[60px] min-w-[60px]'>#</th>
-                    <th className='py-4 px-4 sticky left-[60px] bg-main z-30 w-[200px] min-w-[200px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('name')}>
+                    <th className='py-2 px-1 sticky left-0 bg-main z-30 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-[10px] md:text-xs uppercase tracking-wider'>#</th>
+                    <th className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-main z-30 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] transition-colors hover:text-white cursor-pointer select-none text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('name')}>
                       <div className="flex items-center gap-1">Category <SortIcon columnKey="name" /></div>
                     </th>
-                    <th className='py-4 px-4'>Top Coins</th>
-                    <th className='py-4 px-4 transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('market_cap_change_24h')}>
-                      <div className="flex items-center gap-1">24h Change <SortIcon columnKey="market_cap_change_24h" /></div>
+                    <th className='py-2 px-2 text-[10px] md:text-xs uppercase tracking-wider'>Top Coins</th>
+                    <th className='py-2 px-2 transition-colors hover:text-white cursor-pointer select-none text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('market_cap_change_24h')}>
+                      <div className="flex items-center gap-1 whitespace-nowrap">24h Change <SortIcon columnKey="market_cap_change_24h" /></div>
                     </th>
-                    <th className='py-4 px-4 transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('market_cap')}>
-                      <div className="flex items-center gap-1">Market Cap <SortIcon columnKey="market_cap" /></div>
+                    <th className='py-2 px-2 transition-colors hover:text-white cursor-pointer select-none text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('market_cap')}>
+                      <div className="flex items-center gap-1 whitespace-nowrap">Market Cap <SortIcon columnKey="market_cap" /></div>
                     </th>
-                    <th className='py-4 px-4 transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('volume_24h')}>
-                      <div className="flex items-center gap-1">24h Volume <SortIcon columnKey="volume_24h" /></div>
+                    <th className='py-2 px-2 transition-colors hover:text-white cursor-pointer select-none text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('volume_24h')}>
+                      <div className="flex items-center gap-1 whitespace-nowrap">24h Vol <SortIcon columnKey="volume_24h" /></div>
                     </th>
                   </tr>
                 </thead>
@@ -331,14 +331,14 @@ const Categories = () => {
                   ) : (
                     paginatedCategories.map((coin, index) => (
                       <tr key={coin.id || index} className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer group'>
-                        <td className='py-4 px-4 sticky left-0 bg-main group-hover:bg-card transition-colors z-10'>
-                          <div className='flex items-center gap-2'>
+                        <td className='py-2 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 text-xs text-muted'>
+                          <div className='flex items-center gap-1'>
                             <Star
                               onClick={(e) => {
                                 e.stopPropagation();
                                 toggleFavorite((currentPage - 1) * perPage + index + 1);
                               }}
-                              className={`w-4 h-4 cursor-pointer transition-colors ${favorites.includes((currentPage - 1) * perPage + index + 1)
+                              className={`w-3.5 h-3.5 cursor-pointer transition-colors ${favorites.includes((currentPage - 1) * perPage + index + 1)
                                 ? 'text-yellow-400 fill-yellow-400'
                                 : 'text-muted hover:text-yellow-400'
                                 }`}
@@ -346,21 +346,21 @@ const Categories = () => {
                             <span>{(currentPage - 1) * perPage + index + 1}</span>
                           </div>
                         </td>
-                        <td className='py-4 px-4 sticky left-[60px] bg-main group-hover:bg-card transition-colors z-10'>
-                          <span className='font-bold truncate block max-w-[180px]'>{coin.name}</span>
+                        <td className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10'>
+                          <span className='font-bold truncate block max-w-[110px] sm:max-w-[180px] text-[11px] sm:text-sm'>{coin.name}</span>
                         </td>
-                        <td className='py-4 px-4'>
-                          <div className='flex items-center -space-x-2'>
+                        <td className='py-2 px-2'>
+                          <div className='flex items-center -space-x-1 sm:-space-x-2'>
                             {coin.top_3_coins?.map((img, i) => (
-                              <img key={i} src={img} alt="" className='w-6 h-6 rounded-full border border-gray-900' />
+                              <img key={i} src={img} alt="" className='w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-gray-900' />
                             ))}
                           </div>
                         </td>
-                        <td className={`py-4 px-4 ${coin.market_cap_change_24h < 0 ? 'text-red-500' : 'text-green-500'}`}>
-                          {coin.market_cap_change_24h?.toFixed(2)}%
+                        <td className={`py-2 px-2 text-xs sm:text-sm font-medium ${coin.market_cap_change_24h < 0 ? 'text-red-500' : 'text-green-500'}`}>
+                          {coin.market_cap_change_24h?.toFixed(1)}%
                         </td>
-                        <td className='py-4 px-4'>₹{coin.market_cap?.toLocaleString()}</td>
-                        <td className='py-4 px-4'>₹{coin.volume_24h?.toLocaleString()}</td>
+                        <td className='py-2 px-2 text-xs sm:text-sm font-medium'>₹{coin.market_cap?.toLocaleString(undefined, { notation: 'compact' })}</td>
+                        <td className='py-2 px-2 text-xs sm:text-sm font-medium'>₹{coin.volume_24h?.toLocaleString(undefined, { notation: 'compact' })}</td>
                       </tr>
                     ))
                   )}

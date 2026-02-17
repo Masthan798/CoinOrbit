@@ -299,7 +299,7 @@ const Allcoins = () => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className='w-full flex flex-col gap-6 p-6 bg-main min-h-screen rounded-xl'
+      className='w-full flex flex-col gap-4 sm:gap-6 p-2 sm:p-6 bg-main min-h-screen rounded-xl'
     >
       <Breadcrumbs
         crumbs={[
@@ -309,13 +309,13 @@ const Allcoins = () => {
       />
 
       <div className='flex flex-col gap-1'>
-        <h1 className='text-3xl font-bold text-white'>All Cryptocurrencies</h1>
-        <p className='text-muted'>View a full list of active cryptocurrencies</p>
+        <h1 className='text-2xl sm:text-3xl font-bold text-white'>All Cryptocurrencies</h1>
+        <p className='text-xs sm:text-sm text-muted'>View a full list of active cryptocurrencies</p>
       </div>
 
       {/* Filter Bar */}
-      <div className='flex flex-wrap items-center justify-between gap-4'>
-        <div className="flex flex-wrap items-center gap-2">
+      <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
+        <div className="flex flex-wrap items-center gap-2 overflow-x-auto no-scrollbar py-1">
           <FilterDropdown
             label="Market Cap"
             options={marketCapOptions}
@@ -349,22 +349,24 @@ const Allcoins = () => {
             setActiveFilter={setActiveFilter}
           />
 
-          <button
-            onClick={handleSearchClick}
-            className='flex items-center gap-2 px-4 py-1.5 bg-[#1a1c23] border border-gray-800 text-white font-bold rounded-md text-sm hover:bg-[#252833] transition-colors'
-          >
-            <Search size={14} /> Search
-          </button>
-          <button
-            onClick={handleReset}
-            className='flex items-center gap-2 px-4 py-1.5 bg-[#1a1c23] border border-gray-800 rounded-md text-sm text-gray-300 hover:bg-[#252833] transition-colors'
-          >
-            <RotateCcw size={14} /> Reset
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleSearchClick}
+              className='flex items-center gap-2 px-3 sm:px-4 py-1.5 bg-[#1a1c23] border border-gray-800 text-white font-bold rounded-md text-xs sm:text-sm hover:bg-[#252833] transition-colors'
+            >
+              <Search size={14} /> Search
+            </button>
+            <button
+              onClick={handleReset}
+              className='flex items-center gap-2 px-3 sm:px-4 py-1.5 bg-[#1a1c23] border border-gray-800 rounded-md text-xs sm:text-sm text-gray-300 hover:bg-[#252833] transition-colors'
+            >
+              <RotateCcw size={14} /> Reset
+            </button>
+          </div>
         </div>
 
         {/* Search Box for Coins */}
-        <div className="relative w-full md:w-64">
+        <div className="relative w-full sm:w-64">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
           <input
             type="text"
@@ -385,43 +387,45 @@ const Allcoins = () => {
       </div>
 
       {/* Table Section */}
-      <div className='w-full overflow-x-auto rounded-xl border border-gray-800/50 relative'>
+      <div className='w-full overflow-x-auto rounded-xl border border-white/5 relative'>
         <table className='w-full min-w-[1200px] text-left text-sm'>
           <thead className='border-b border-gray-800 text-muted bg-[#0b0e11] sticky top-0 z-20'>
             <tr>
-              <th className='py-4 px-4 w-[50px] cursor-pointer hover:text-white transition-colors' onClick={() => handleSort('market_cap_rank')}>
-                <div className='flex items-center gap-1'># <SortIcon columnKey="market_cap_rank" /></div>
-              </th>
-              <th className='py-4 px-4 min-w-[200px] cursor-pointer hover:text-white transition-colors' onClick={() => handleSort('name')}>
-                <div className='flex items-center gap-1'>Coin <SortIcon columnKey="name" /></div>
-              </th>
-              <th className='py-4 px-4 text-right cursor-pointer hover:text-white transition-colors' onClick={() => handleSort('current_price')}>
-                <div className='flex items-center justify-end gap-1'>Price <SortIcon columnKey="current_price" /></div>
-              </th>
-              <th className='py-4 px-4 text-right cursor-pointer hover:text-white transition-colors' onClick={() => handleSort('price_change_percentage_1h_in_currency')}>
-                <div className='flex items-center justify-end gap-1'>1h <SortIcon columnKey="price_change_percentage_1h_in_currency" /></div>
-              </th>
-              <th className='py-4 px-4 text-right cursor-pointer hover:text-white transition-colors' onClick={() => handleSort('price_change_percentage_24h_in_currency')}>
-                <div className='flex items-center justify-end gap-1'>24h <SortIcon columnKey="price_change_percentage_24h_in_currency" /></div>
-              </th>
-              <th className='py-4 px-4 text-right cursor-pointer hover:text-white transition-colors' onClick={() => handleSort('price_change_percentage_7d_in_currency')}>
-                <div className='flex items-center justify-end gap-1'>7d <SortIcon columnKey="price_change_percentage_7d_in_currency" /></div>
-              </th>
-              <th className='py-4 px-4 text-right cursor-pointer hover:text-white transition-colors' onClick={() => handleSort('price_change_percentage_30d_in_currency')}>
-                <div className='flex items-center justify-end gap-1'>30d <SortIcon columnKey="price_change_percentage_30d_in_currency" /></div>
-              </th>
-              <th className='py-4 px-4 text-right cursor-pointer hover:text-white transition-colors' onClick={() => handleSort('total_volume')}>
-                <div className='flex items-center justify-end gap-1'>24h Volume <SortIcon columnKey="total_volume" /></div>
-              </th>
-              <th className='py-4 px-4 text-right cursor-pointer hover:text-white transition-colors' onClick={() => handleSort('circulating_supply')}>
-                <div className='flex items-center justify-end gap-1'>Circulating Supply <SortIcon columnKey="circulating_supply" /></div>
-              </th>
-              <th className='py-4 px-4 text-right cursor-pointer hover:text-white transition-colors' onClick={() => handleSort('total_supply')}>
-                <div className='flex items-center justify-end gap-1'>Total Supply <SortIcon columnKey="total_supply" /></div>
-              </th>
-              <th className='py-4 px-4 text-right cursor-pointer hover:text-white transition-colors' onClick={() => handleSort('market_cap')}>
-                <div className='flex items-center justify-end gap-1'>Market Cap <SortIcon columnKey="market_cap" /></div>
-              </th>
+              <tr>
+                <th className='py-2 px-1 w-[40px] md:w-[50px] cursor-pointer hover:text-white transition-colors sticky left-0 bg-[#0b0e11] z-30 text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('market_cap_rank')}>
+                  <div className='flex items-center gap-1'># <SortIcon columnKey="market_cap_rank" /></div>
+                </th>
+                <th className='py-2 px-2 min-w-[140px] md:min-w-[200px] cursor-pointer hover:text-white transition-colors sticky left-[40px] md:left-[50px] bg-[#0b0e11] z-30 text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('name')}>
+                  <div className='flex items-center gap-1'>Coin <SortIcon columnKey="name" /></div>
+                </th>
+                <th className='py-2 px-2 text-right cursor-pointer hover:text-white transition-colors text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('current_price')}>
+                  <div className='flex items-center justify-end gap-1'>Price <SortIcon columnKey="current_price" /></div>
+                </th>
+                <th className='py-2 px-2 text-right cursor-pointer hover:text-white transition-colors text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('price_change_percentage_1h_in_currency')}>
+                  <div className='flex items-center justify-end gap-1'>1h <SortIcon columnKey="price_change_percentage_1h_in_currency" /></div>
+                </th>
+                <th className='py-2 px-2 text-right cursor-pointer hover:text-white transition-colors text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('price_change_percentage_24h_in_currency')}>
+                  <div className='flex items-center justify-end gap-1'>24h <SortIcon columnKey="price_change_percentage_24h_in_currency" /></div>
+                </th>
+                <th className='py-2 px-2 text-right cursor-pointer hover:text-white transition-colors text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('price_change_percentage_7d_in_currency')}>
+                  <div className='flex items-center justify-end gap-1'>7d <SortIcon columnKey="price_change_percentage_7d_in_currency" /></div>
+                </th>
+                <th className='py-2 px-2 text-right cursor-pointer hover:text-white transition-colors text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('price_change_percentage_30d_in_currency')}>
+                  <div className='flex items-center justify-end gap-1'>30d <SortIcon columnKey="price_change_percentage_30d_in_currency" /></div>
+                </th>
+                <th className='py-2 px-2 text-right cursor-pointer hover:text-white transition-colors text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('total_volume')}>
+                  <div className='flex items-center justify-end gap-1 whitespace-nowrap'>24h Vol <SortIcon columnKey="total_volume" /></div>
+                </th>
+                <th className='py-2 px-2 text-right cursor-pointer hover:text-white transition-colors text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('circulating_supply')}>
+                  <div className='flex items-center justify-end gap-1 whitespace-nowrap'>Circ Supply <SortIcon columnKey="circulating_supply" /></div>
+                </th>
+                <th className='py-2 px-2 text-right cursor-pointer hover:text-white transition-colors text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('total_supply')}>
+                  <div className='flex items-center justify-end gap-1 whitespace-nowrap'>Total Supply <SortIcon columnKey="total_supply" /></div>
+                </th>
+                <th className='py-2 px-2 text-right cursor-pointer hover:text-white transition-colors text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('market_cap')}>
+                  <div className='flex items-center justify-end gap-1 whitespace-nowrap'>Mkt Cap <SortIcon columnKey="market_cap" /></div>
+                </th>
+              </tr>
             </tr>
           </thead>
           <tbody>
@@ -446,43 +450,43 @@ const Allcoins = () => {
                   onClick={() => navigate(`/cryptocurrencies/marketcap/${coin.id}`)}
                   className='border-b border-gray-800/50 hover:bg-white/5 transition-colors cursor-pointer group'
                 >
-                  <td className='py-4 px-4 text-muted'>{coin.market_cap_rank}</td>
-                  <td className='py-4 px-4'>
-                    <div className='flex items-center gap-3'>
-                      <img src={coin.image} alt={coin.name} className='w-6 h-6 rounded-full' />
+                  <td className='py-2 px-1 text-muted sticky left-0 bg-main group-hover:bg-card transition-all z-10 text-xs'>{coin.market_cap_rank}</td>
+                  <td className='py-2 px-2 sticky left-[40px] md:left-[50px] bg-main group-hover:bg-card transition-all z-10'>
+                    <div className='flex items-center gap-2'>
+                      <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6 rounded-full' />
                       <div className='flex flex-col'>
-                        <span className='font-bold text-white'>
-                          {coin.name} <span className='text-xs text-muted uppercase ml-1'>{coin.symbol}</span>
+                        <span className='font-bold text-white text-[11px] sm:text-sm whitespace-nowrap'>
+                          {coin.name} <span className='text-[10px] text-muted uppercase ml-1'>{coin.symbol}</span>
                         </span>
                       </div>
                     </div>
                   </td>
-                  <td className='py-4 px-4 text-right font-bold'>
+                  <td className='py-2 px-2 text-right font-bold text-xs sm:text-sm'>
                     {formatCurrency(coin.current_price)}
                   </td>
-                  <td className='py-4 px-4 text-right'>
+                  <td className='py-2 px-2 text-right text-xs sm:text-sm'>
                     {renderPriceChange(coin.price_change_percentage_1h_in_currency)}
                   </td>
-                  <td className='py-4 px-4 text-right'>
+                  <td className='py-2 px-2 text-right text-xs sm:text-sm'>
                     {renderPriceChange(coin.price_change_percentage_24h_in_currency)}
                   </td>
-                  <td className='py-4 px-4 text-right'>
+                  <td className='py-2 px-2 text-right text-xs sm:text-sm'>
                     {renderPriceChange(coin.price_change_percentage_7d_in_currency)}
                   </td>
-                  <td className='py-4 px-4 text-right'>
+                  <td className='py-2 px-2 text-right text-xs sm:text-sm'>
                     {renderPriceChange(coin.price_change_percentage_30d_in_currency)}
                   </td>
-                  <td className='py-4 px-4 text-right text-gray-300'>
-                    ${coin.total_volume?.toLocaleString()}
+                  <td className='py-2 px-2 text-right text-gray-300 text-xs sm:text-sm'>
+                    {formatCompact(coin.total_volume)}
                   </td>
-                  <td className='py-4 px-4 text-right text-gray-300'>
-                    {coin.circulating_supply?.toLocaleString()}
+                  <td className='py-2 px-2 text-right text-gray-300 text-xs sm:text-sm'>
+                    {formatCompact(coin.circulating_supply)}
                   </td>
-                  <td className='py-4 px-4 text-right text-gray-300'>
+                  <td className='py-2 px-2 text-right text-gray-300 text-xs sm:text-sm'>
                     {coin.total_supply ? formatCompact(coin.total_supply) : (coin.max_supply ? formatCompact(coin.max_supply) : '∞')}
                   </td>
-                  <td className='py-4 px-4 text-right text-gray-300'>
-                    ${coin.market_cap?.toLocaleString()}
+                  <td className='py-2 px-2 text-right text-gray-300 text-xs sm:text-sm whitespace-nowrap font-medium'>
+                    {formatCompact(coin.market_cap)}
                   </td>
                 </tr>
               ))
