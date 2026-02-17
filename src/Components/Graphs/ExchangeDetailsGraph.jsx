@@ -22,6 +22,13 @@ const ExchageDeatilesGraph = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [timeframe, setTimeframe] = useState(timeframes[5]); // Default to 1Y
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -102,16 +109,16 @@ const ExchageDeatilesGraph = () => {
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-[#1a1c23]/95 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shadow-2xl min-w-[200px]">
-                    <p className="text-[10px] text-gray-400 font-bold uppercase mb-3 opacity-60 tracking-wider">
+                <div className="bg-[#1a1c23]/95 backdrop-blur-xl border border-white/10 p-2 sm:p-4 rounded-xl sm:rounded-2xl shadow-2xl min-w-[140px] sm:min-w-[200px]">
+                    <p className="text-[8px] sm:text-[10px] text-gray-400 font-bold uppercase mb-1 sm:mb-3 opacity-60 tracking-wider">
                         {new Date(label).toLocaleString(undefined, {
                             month: 'short', day: 'numeric', year: 'numeric',
                             hour: '2-digit', minute: '2-digit'
                         })}
                     </p>
-                    <div className="flex items-center justify-between gap-4">
-                        <span className="text-[11px] text-gray-400 font-bold uppercase tracking-tight">Volume</span>
-                        <span className="text-sm font-black text-white">
+                    <div className="flex items-center justify-between gap-2 sm:gap-4">
+                        <span className="text-[9px] sm:text-[11px] text-gray-400 font-bold uppercase tracking-tight">Volume</span>
+                        <span className="text-xs sm:text-sm font-black text-white">
                             ${parseFloat(payload[0].value).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                         </span>
                     </div>
@@ -123,7 +130,7 @@ const ExchageDeatilesGraph = () => {
 
     if (loading && chartData.length === 0) {
         return (
-            <div className="w-full h-[550px] flex items-center justify-center bg-[#0d0e12] rounded-3xl border border-white/5">
+            <div className="w-full h-[300px] sm:h-[550px] flex items-center justify-center bg-[#0d0e12] rounded-3xl border border-white/5">
                 <div className="w-10 h-10 border-2 border-white/10 border-t-white rounded-full animate-spin"></div>
             </div>
         );
@@ -131,7 +138,7 @@ const ExchageDeatilesGraph = () => {
 
     if (error) {
         return (
-            <div className="w-full h-[550px] flex flex-col items-center justify-center gap-4 bg-[#0d0e12] rounded-3xl border border-white/5 p-8 text-center">
+            <div className="w-full h-[300px] sm:h-[550px] flex flex-col items-center justify-center gap-4 bg-[#0d0e12] rounded-3xl border border-white/5 p-8 text-center">
                 <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center">
                     <Zap size={32} className="text-red-500 opacity-50" />
                 </div>
@@ -148,7 +155,7 @@ const ExchageDeatilesGraph = () => {
 
     return (
         <div className="w-full flex flex-col gap-6 p-4 bg-[#0d0e12] rounded-3xl border border-white/5">
-            <div className="flex flex-col sm:flex-row flex-wrap items-center justify-between gap-4 border-b border-white/5 pb-4">
+            <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center justify-between gap-4 border-b border-white/5 pb-4">
                 <h3 className="text-lg font-bold text-white px-2">Exchange Trade Volume</h3>
 
                 <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl w-full sm:w-auto overflow-x-auto no-scrollbar">
@@ -171,11 +178,11 @@ const ExchageDeatilesGraph = () => {
             </div>
 
             {/* Graph Container with explicit height for ResponsiveContainer */}
-            <div className="w-full h-[550px] relative">
+            <div className="w-full h-[300px] sm:h-[450px] md:h-[550px] relative">
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                         data={chartData}
-                        margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+                        margin={{ top: 10, right: isMobile ? 10 : 10, left: isMobile ? 10 : 0, bottom: 0 }}
                     >
                         <defs>
                             <linearGradient id="exchangeVolumeGradient" x1="0" y1="0" x2="0" y2="1">
@@ -183,8 +190,9 @@ const ExchageDeatilesGraph = () => {
                                 <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
                             </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#ffffff00" vertical={false} />
                         <XAxis
+                            hide={isMobile}
                             dataKey="time"
                             tickFormatter={formatXAxis}
                             axisLine={false}
@@ -196,6 +204,7 @@ const ExchageDeatilesGraph = () => {
                             scale="time"
                         />
                         <YAxis
+                            hide={isMobile}
                             orientation="right"
                             axisLine={false}
                             tickLine={false}
@@ -203,7 +212,11 @@ const ExchageDeatilesGraph = () => {
                             tickFormatter={(val) => `$${val?.toLocaleString(undefined, { notation: 'compact' })}`}
                             domain={['auto', 'auto']}
                         />
-                        <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#ffffff10', strokeWidth: 1 }} />
+                        <Tooltip
+                            content={<CustomTooltip />}
+                            cursor={{ stroke: '#ffffff10', strokeWidth: 1 }}
+                            allowEscapeViewBox={{ x: false, y: false }}
+                        />
                         <Area
                             type="monotone"
                             dataKey="value"

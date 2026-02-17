@@ -61,7 +61,7 @@ const PerpDEXs = () => {
   );
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible" className='w-full flex flex-col justify-start items-center bg-main min-h-full p-4 pb-8 rounded-xl gap-8'>
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" className='w-full flex flex-col justify-start items-center bg-main min-h-full p-2 sm:p-4 pb-8 rounded-xl gap-8'>
 
       <div className='w-full'>
         <Breadcrumbs
@@ -72,26 +72,30 @@ const PerpDEXs = () => {
         />
       </div>
 
-      <motion.div variants={itemVariants} className='w-full flex items-center justify-between'>
-        <div className='flex flex-col gap-1'>
-          <h1 className='text-3xl font-bold'>Top Perpetual DEXs Exchanges Ranked by Open Interest & Trade Volume</h1>
-          <p className='text-sm text-muted'>We track {perpDexs.length} perpetual derivative contracts across various exchanges.</p>
+      <motion.div variants={itemVariants} className='w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4'>
+        <div className='flex flex-col gap-1 text-left'>
+          <h1 className='text-2xl sm:text-3xl font-bold'>Perpetual DEXs</h1>
+          <p className='text-xs sm:text-sm text-muted'>Ranked by Open Interest & Trade Volume. Tracking {perpDexs.length} contracts.</p>
         </div>
       </motion.div>
 
-      <motion.div variants={itemVariants} className='w-full overflow-x-auto h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative'>
+      <motion.div variants={itemVariants} className='w-full overflow-x-auto h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative rounded-xl border border-gray-800/50'>
         <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
           <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
             <tr>
-              <th className='py-4 px-4 sticky left-0 bg-main z-30 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px] text-left'>#</th>
-              <th className='py-4 px-4 sticky left-[60px] md:left-[80px] bg-main z-30 w-[140px] min-w-[140px] md:w-[250px] md:min-w-[250px] text-left'>Market</th>
-              <th className='py-4 px-4 w-[140px] text-center'>Contract Type</th>
-              <th className='py-4 px-4 w-[140px] text-center'>Price</th>
-              <th className='py-4 px-4 w-[120px] text-right'>Basis</th>
-              <th className='py-4 px-4 w-[120px] text-right'>Spread</th>
-              <th className='py-4 px-4 w-[150px] text-right'>Open Interest</th>
-              <th className='py-4 px-4 w-[150px] text-right'>24h Volume</th>
-              <th className='py-4 px-4 w-[180px] text-right'>Last Traded</th>
+              <th className='py-2 px-1 sticky left-0 bg-main z-30 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-left transition-colors hover:text-white'>
+                <div className="text-[10px] md:text-xs uppercase tracking-wider">#</div>
+              </th>
+              <th className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-main z-30 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] text-left transition-colors hover:text-white'>
+                <div className="text-[10px] md:text-xs uppercase tracking-wider">Market</div>
+              </th>
+              <th className='py-2 px-2 w-[120px] text-center transition-colors hover:text-white'><div className="text-[10px] md:text-xs uppercase tracking-wider">Type</div></th>
+              <th className='py-2 px-2 w-[120px] text-center transition-colors hover:text-white'><div className="text-[10px] md:text-xs uppercase tracking-wider">Price</div></th>
+              <th className='py-2 px-2 w-[100px] text-right transition-colors hover:text-white'><div className="text-[10px] md:text-xs uppercase tracking-wider">Basis</div></th>
+              <th className='py-2 px-2 w-[100px] text-right transition-colors hover:text-white'><div className="text-[10px] md:text-xs uppercase tracking-wider">Spread</div></th>
+              <th className='py-2 px-2 w-[130px] text-right transition-colors hover:text-white'><div className="text-[10px] md:text-xs uppercase tracking-wider">Open Int</div></th>
+              <th className='py-2 px-2 w-[130px] text-right transition-colors hover:text-white'><div className="text-[10px] md:text-xs uppercase tracking-wider">24h Vol</div></th>
+              <th className='py-2 px-2 w-[150px] text-right transition-colors hover:text-white'><div className="text-[10px] md:text-xs uppercase tracking-wider">Updated</div></th>
             </tr>
           </thead>
           <tbody>
@@ -114,37 +118,37 @@ const PerpDEXs = () => {
             ) : (
               paginatedData.map((coin, index) => (
                 <tr key={`${coin.market}-${coin.symbol}-${index}`} className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer group'>
-                  <td className='py-4 px-4 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px] text-left'>
+                  <td className='py-2 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-left text-xs text-muted'>
                     <span>{(currentPage - 1) * perPage + index + 1}</span>
                   </td>
-                  <td className='py-4 px-4 sticky left-[60px] md:left-[80px] bg-main group-hover:bg-card transition-colors z-10 w-[140px] min-w-[140px] md:w-[250px] md:min-w-[250px] text-left'>
-                    <div className='flex flex-col gap-0.5'>
-                      <span className='font-bold truncate max-w-[200px]'>{coin.market}</span>
-                      <span className='text-[10px] text-muted uppercase leading-none'>{coin.symbol}</span>
+                  <td className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] text-left'>
+                    <div className='flex flex-col gap-0.5 min-w-0'>
+                      <span className='font-bold truncate text-[11px] sm:text-sm'>{coin.market}</span>
+                      <span className='text-[9px] sm:text-[10px] text-muted uppercase leading-none'>{coin.symbol}</span>
                     </div>
                   </td>
-                  <td className='py-4 px-4 text-center'>
-                    <span className='px-2 py-1 bg-green-500/10 text-green-500 rounded text-xs font-bold border border-green-500/20 uppercase'>
+                  <td className='py-2 px-2 text-center'>
+                    <span className='px-1.5 py-0.5 bg-green-500/10 text-green-500 rounded text-[10px] md:text-xs font-bold border border-green-500/20 uppercase'>
                       {coin.contract_type || "N/A"}
                     </span>
                   </td>
-                  <td className='py-4 px-4 text-center font-medium'>
-                    ${Number(coin.price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
+                  <td className='py-2 px-2 text-center font-medium text-[11px] sm:text-xs'>
+                    ${Number(coin.price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
                   </td>
-                  <td className={`py-4 px-4 text-right ${coin.basis < 0 ? 'text-red-500' : 'text-green-500'}`}>
+                  <td className={`py-2 px-2 text-right text-[11px] sm:text-xs ${coin.basis < 0 ? 'text-red-500' : 'text-green-500'}`}>
                     {coin.basis ? coin.basis.toFixed(4) : "-"}
                   </td>
-                  <td className='py-4 px-4 text-right'>
+                  <td className='py-2 px-2 text-right text-[11px] sm:text-xs text-muted'>
                     {coin.spread ? coin.spread.toFixed(4) : "-"}
                   </td>
-                  <td className='py-4 px-4 text-right'>
-                    ${Number(coin.open_interest).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                  <td className='py-2 px-2 text-right text-[11px] sm:text-xs font-mono text-muted'>
+                    ${Number(coin.open_interest).toLocaleString(undefined, { maximumFractionDigits: 0, notation: 'compact' })}
                   </td>
-                  <td className='py-4 px-4 text-right font-medium'>
-                    ${Number(coin.volume_24h).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                  <td className='py-2 px-2 text-right font-medium text-[11px] sm:text-xs font-mono text-muted'>
+                    ${Number(coin.volume_24h).toLocaleString(undefined, { maximumFractionDigits: 0, notation: 'compact' })}
                   </td>
-                  <td className='py-4 px-4 text-right text-muted'>
-                    {coin.last_traded_at ? new Date(coin.last_traded_at * 1000).toLocaleTimeString() : "-"}
+                  <td className='py-2 px-2 text-right text-muted text-[10px] sm:text-[11px]'>
+                    {coin.last_traded_at ? new Date(coin.last_traded_at * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "-"}
                   </td>
                 </tr>
               ))

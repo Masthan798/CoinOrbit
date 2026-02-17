@@ -19,6 +19,13 @@ const GlobalDefiChart = () => {
     const [chartData, setChartData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         const fetchChartData = async () => {
@@ -54,15 +61,15 @@ const GlobalDefiChart = () => {
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-[#1a1c23]/95 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shadow-2xl min-w-[200px]">
-                    <p className="text-[10px] text-gray-400 font-bold uppercase mb-2 opacity-60 tracking-wider">
+                <div className="bg-[#1a1c23]/95 backdrop-blur-xl border border-white/10 p-2 sm:p-4 rounded-xl sm:rounded-2xl shadow-2xl min-w-[140px] sm:min-w-[200px]">
+                    <p className="text-[9px] sm:text-[10px] text-gray-400 font-bold uppercase mb-2 opacity-60 tracking-wider">
                         {new Date(label).toLocaleDateString(undefined, {
                             weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
                         })}
                     </p>
                     <div className="flex items-center gap-2">
-                        <span className="text-sm font-black text-white">
-                            ${(payload[0].value / 1e9).toFixed(2)} Billion
+                        <span className="text-xs sm:text-sm font-black text-white">
+                            ${(payload[0].value / 1e9).toFixed(1)} Billion
                         </span>
                     </div>
                 </div>
@@ -75,17 +82,17 @@ const GlobalDefiChart = () => {
         <div className="w-full h-full flex flex-col gap-4 sm:gap-6 p-2 sm:p-6 bg-[#0d0e12] rounded-3xl border border-white/5 relative overflow-hidden">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/5 pb-4">
                 <div>
-                    <h3 className="text-lg font-bold text-white">DeFi Market Cap Chart</h3>
-                    <p className="text-xs text-gray-400 max-w-xl mt-1">
-                        Historical market capitalization of the DeFi sector (Proxied via Top DeFi Assets).
+                    <h3 className="text-base sm:text-lg font-bold text-white">DeFi Market Cap Chart</h3>
+                    <p className="text-[10px] sm:text-xs text-gray-400 max-w-xl mt-1">
+                        Historical DeFi market cap (Proxied via Top Assets).
                     </p>
                 </div>
-                <div className="flex items-center bg-white/5 p-1 rounded-xl">
+                <div className="flex items-center bg-white/5 p-0.5 sm:p-1 rounded-xl w-full sm:w-auto overflow-x-auto no-scrollbar">
                     {timeframes.map((tf) => (
                         <button
                             key={tf.label}
                             onClick={() => setTimeframe(tf)}
-                            className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all ${timeframe.label === tf.label ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/20' : 'text-gray-400 hover:text-white'}`}
+                            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-[9px] sm:text-[10px] font-bold transition-all ${timeframe.label === tf.label ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/20' : 'text-gray-400 hover:text-white'}`}
                         >
                             {tf.label}
                         </button>
@@ -93,7 +100,7 @@ const GlobalDefiChart = () => {
                 </div>
             </div>
 
-            <div className="flex-1 w-full min-h-[400px] relative">
+            <div className={`flex-1 w-full ${isMobile ? 'h-[300px]' : 'h-[500px]'} relative`}>
                 {loading ? (
                     <div className="absolute inset-0 flex items-center justify-center">
                         <div className="w-10 h-10 border-2 border-white/10 border-t-purple-500 rounded-full animate-spin"></div>
@@ -104,7 +111,10 @@ const GlobalDefiChart = () => {
                     </div>
                 ) : (
                     <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={chartData}>
+                        <AreaChart
+                            data={chartData}
+                            margin={{ top: 10, right: isMobile ? 10 : 30, left: isMobile ? 10 : 0, bottom: 0 }}
+                        >
                             <defs>
                                 <linearGradient id="colorDefi" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="5%" stopColor="#a855f7" stopOpacity={0.3} />
@@ -121,13 +131,17 @@ const GlobalDefiChart = () => {
                                 minTickGap={50}
                             />
                             <YAxis
+                                hide={isMobile}
                                 domain={['auto', 'auto']}
                                 axisLine={false}
                                 tickLine={false}
                                 tick={{ fill: '#6b7280', fontSize: 10 }}
                                 tickFormatter={(val) => `$${(val / 1e9).toFixed(0)}B`}
                             />
-                            <Tooltip content={<CustomTooltip />} />
+                            <Tooltip
+                                content={<CustomTooltip />}
+                                allowEscapeViewBox={{ x: false, y: false }}
+                            />
                             <Area
                                 type="monotone"
                                 dataKey="value"

@@ -64,31 +64,39 @@ const GlobalChart = () => {
   const StatCard = ({ label, value, subValue, icon: Icon, color, chartData }) => {
     const isPositive = chartData ? chartData[chartData.length - 1] >= chartData[0] : true;
     const trendColor = isPositive ? '#22c55e' : '#ef4444';
-    const hoverBorderClass = chartData
-      ? (isPositive ? 'hover:border-green-500' : 'hover:border-red-500')
-      : 'hover:border-gray-600';
 
     return (
-      <div className={`bg-[#0b0e11] border border-gray-800 p-4 sm:p-6 rounded-3xl flex items-center justify-between gap-4 group ${hoverBorderClass} transition-all relative overflow-hidden h-40`}>
+      <div
+        className={`bg-[#0b0e11] p-4 sm:p-6 rounded-3xl flex items-center justify-between gap-4 group transition-all relative overflow-hidden h-40 border-2`}
+        style={{
+          borderColor: `${trendColor}20`,
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.borderColor = `${trendColor}60`}
+        onMouseLeave={(e) => e.currentTarget.style.borderColor = `${trendColor}20`}
+      >
         <div className="flex flex-col z-10 h-full justify-between">
           <div>
             <p className="text-gray-400 text-sm font-medium mb-1">{label}</p>
             <h4 className="text-2xl font-bold text-white break-all">{value}</h4>
           </div>
-          {subValue && <p className={`text-xs font-bold ${subValue.toString().includes('-') ? 'text-red-500' : 'text-green-500'}`}>{subValue}</p>}
+          {subValue && (
+            <p className={`text-xs font-bold ${subValue.toString().includes('-') ? 'text-red-500' : 'text-green-500'}`}>
+              {subValue}
+            </p>
+          )}
         </div>
 
-        <div className={`w-12 h-12 shrink-0 rounded-2xl flex items-center justify-center bg-${color}-500/10 border border-${color}-500/20 group-hover:scale-110 transition-transform z-10 self-start`}>
-          <Icon className={`text-${color}-500`} size={24} />
+        <div className={`w-12 h-12 shrink-0 flex items-center justify-center group-hover:scale-110 transition-transform z-10 self-start`}>
+          <Icon className={`text-${color}-500`} size={28} />
         </div>
 
         {chartData && (
-          <div className="absolute inset-x-0 bottom-0 h-20 opacity-30 group-hover:opacity-50 transition-opacity pointer-events-none">
+          <div className="absolute inset-x-0 bottom-0 h-24 opacity-40 group-hover:opacity-60 transition-opacity pointer-events-none">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData.map(v => ({ value: v }))}>
+              <AreaChart data={chartData.map(v => ({ value: v }))} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id={`gradient-${label.replace(/\s+/g, '')}`} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={trendColor} stopOpacity={0.5} />
+                    <stop offset="5%" stopColor={trendColor} stopOpacity={0.6} />
                     <stop offset="95%" stopColor={trendColor} stopOpacity={0} />
                   </linearGradient>
                 </defs>
@@ -97,7 +105,8 @@ const GlobalChart = () => {
                   dataKey="value"
                   stroke={trendColor}
                   fill={`url(#gradient-${label.replace(/\s+/g, '')})`}
-                  strokeWidth={2}
+                  strokeWidth={2.5}
+                  isAnimationActive={false}
                 />
               </AreaChart>
             </ResponsiveContainer>

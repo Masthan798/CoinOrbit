@@ -315,7 +315,7 @@ const ExchangeDetail = () => {
     }
 
     return (
-        <motion.div variants={containerVariants} initial='hidden' animate='visible' className="p-6 bg-main rounded-xl min-h-screen">
+        <motion.div variants={containerVariants} initial='hidden' animate='visible' className="p-2 sm:p-6 bg-main rounded-xl min-h-screen">
             {/* Breadcrumbs */}
 
             <div className="flex flex-col gap-8">
@@ -459,41 +459,41 @@ const ExchangeDetail = () => {
                     <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
                         <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
                             <tr>
-                                <th className='py-4 px-2 sticky left-0 bg-main z-30 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px]'>#</th>
-                                <th className='py-4 px-2 sticky left-[60px] md:left-[80px] bg-main z-30 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('base')}>
+                                <th className='py-2 px-1 sticky left-0 bg-main z-30 w-[35px] min-w-[35px] md:w-[45px] md:min-w-[45px] text-[10px] md:text-xs'>#</th>
+                                <th className='py-2 px-1 sticky left-[35px] md:left-[45px] bg-main z-30 w-[100px] min-w-[100px] md:w-[150px] md:min-w-[150px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('base')}>
                                     <div className="flex items-center gap-1">Coin <SortIcon columnKey="base" /></div>
                                 </th>
-                                <th className='py-4 px-2 w-[10%]'>Pair</th>
-                                <th className='py-4 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price')}>
+                                <th className='py-2 px-2 w-[10%]'>Pair</th>
+                                <th className='py-2 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price')}>
                                     <div className="flex items-center gap-1">Price <SortIcon columnKey="price" /></div>
                                 </th>
-                                <th className='py-4 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('bid_ask_spread_percentage')}>
+                                <th className='py-2 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('bid_ask_spread_percentage')}>
                                     <div className="flex items-center gap-1">spread <SortIcon columnKey="bid_ask_spread_percentage" /></div>
                                 </th>
                                 {activeTab === 'Perpetuals' ? (
                                     <>
-                                        <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('open_interest_usd')}>
+                                        <th className='py-2 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('open_interest_usd')}>
                                             <div className="flex items-center gap-1">Open Interest (USD) <SortIcon columnKey="open_interest_usd" /></div>
                                         </th>
-                                        <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('funding_rate')}>
+                                        <th className='py-2 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('funding_rate')}>
                                             <div className="flex items-center gap-1">Funding Rate <SortIcon columnKey="funding_rate" /></div>
                                         </th>
                                     </>
                                 ) : (
                                     <>
-                                        <th className='py-4 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('cost_to_move_up_usd')}>
+                                        <th className='py-2 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('cost_to_move_up_usd')}>
                                             <div className="flex items-center gap-1">+2% depth <SortIcon columnKey="cost_to_move_up_usd" /></div>
                                         </th>
-                                        <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('cost_to_move_down_usd')}>
+                                        <th className='py-2 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('cost_to_move_down_usd')}>
                                             <div className="flex items-center gap-1">-2% depth <SortIcon columnKey="cost_to_move_down_usd" /></div>
                                         </th>
                                     </>
                                 )}
-                                <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('volume')}>
+                                <th className='py-2 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('volume')}>
                                     <div className="flex items-center gap-1">24h Volume <SortIcon columnKey="volume" /></div>
                                 </th>
-                                <th className='py-4 px-2 w-[15%]'>Volume %</th>
-                                <th className='py-4 px-2 w-[15%]'>Last Updated</th>
+                                <th className='py-2 px-2 w-[15%]'>Volume %</th>
+                                <th className='py-2 px-2 w-[15%]'>Updated</th>
 
                             </tr>
                         </thead>
@@ -501,36 +501,28 @@ const ExchangeDetail = () => {
                             {loading ? (
                                 <tr>
                                     <td colSpan="9" className="p-0">
-                                        <TableSkeleton rows={10} columns={9} />
+                                        <TableSkeleton rows={15} columns={9} />
                                     </td>
                                 </tr>
                             ) : error ? (
-                                <tr>
-                                    <td colSpan="9" className="py-20 text-center">
-                                        <div className="flex flex-col items-center gap-6">
-                                            <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center">
-                                                <ArrowRightIcon className="text-red-500 rotate-90" size={32} />
+                                <tr className="h-40">
+                                    <td colSpan="9" className="py-10 text-center">
+                                        <div className="flex flex-col items-center gap-4">
+                                            <div className="w-12 h-12 bg-red-500/10 rounded-full flex items-center justify-center">
+                                                <ArrowRightIcon className="text-red-500 rotate-90" size={24} />
                                             </div>
                                             <div className="flex flex-col gap-1">
-                                                <h3 className="text-xl font-bold text-white uppercase italic tracking-wider">Data Feed Offline</h3>
-                                                <p className="text-sm text-muted max-w-sm mx-auto">
-                                                    {error.includes('429')
-                                                        ? "Rate limit exceeded. CoinGecko has temporarily throttled requests. Please wait a minute or check your API key."
-                                                        : error}
+                                                <h3 className="text-lg font-bold text-white uppercase italic tracking-wider">Offline</h3>
+                                                <p className="text-xs text-muted max-w-sm mx-auto">
+                                                    {error.includes('429') ? "Rate limit" : "Error"}
                                                 </p>
                                             </div>
-                                            <button
-                                                onClick={() => window.location.reload()}
-                                                className="px-8 py-2.5 bg-white/5 hover:bg-white/10 text-white text-xs font-black uppercase tracking-widest rounded-full transition-all border border-white/10 shadow-xl"
-                                            >
-                                                Retry Connection
-                                            </button>
                                         </div>
                                     </td>
                                 </tr>
                             ) : exhangeData.length === 0 ? (
                                 <tr>
-                                    <td colSpan="9" className="py-20 text-center text-muted">No coins found for this page.</td>
+                                    <td colSpan="9" className="py-8 text-center text-muted text-xs">No coins found.</td>
                                 </tr>
                             ) : (
                                 getSortedExhangeData().map((ticker, index) => (
@@ -539,48 +531,44 @@ const ExchangeDetail = () => {
                                         onClick={() => navigate(`/cryptocurrencies/marketcap/${ticker.coin_id}`)}
                                         className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer group'
                                     >
-                                        <td className='py-4 px-2 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px]'>
-                                            <div className='flex items-center gap-2'>
-                                                <span>{(currentPage - 1) * perPage + index + 1}</span>
+                                        <td className='py-2 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[35px] min-w-[35px] md:w-[45px] md:min-w-[45px] text-[10px] md:text-xs text-muted'>
+                                            {(currentPage - 1) * perPage + index + 1}
+                                        </td>
+                                        <td className='py-2 px-1 sticky left-[35px] md:left-[45px] bg-main group-hover:bg-card transition-colors z-10 w-[100px] min-w-[100px] md:w-[150px] md:min-w-[150px]'>
+                                            <div className='flex flex-col gap-0.5'>
+                                                <span className='font-bold truncate max-w-[80px] md:max-w-[130px]'>{ticker.base}</span>
+                                                <span className='text-[9px] text-muted uppercase leading-none'>{ticker.coin_id?.split('-')[0]}</span>
                                             </div>
                                         </td>
-                                        <td className='py-4 px-2 sticky left-[60px] md:left-[80px] bg-main group-hover:bg-card transition-colors z-10 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px]'>
-                                            <div className='flex items-center gap-2'>
-                                                <div className='flex flex-col gap-0.5'>
-                                                    <span className='font-bold truncate max-w-[180px]'>{ticker.base}</span>
-                                                    <span className='text-xs text-muted uppercase'>{ticker.coin_id}</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className='py-4 px-2 font-medium text-white'>
+                                        <td className='py-2 px-2 font-medium text-white text-xs'>
                                             {activeTab === 'Perpetuals' ? (
-                                                <span className='px-2 py-1 bg-green-500/10 text-green-500 rounded text-[10px] font-bold border border-green-500/20 uppercase tracking-wider'>
-                                                    Perpetual
+                                                <span className='px-1.5 py-0.5 bg-green-500/10 text-green-500 rounded text-[9px] font-bold border border-green-500/20 uppercase'>
+                                                    Perp
                                                 </span>
                                             ) : (
-                                                <a href={ticker.trade_url} className='py-2 px-3 bg-card rounded-md hover:bg-main text-muted hover:text-white transition-colors'>
+                                                <span className='text-muted group-hover:text-white transition-colors truncate max-w-[80px] block'>
                                                     {ticker.base}/{ticker.target}
-                                                </a>
+                                                </span>
                                             )}
                                         </td>
-                                        <td className='py-4 px-2'>${ticker.converted_last?.usd?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}</td>
-                                        <td className='py-4 px-2 text-muted'>{ticker.bid_ask_spread_percentage?.toFixed(2)}%</td>
+                                        <td className='py-2 px-2 text-xs'>${ticker.converted_last?.usd?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</td>
+                                        <td className='py-2 px-2 text-muted text-xs'>{ticker.bid_ask_spread_percentage?.toFixed(2)}%</td>
 
                                         {activeTab === 'Perpetuals' ? (
                                             <>
-                                                <td className='py-4 px-2 text-blue-400'>${(ticker.open_interest_usd || 0).toLocaleString()}</td>
-                                                <td className='py-4 px-2 text-green-400'>{(ticker.funding_rate || 0).toFixed(4)}%</td>
+                                                <td className='py-2 px-2 text-blue-400 text-xs'>${(ticker.open_interest_usd || 0).toLocaleString(undefined, { notation: 'compact' })}</td>
+                                                <td className='py-2 px-2 text-green-400 text-xs'>{(ticker.funding_rate || 0).toFixed(4)}%</td>
                                             </>
                                         ) : (
                                             <>
-                                                <td className='py-4 px-2 text-green-500/80'>${ticker.cost_to_move_up_usd?.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
-                                                <td className='py-4 px-2 text-red-500/80'>${ticker.cost_to_move_down_usd?.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+                                                <td className='py-2 px-2 text-green-500/80 text-xs'>${ticker.cost_to_move_up_usd?.toLocaleString(undefined, { notation: 'compact' })}</td>
+                                                <td className='py-2 px-2 text-red-500/80 text-xs'>${ticker.cost_to_move_down_usd?.toLocaleString(undefined, { notation: 'compact' })}</td>
                                             </>
                                         )}
 
-                                        <td className='py-4 px-2'>${ticker.converted_volume?.usd?.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
-                                        <td className='py-4 px-2 text-muted'>{((ticker.converted_volume?.usd / (exchange?.trade_volume_24h_btc_normalized || 1)) * 100).toFixed(2)}%</td>
-                                        <td className='py-4 px-2 text-xs text-muted'>{new Date(ticker.last_traded_at).toLocaleTimeString()}</td>
+                                        <td className='py-2 px-2 text-xs font-mono'>${ticker.converted_volume?.usd?.toLocaleString(undefined, { notation: 'compact' })}</td>
+                                        <td className='py-2 px-2 text-muted text-xs'>{((ticker.converted_volume?.usd / (exchange?.trade_volume_24h_btc_normalized || 1)) * 100).toFixed(2)}%</td>
+                                        <td className='py-2 px-2 text-[10px] text-muted'>{new Date(ticker.last_traded_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
                                     </tr>
                                 ))
                             )}

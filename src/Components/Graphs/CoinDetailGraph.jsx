@@ -16,7 +16,15 @@ const timeframes = [
     { label: 'Max', value: 'max', interval: 'daily' },
 ];
 
-const CoinDetailGraph = ({ coinId: propCoinId, chartHeight = "min-h-[550px]" }) => {
+const CoinDetailGraph = ({ coinId: propCoinId }) => {
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const chartHeight = isMobile ? "h-[300px]" : "h-[500px]";
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
     const { coinId: paramCoinId } = useParams();
     const coinId = propCoinId || paramCoinId;
     const [dataType, setDataType] = useState('prices'); // 'prices' | 'market_caps'
@@ -208,26 +216,26 @@ const CoinDetailGraph = ({ coinId: propCoinId, chartHeight = "min-h-[550px]" }) 
         if (active && payload && payload.length) {
             const data = payload[0].payload;
             return (
-                <div className="bg-[#1a1c23]/95 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shadow-2xl min-w-[200px]">
-                    <p className="text-[10px] text-gray-400 font-bold uppercase mb-3 opacity-60 tracking-wider">
+                <div className="bg-[#1a1c23]/95 backdrop-blur-xl border border-white/10 p-2 sm:p-4 rounded-xl sm:rounded-2xl shadow-2xl min-w-[140px] sm:min-w-[200px]">
+                    <p className="text-[9px] sm:text-[10px] text-gray-400 font-bold uppercase mb-2 opacity-60 tracking-wider">
                         {new Date(data.time).toLocaleString(undefined, {
                             month: 'short', day: 'numeric', year: 'numeric',
                             hour: '2-digit', minute: '2-digit'
                         })}
                     </p>
-                    <div className="flex flex-col gap-2">
-                        <div className="flex items-center justify-between">
-                            <span className="text-[11px] text-gray-400 font-bold uppercase tracking-tight">{dataType === 'prices' ? 'Price' : 'Market Cap'}</span>
-                            <span className="text-sm font-black text-white">
+                    <div className="flex flex-col gap-1 sm:gap-2">
+                        <div className="flex items-center justify-between gap-4">
+                            <span className="text-[9px] sm:text-[11px] text-gray-400 font-bold uppercase tracking-tight">{dataType === 'prices' ? 'Price' : 'Cap'}</span>
+                            <span className="text-xs sm:text-sm font-black text-white">
                                 ${data.value?.toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 })}
                             </span>
                         </div>
-                        <div className="flex items-center justify-between">
-                            <span className="text-[11px] text-gray-400 font-bold uppercase tracking-tight">Vol</span>
-                            <span className="text-sm font-black text-white/70">
+                        <div className="flex items-center justify-between gap-4">
+                            <span className="text-[9px] sm:text-[11px] text-gray-400 font-bold uppercase tracking-tight">Vol</span>
+                            <span className="text-xs sm:text-sm font-black text-white/70">
                                 ${data.vol?.toLocaleString(undefined, { notation: 'compact' })}
                             </span>
                         </div>
@@ -239,68 +247,65 @@ const CoinDetailGraph = ({ coinId: propCoinId, chartHeight = "min-h-[550px]" }) 
     };
 
     return (
-        <div className="w-full h-full flex flex-col gap-6 p-4 bg-[#0d0e12] rounded-3xl border border-white/5">
-            <div className="flex flex-col sm:flex-row flex-wrap items-center justify-between gap-4 border-b border-white/5 pb-4">
-                <div className="flex items-center gap-4">
-                    <h3 className="text-lg font-bold text-white px-2">Price & Market Cap Chart</h3>
-                    <div className="flex bg-white/5 p-1 rounded-lg">
+        <div className="w-full h-full flex flex-col gap-4 sm:gap-6 p-2 sm:p-6 bg-[#0d0e12] rounded-2xl sm:rounded-3xl border border-white/5">
+            <div className="flex flex-col gap-4 border-b border-white/5 pb-4">
+                <div className="flex flex-col gap-1">
+                    <h3 className="text-base sm:text-lg font-bold text-white px-2">Price & Market Cap Chart</h3>
+                    <p className='text-[10px] sm:text-xs text-gray-400 px-2'>Historical performance and market capitalization trend.</p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
+                    <div className="flex bg-white/5 p-1 rounded-xl w-full sm:w-auto">
                         <button
                             onClick={() => setDataType('prices')}
-                            className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${dataType === 'prices' ? 'bg-[#3b82f6] text-white shadow-lg shadow-blue-500/20' : 'text-gray-400 hover:text-white'}`}
+                            className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${dataType === 'prices' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20' : 'text-gray-400 hover:text-white'}`}
                         >
                             Price
                         </button>
                         <button
                             onClick={() => setDataType('market_caps')}
-                            className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${dataType === 'market_caps' ? 'bg-[#3b82f6] text-white shadow-lg shadow-blue-500/20' : 'text-gray-400 hover:text-white'}`}
+                            className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${dataType === 'market_caps' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20' : 'text-gray-400 hover:text-white'}`}
                         >
                             Market Cap
                         </button>
                     </div>
-                </div>
 
-                <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl">
-                        <button
-                            onClick={() => setChartType('line')}
-                            className={`p-1.5 rounded-lg transition-all ${chartType === 'line' ? 'bg-white/10 text-blue-400' : 'text-gray-500 hover:text-white'}`}
-                            title="Line Chart"
-                        >
-                            <TrendingUp size={14} />
-                        </button>
-                        <button
-                            onClick={() => setChartType('ohlc')}
-                            className={`p-1.5 rounded-lg transition-all ${chartType === 'ohlc' ? 'bg-white/10 text-blue-400' : 'text-gray-500 hover:text-white'}`}
-                            title="OHLC Chart"
-                        >
-                            <BarChart3 size={14} />
-                        </button>
-                    </div>
+                    <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                        <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl">
+                            <button
+                                onClick={() => setChartType('line')}
+                                className={`p-1.5 rounded-lg transition-all ${chartType === 'line' ? 'bg-white/10 text-blue-400' : 'text-gray-500 hover:text-white'}`}
+                                title="Line Chart"
+                            >
+                                <TrendingUp size={14} />
+                            </button>
+                            <button
+                                onClick={() => setChartType('ohlc')}
+                                className={`p-1.5 rounded-lg transition-all ${chartType === 'ohlc' ? 'bg-white/10 text-blue-400' : 'text-gray-500 hover:text-white'}`}
+                                title="OHLC Chart"
+                            >
+                                <BarChart3 size={14} />
+                            </button>
+                        </div>
 
-                    <div className="w-[1px] h-4 bg-white/10 mx-1" />
+                        <div className="w-[1px] h-4 bg-white/10 mx-1 hidden sm:block" />
 
-                    <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl w-full sm:w-auto overflow-x-auto no-scrollbar">
-                        <div className="flex items-center gap-1 min-w-max">
+                        <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl overflow-x-auto no-scrollbar max-w-[200px] sm:max-w-none">
                             {timeframes.map((tf) => (
                                 <button
                                     key={tf.label}
                                     onClick={() => setTimeframe(tf)}
-                                    className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-[9px] sm:text-[10px] font-black transition-all ${timeframe.label === tf.label ? 'bg-blue-500/20 text-blue-400' : 'text-gray-500 hover:text-white'}`}
+                                    className={`px-2 py-1.5 rounded-lg text-[9px] sm:text-[10px] font-black transition-all ${timeframe.label === tf.label ? 'bg-blue-500/20 text-blue-400' : 'text-gray-500 hover:text-white'}`}
                                 >
                                     {tf.label}
                                 </button>
                             ))}
                         </div>
-                        <div className="w-[1px] h-4 bg-white/10 mx-1 sm:mx-2 flex-shrink-0" />
-                        <div className="flex items-center gap-0.5 sm:gap-1 flex-shrink-0">
-                            <button className="p-1.5 text-gray-500 hover:text-white transition-all"><Download size={13} className="sm:w-3.5 sm:h-3.5" /></button>
-                            <button className="p-1.5 text-gray-500 hover:text-white transition-all"><Maximize2 size={13} className="sm:w-3.5 sm:h-3.5" /></button>
-                        </div>
                     </div>
                 </div>
             </div>
 
-            <div className={`flex-1 w-full ${chartHeight} relative`} ref={chartRef}>
+            <div className={`w-full ${isMobile ? 'min-h-[300px]' : 'min-h-[500px]'} relative`} ref={chartRef}>
                 {loading && (
                     <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-2xl">
                         <div className="w-10 h-10 border-2 border-white/10 border-t-white rounded-full animate-spin"></div>
@@ -315,7 +320,7 @@ const CoinDetailGraph = ({ coinId: propCoinId, chartHeight = "min-h-[550px]" }) 
                         <div>
                             <h3 className="text-lg font-bold text-white mb-2 italic tracking-tight">DATA FEED OFFLINE</h3>
                             <p className="text-sm text-gray-500 max-w-[300px] leading-relaxed">
-                                {error.includes('401')
+                                {String(error).includes('401')
                                     ? "Unauthorized access. Your CoinGecko API Key seems to be invalid or missing."
                                     : error}
                             </p>
@@ -327,12 +332,18 @@ const CoinDetailGraph = ({ coinId: propCoinId, chartHeight = "min-h-[550px]" }) 
                             Retry Connection
                         </button>
                     </div>
+                ) : chartData.length === 0 ? (
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-[#0d0e12] rounded-2xl border border-white/5 p-8 text-center">
+                        <BarChart3 size={32} className="text-gray-600 opacity-50" />
+                        <p className="text-sm text-gray-500 italic">No historical data available for this coin.</p>
+                    </div>
                 ) : (
                     <ResponsiveContainer width="100%" height="100%">
                         <ComposedChart
                             data={chartData}
                             onMouseMove={handleMouseMove}
                             onMouseLeave={() => setCursorTime(null)}
+                            margin={{ top: 10, right: isMobile ? 10 : 30, left: isMobile ? 10 : 0, bottom: 0 }}
                         >
                             <defs>
                                 <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
@@ -366,6 +377,7 @@ const CoinDetailGraph = ({ coinId: propCoinId, chartHeight = "min-h-[550px]" }) 
                                 tick={{ fill: '#4b5563', fontSize: 10, fontWeight: 700 }}
                                 tickFormatter={(val) => `$${val?.toLocaleString(undefined, { notation: 'compact' })}`}
                                 allowDataOverflow
+                                width={isMobile ? 0 : 60}
                             />
                             <YAxis
                                 yAxisId="vol"
@@ -373,7 +385,11 @@ const CoinDetailGraph = ({ coinId: propCoinId, chartHeight = "min-h-[550px]" }) 
                                 domain={[0, (dataMax) => dataMax * 5]}
                                 hide={true}
                             />
-                            <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#ffffff10', strokeWidth: 1 }} />
+                            <Tooltip
+                                content={<CustomTooltip />}
+                                cursor={{ stroke: '#ffffff10', strokeWidth: 1 }}
+                                allowEscapeViewBox={{ x: false, y: false }}
+                            />
 
                             <Bar
                                 yAxisId="vol"
@@ -421,16 +437,16 @@ const CoinDetailGraph = ({ coinId: propCoinId, chartHeight = "min-h-[550px]" }) 
                             />
                         </ComposedChart>
                     </ResponsiveContainer>
-                )
-                }
+                )}
 
-                <div className="absolute bottom-10 right-10 opacity-40 pointer-events-none flex items-center gap-2">
-                    <div className="w-6 h-6 bg-[#3b82f6] rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.5)]">
-                        <Zap size={14} className="text-white fill-white" />
+                <div className="absolute bottom-4 right-4 opacity-30 pointer-events-none flex items-center gap-1.5">
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-[#3b82f6] rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+                        <Zap size={12} className="text-white fill-white sm:w-3.5 sm:h-3.5" />
                     </div>
-                    <span className="text-sm font-black tracking-tighter text-white uppercase italic">COIN<span className="text-blue-500">ORBIT</span></span>
+                    <span className="text-xs sm:text-sm font-black tracking-tighter text-white uppercase italic">COIN<span className="text-blue-500">ORBIT</span></span>
                 </div>
-            </div >
+            </div>
+
         </div >
     );
 };

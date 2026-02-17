@@ -1,8 +1,17 @@
 import React from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 const ComparisonsPieChart = ({ data, title }) => {
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     const COLORS = ['#3b82f6', '#facc15', '#10b981', '#ef4444']; // Blue, Yellow, Green, Red
 
     // Calculate total for percentage in Legend
@@ -29,7 +38,7 @@ const ComparisonsPieChart = ({ data, title }) => {
     const renderLegend = (props) => {
         const { payload } = props;
         return (
-            <ul className="flex flex-col gap-2 text-sm mt-4">
+            <ul className={`flex ${isMobile ? 'flex-row justify-center flex-wrap' : 'flex-col'} gap-2 text-sm mt-4`}>
                 {payload.map((entry, index) => {
                     // entry.payload is the data object { name, value, color }
                     // We calculate percent manually
@@ -56,23 +65,30 @@ const ComparisonsPieChart = ({ data, title }) => {
             className="w-full bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col items-center justify-center"
         >
             <h3 className="text-lg font-bold text-white mb-4 self-start">{title}</h3>
-            <div className="w-full h-[300px] relative flex items-center justify-center">
+            <div className={`w-full ${isMobile ? 'h-[350px]' : 'h-[300px]'} relative flex items-center justify-center`}>
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                         <Pie
                             data={data}
-                            innerRadius={80}
-                            outerRadius={110}
+                            innerRadius={isMobile ? 60 : 80}
+                            outerRadius={isMobile ? 85 : 110}
                             paddingAngle={5}
                             dataKey="value"
                             stroke="none"
+                            cx={isMobile ? "50%" : "40%"}
+                            cy="50%"
                         >
                             {data.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={entry.color || COLORS[index % COLORS.length]} />
                             ))}
                         </Pie>
                         <Tooltip content={<CustomTooltip />} />
-                        <Legend content={renderLegend} verticalAlign="middle" align="right" layout="vertical" />
+                        <Legend
+                            content={renderLegend}
+                            verticalAlign={isMobile ? "bottom" : "middle"}
+                            align={isMobile ? "center" : "right"}
+                            layout={isMobile ? "horizontal" : "vertical"}
+                        />
                     </PieChart>
                 </ResponsiveContainer>
             </div>
