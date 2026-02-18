@@ -6,6 +6,7 @@ import { ExchagesData } from '../../services/AllcoinsData';
 import Pagination from '../../Components/Pagination/Pagination';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
+import SearchBar from '../../Components/Inputs/SearchBar';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -36,6 +37,7 @@ const CryptoExchanges = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchExhageData = async () => {
@@ -70,9 +72,17 @@ const CryptoExchanges = () => {
   };
 
   const getSortedExchanges = () => {
-    if (!sortConfig.key) return exchageData;
+    let filteredExchanges = exchageData;
+    if (searchQuery) {
+      filteredExchanges = exchageData.filter(exchange =>
+        exchange.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        exchange.id.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
 
-    return [...exchageData].sort((a, b) => {
+    if (!sortConfig.key) return filteredExchanges;
+
+    return [...filteredExchanges].sort((a, b) => {
       let aVal = a[sortConfig.key];
       let bVal = b[sortConfig.key];
 
@@ -109,6 +119,11 @@ const CryptoExchanges = () => {
           <h1 className='text-2xl sm:text-3xl font-bold'>Spot Exchanges</h1>
           <p className='text-xs sm:text-sm text-muted'>Ranked by Trust Score. Tracking {TOTAL_EXCHANGES} exchanges.</p>
         </div>
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search exchanges..."
+        />
       </motion.div>
 
       <motion.div variants={itemVariants} className='w-full overflow-x-auto h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative rounded-xl border border-gray-800/50'>

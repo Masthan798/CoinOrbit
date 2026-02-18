@@ -9,6 +9,7 @@ import Toggle from '../../Components/Toggles/Toggle';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import CardSkeleton from '../../Components/Loadings/CardSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
+import SearchBar from '../../Components/Inputs/SearchBar';
 
 
 const data = [
@@ -37,6 +38,7 @@ const MarketCap = () => {
     return saved !== null ? JSON.parse(saved) : true; // Default to true if not saved
   });
   const [highlightsLoading, setHighlightsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Global Stats State
   const [globalData, setGlobalData] = useState(null);
@@ -201,9 +203,17 @@ const MarketCap = () => {
   };
 
   const getSortedCoins = () => {
-    if (!sortConfig.key) return Allcoins;
+    let filteredCoins = Allcoins;
+    if (searchQuery) {
+      filteredCoins = Allcoins.filter(coin =>
+        coin.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        coin.symbol.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
 
-    return [...Allcoins].sort((a, b) => {
+    if (!sortConfig.key) return filteredCoins;
+
+    return [...filteredCoins].sort((a, b) => {
       let aVal = a[sortConfig.key];
       let bVal = b[sortConfig.key];
 
@@ -412,6 +422,14 @@ const MarketCap = () => {
 
 
 
+      </motion.div>
+
+      <motion.div variants={itemVariants} className='w-full flex justify-end'>
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search coins..."
+        />
       </motion.div>
 
 

@@ -4,6 +4,7 @@ import { DerivativesData } from '../../services/AllcoinsData';
 import Pagination from '../../Components/Pagination/Pagination';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
+import SearchBar from '../../Components/Inputs/SearchBar';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -31,6 +32,7 @@ const Derivatives = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchDerivatiesData = async () => {
@@ -52,8 +54,13 @@ const Derivatives = () => {
     fetchDerivatiesData();
   }, []) // Fetch once, then paginate locally if API doesn't support it
 
-  // Local pagination since the service function doesn't take params
-  const paginatedData = derivaties.slice(
+  // Local search and pagination
+  const filteredData = derivaties.filter(exchange =>
+    exchange.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    exchange.id.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * perPage,
     currentPage * perPage
   );
@@ -75,6 +82,11 @@ const Derivatives = () => {
           <h1 className='text-2xl sm:text-3xl font-bold'>Derivative Exchanges</h1>
           <p className='text-xs sm:text-sm text-muted'>Ranked by Open Interest & Trade Volume. Tracking {derivaties.length} exchanges.</p>
         </div>
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search exchanges..."
+        />
       </motion.div>
 
 
@@ -152,7 +164,7 @@ const Derivatives = () => {
           setCurrentPage={setCurrentPage}
           perPage={perPage}
           setPerPage={setPerPage}
-          totalItems={derivaties.length}
+          totalItems={filteredData.length}
         />
       </motion.div>
 

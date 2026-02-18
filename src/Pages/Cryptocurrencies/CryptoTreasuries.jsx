@@ -7,6 +7,7 @@ import Pagination from '../../Components/Pagination/Pagination';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import StatsCardSkeleton from '../../Components/Loadings/StatsCardSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
+import SearchBar from '../../Components/Inputs/SearchBar';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -37,6 +38,7 @@ const CryptoTreasuries = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchTreasuriesData = async () => {
@@ -95,9 +97,17 @@ const CryptoTreasuries = () => {
   };
 
   const getSortedTreasuries = () => {
-    if (!sortConfig.key) return treasuries;
+    let filteredTreasuries = treasuries;
+    if (searchQuery) {
+      filteredTreasuries = treasuries.filter(entity =>
+        entity.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        entity.symbol.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
 
-    return [...treasuries].sort((a, b) => {
+    if (!sortConfig.key) return filteredTreasuries;
+
+    return [...filteredTreasuries].sort((a, b) => {
       let aVal = a[sortConfig.key];
       let bVal = b[sortConfig.key];
 
@@ -135,11 +145,16 @@ const CryptoTreasuries = () => {
         />
       </div>
 
-      <motion.div variants={itemVariants} className='w-full flex items-center justify-between'>
+      <motion.div variants={itemVariants} className='w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4'>
         <div className='flex flex-col gap-1'>
           <h1 className='text-3xl font-bold'>Crypto Treasuries</h1>
           <p className='text-sm text-muted'>Public companies that have disclosed their Bitcoin holdings.</p>
         </div>
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search entities..."
+        />
       </motion.div>
 
       <motion.div variants={itemVariants} className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4'>
@@ -293,7 +308,7 @@ const CryptoTreasuries = () => {
           setCurrentPage={setCurrentPage}
           perPage={perPage}
           setPerPage={setPerPage}
-          totalItems={treasuries.length}
+          totalItems={sortedTreasuriesList.length}
         />
       </motion.div>
 

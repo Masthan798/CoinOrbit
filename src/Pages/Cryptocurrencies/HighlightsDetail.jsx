@@ -6,6 +6,7 @@ import { AreaChart, Area, ResponsiveContainer } from 'recharts';
 import { TrendingCoinsData, AllcoinsData } from '../../services/AllcoinsData';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
+import SearchBar from '../../Components/Inputs/SearchBar';
 
 const HighlightsDetail = () => {
     const { type } = useParams();
@@ -14,6 +15,7 @@ const HighlightsDetail = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+    const [searchQuery, setSearchQuery] = useState('');
 
     const getTitle = () => {
         switch (type) {
@@ -99,9 +101,17 @@ const HighlightsDetail = () => {
     };
 
     const getSortedCoins = () => {
-        if (!sortConfig.key) return coins;
+        let filteredCoins = coins;
+        if (searchQuery) {
+            filteredCoins = coins.filter(coin =>
+                coin.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                coin.symbol.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
 
-        const sorted = [...coins].sort((a, b) => {
+        if (!sortConfig.key) return filteredCoins;
+
+        const sorted = [...filteredCoins].sort((a, b) => {
             let aVal = a[sortConfig.key];
             let bVal = b[sortConfig.key];
 
@@ -160,9 +170,16 @@ const HighlightsDetail = () => {
                     ]}
                 />
 
-                <div className='flex flex-col gap-2'>
-                    <h1 className='text-3xl font-bold'>{getTitle()}</h1>
-                    <p className='text-muted max-w-4xl'>{getDescription()}</p>
+                <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
+                    <div className='flex flex-col gap-2'>
+                        <h1 className='text-3xl font-bold'>{getTitle()}</h1>
+                        <p className='text-muted max-w-4xl'>{getDescription()}</p>
+                    </div>
+                    <SearchBar
+                        value={searchQuery}
+                        onChange={setSearchQuery}
+                        placeholder="Search coins..."
+                    />
                 </div>
             </div>
 

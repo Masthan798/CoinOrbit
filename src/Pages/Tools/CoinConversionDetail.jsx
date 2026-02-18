@@ -67,7 +67,7 @@ const CoinConversionDetail = () => {
 
     if (loading) {
         return (
-            <div className="w-full min-h-screen p-4 md:p-6 flex flex-col gap-6 bg-main text-white pb-20 animate-pulse">
+            <div className="w-full min-h-screen p-2 md:p-6 flex flex-col gap-6 bg-main text-white pb-20 animate-pulse">
                 {/* Breadcrumbs Skeleton */}
                 <div className="h-4 bg-gray-800 rounded w-64"></div>
 
@@ -130,7 +130,7 @@ const CoinConversionDetail = () => {
             initial="hidden"
             animate="visible"
             exit={{ opacity: 0 }}
-            className="w-full min-h-full p-4 md:p-6 flex flex-col gap-6 bg-main text-white pb-20"
+            className="w-full min-h-full p-2 md:p-6 flex flex-col gap-6 bg-main text-white pb-20"
         >
             {/* Breadcrumbs */}
             <Breadcrumbs
@@ -223,38 +223,6 @@ const CoinConversionDetail = () => {
 
                     </div>
 
-
-                    {/* FAQs */}
-                    <div className="flex flex-col gap-4 p-2">
-                        <h3 className="font-bold">FAQs</h3>
-                        {[
-                            { q: `How much is 1 ${coinData.name} worth in ${currencyCode.toUpperCase()}?`, a: `The current price of 1 ${coinData.name} is ${formatCurrency(exchangeRate, currencyCode)}. This price is updated in real-time and reflects the latest market activity.` },
-                            { q: `How many ${coinData.symbol.toUpperCase()} can I buy for 1 ${currencyCode.toUpperCase()}?`, a: `With 1 ${currencyCode.toUpperCase()}, you can buy approximately ${(1 / exchangeRate).toFixed(8)} ${coinData.symbol.toUpperCase()}. This is calculated by dividing 1 by the current exchange rate.` },
-                            { q: `How do I convert the price of ${coinData.symbol.toUpperCase()} to ${currencyCode.toUpperCase()}?`, a: `You can use the converter tool on this page to calculate the value. Simply enter the amount of ${coinData.symbol.toUpperCase()} you want to convert, and it will automatically display the equivalent value in ${currencyCode.toUpperCase()}.` },
-                            { q: `What is the highest price of ${coinData.symbol.toUpperCase()}/${currencyCode.toUpperCase()} in history?`, a: `The all-time high price of ${coinData.name} was ${formatCurrency(coinData.market_data.ath[currencyCode.toLowerCase()] || coinData.market_data.ath.usd, currencyCode)} on ${new Date(coinData.market_data.ath_date[currencyCode.toLowerCase()] || coinData.market_data.ath_date.usd).toLocaleDateString()}.` },
-                            { q: `What is the price trend of ${coinData.name} in ${currencyCode.toUpperCase()}?`, a: `Over the last 24 hours, the price has changed by ${coinData.market_data.price_change_percentage_24h.toFixed(2)}%. In the last 7 days, the price has moved by ${coinData.market_data.price_change_percentage_7d.toFixed(2)}%.` }
-                        ].map((item, i) => (
-                            <div key={i} className="border-b border-gray-800 pb-2">
-                                <div
-                                    className="flex justify-between items-center py-2 cursor-pointer group"
-                                    onClick={() => toggleFAQ(i)}
-                                >
-                                    <span className="text-sm text-gray-400 group-hover:text-white transition font-medium">{item.q}</span>
-                                    <span className="text-gray-400 text-xl font-light">{expandedFAQ === i ? '−' : '+'}</span>
-                                </div>
-                                <motion.div
-                                    initial={false}
-                                    animate={{ height: expandedFAQ === i ? 'auto' : 0, opacity: expandedFAQ === i ? 1 : 0 }}
-                                    className="overflow-hidden"
-                                >
-                                    <p className="text-xs text-muted leading-relaxed pb-2 pl-1">
-                                        {item.a}
-                                    </p>
-                                </motion.div>
-                            </div>
-                        ))}
-                    </div>
-
                 </div>
 
                 {/* RIGHT COLUMN: Converter & Chart */}
@@ -313,36 +281,68 @@ const CoinConversionDetail = () => {
                         </div>
 
                         {/* Price Performance Table */}
-                        <div className="mt-6 bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 overflow-x-auto no-scrollbar">
+                        <div className="mt-6 bg-[#0b0e11] border border-gray-800 rounded-3xl p-6">
                             <h3 className="text-lg font-bold mb-4">{coinData.name} Price Performance ({currencyCode.toUpperCase()})</h3>
-                            <table className="w-full min-w-[500px]">
-                                <thead>
-                                    <tr className="border-b border-gray-800">
-                                        {['1h', '24h', '7d', '14d', '30d', '1y'].map(h => (
-                                            <th key={h} className="text-left py-3 text-sm text-muted font-medium uppercase tracking-wider">{h}</th>
-                                        ))}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        {[
-                                            coinData.market_data.price_change_percentage_1h_in_currency?.usd,
-                                            coinData.market_data.price_change_percentage_24h,
-                                            coinData.market_data.price_change_percentage_7d,
-                                            coinData.market_data.price_change_percentage_14d,
-                                            coinData.market_data.price_change_percentage_30d,
-                                            coinData.market_data.price_change_percentage_1y
-                                        ].map((val, idx) => (
-                                            <td key={idx} className={`py-4 text-sm font-bold ${val >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                                                {val ? `${val > 0 ? '+' : ''}${val.toFixed(2)}%` : '-'}
-                                            </td>
-                                        ))}
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div className="overflow-x-auto no-scrollbar">
+                                <table className="w-full min-w-[500px]">
+                                    <thead>
+                                        <tr className="border-b border-gray-800">
+                                            {['1h', '24h', '7d', '14d', '30d', '1y'].map(h => (
+                                                <th key={h} className="text-left py-3 text-sm text-muted font-medium uppercase tracking-wider">{h}</th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            {[
+                                                coinData.market_data.price_change_percentage_1h_in_currency?.usd,
+                                                coinData.market_data.price_change_percentage_24h,
+                                                coinData.market_data.price_change_percentage_7d,
+                                                coinData.market_data.price_change_percentage_14d,
+                                                coinData.market_data.price_change_percentage_30d,
+                                                coinData.market_data.price_change_percentage_1y
+                                            ].map((val, idx) => (
+                                                <td key={idx} className={`py-4 text-sm font-bold ${val >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                                    {val ? `${val > 0 ? '+' : ''}${val.toFixed(2)}%` : '-'}
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
+                </div>
 
+                {/* FAQs: Appears under Sidebar on Desktop, at the bottom on Mobile */}
+                <div className="col-span-1 flex flex-col gap-4 p-2">
+                    <h3 className="font-bold">FAQs</h3>
+                    {[
+                        { q: `How much is 1 ${coinData.name} worth in ${currencyCode.toUpperCase()}?`, a: `The current price of 1 ${coinData.name} is ${formatCurrency(exchangeRate, currencyCode)}. This price is updated in real-time and reflects the latest market activity.` },
+                        { q: `How many ${coinData.symbol.toUpperCase()} can I buy for 1 ${currencyCode.toUpperCase()}?`, a: `With 1 ${currencyCode.toUpperCase()}, you can buy approximately ${(1 / exchangeRate).toFixed(8)} ${coinData.symbol.toUpperCase()}. This is calculated by dividing 1 by the current exchange rate.` },
+                        { q: `How do I convert the price of ${coinData.symbol.toUpperCase()} to ${currencyCode.toUpperCase()}?`, a: `You can use the converter tool on this page to calculate the value. Simply enter the amount of ${coinData.symbol.toUpperCase()} you want to convert, and it will automatically display the equivalent value in ${currencyCode.toUpperCase()}.` },
+                        { q: `What is the highest price of ${coinData.symbol.toUpperCase()}/${currencyCode.toUpperCase()} in history?`, a: `The all-time high price of ${coinData.name} was ${formatCurrency(coinData.market_data.ath[currencyCode.toLowerCase()] || coinData.market_data.ath.usd, currencyCode)} on ${new Date(coinData.market_data.ath_date[currencyCode.toLowerCase()] || coinData.market_data.ath_date.usd).toLocaleDateString()}.` },
+                        { q: `What is the price trend of ${coinData.name} in ${currencyCode.toUpperCase()}?`, a: `Over the last 24 hours, the price has changed by ${coinData.market_data.price_change_percentage_24h.toFixed(2)}%. In the last 7 days, the price has moved by ${coinData.market_data.price_change_percentage_7d.toFixed(2)}%.` }
+                    ].map((item, i) => (
+                        <div key={i} className="border-b border-gray-800 pb-2">
+                            <div
+                                className="flex justify-between items-center py-2 cursor-pointer group"
+                                onClick={() => toggleFAQ(i)}
+                            >
+                                <span className="text-sm text-gray-400 group-hover:text-white transition font-medium">{item.q}</span>
+                                <span className="text-gray-400 text-xl font-light">{expandedFAQ === i ? '−' : '+'}</span>
+                            </div>
+                            <motion.div
+                                initial={false}
+                                animate={{ height: expandedFAQ === i ? 'auto' : 0, opacity: expandedFAQ === i ? 1 : 0 }}
+                                className="overflow-hidden"
+                            >
+                                <p className="text-xs text-muted leading-relaxed pb-2 pl-1">
+                                    {item.a}
+                                </p>
+                            </motion.div>
+                        </div>
+                    ))}
                 </div>
 
             </div>

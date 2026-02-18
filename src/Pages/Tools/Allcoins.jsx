@@ -1,11 +1,17 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react'
+import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, Search, RotateCcw, ArrowUpRight, ChevronUp, X } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { AllcoinsData } from '../../services/AllcoinsData';
 import Pagination from '../../Components/Pagination/Pagination';
-import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
+import { ArrowUpRight, ChevronUp, ChevronDown, Rocket, Flame, ArrowRight, ArrowLeft } from 'lucide-react';
+import TableSkeleton from '../../Components/Loadings/TableSkeleton';
+
+// Utilities
+import { formatCurrency, formatCompact, renderPriceChange } from '../../utils/formatters.jsx';
+
+// Sub-components
+import SearchBar from '../../Components/Inputs/SearchBar';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -18,119 +24,15 @@ const containerVariants = {
   }
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 10 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: "easeOut" }
-  }
-};
-
-const FilterDropdown = ({ label, options, selectedValue, onSelect, activeFilter, setActiveFilter }) => {
-  const isOpen = activeFilter === label;
-  const dropdownRef = useRef(null);
-  const [searchTerm, setSearchTerm] = useState('');
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setActiveFilter(null);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [setActiveFilter]);
-
-  const filteredOptions = options.filter(opt =>
-    opt.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  return (
-    <div className="relative" ref={dropdownRef}>
-      <button
-        onClick={() => setActiveFilter(isOpen ? null : label)}
-        className={`flex items-center gap-2 px-3 py-1.5 bg-[#1a1c23] border ${isOpen ? 'border-blue-500 text-white' : 'border-gray-800 text-gray-300'} rounded-md text-sm hover:bg-[#252833] transition-colors`}
-      >
-        {label} {selectedValue !== 'All' && <span className="text-blue-500 ml-1">•</span>}
-        {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-      </button>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="absolute left-0 mt-2 w-64 bg-[#1a1c23] border border-gray-700 rounded-xl shadow-2xl z-50 overflow-hidden"
-          >
-            <div className="p-3 border-b border-gray-800">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={14} />
-                <input
-                  type="text"
-                  placeholder="Search"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-[#0b0e11] border border-gray-700 rounded-lg py-1.5 pl-10 pr-4 text-sm focus:outline-none focus:border-blue-500 text-white"
-                />
-              </div>
-            </div>
-            <div className="max-h-64 overflow-y-auto custom-scrollbar">
-              {filteredOptions.length > 0 ? (
-                filteredOptions.map((option) => (
-                  <button
-                    key={option}
-                    onClick={() => {
-                      onSelect(option);
-                      setActiveFilter(null);
-                      setSearchTerm('');
-                    }}
-                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors hover:bg-white/5 ${selectedValue === option ? 'text-white bg-white/10 font-bold' : 'text-gray-300'
-                      }`}
-                  >
-                    {option}
-                  </button>
-                ))
-              ) : (
-                <div className="px-4 py-3 text-sm text-muted text-center">No options found</div>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-};
-
 const Allcoins = () => {
   const navigate = useNavigate();
   const [coins, setCoins] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(100);
+  const [perPage, setPerPage] = useState(10);
+  const [searchQuery, setSearchQuery] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'market_cap_rank', direction: 'asc' });
-
-  // Filter States
-  const [activeFilter, setActiveFilter] = useState(null);
-  const [selectedMarketCap, setSelectedMarketCap] = useState('All');
-  const [selectedVolume, setSelectedVolume] = useState('All');
-  const [selectedPrice, setSelectedPrice] = useState('All');
-  const [selectedChange, setSelectedChange] = useState('All');
-  const [globalSearch, setGlobalSearch] = useState('');
-  const [appliedFilters, setAppliedFilters] = useState({
-    marketCap: 'All',
-    volume: 'All',
-    price: 'All',
-    change: 'All',
-    search: ''
-  });
-
-  const marketCapOptions = ['All', '> $10B', '$1B to $10B', '$100M to $1B', '$10M to $100M', '$1M to $10M', '$100K to $1M'];
-  const volumeOptions = ['All', '> $10B', '$1B to $10B', '$100M to $1B', '$10M to $100M', '$1M to $10M', '$100K to $1M'];
-  const changeOptions = ['All', '> +50%', '+10% to +50%', '0% to +10%', '-10% to 0%', '-50% to -10%', '< -50%'];
-  const priceOptions = ['All', '> $1K', '$100 to $1000', '$10 to $100', '$1 to $10', '$0.01 to $1', '$0.001 to $0.01'];
 
   const fetchCoins = async () => {
     setLoading(true);
@@ -162,91 +64,18 @@ const Allcoins = () => {
     setSortConfig({ key, direction });
   };
 
-  const handleSearchClick = () => {
-    setAppliedFilters({
-      marketCap: selectedMarketCap,
-      volume: selectedVolume,
-      price: selectedPrice,
-      change: selectedChange,
-      search: globalSearch
-    });
-  };
-
-  const handleReset = () => {
-    setSelectedMarketCap('All');
-    setSelectedVolume('All');
-    setSelectedPrice('All');
-    setSelectedChange('All');
-    setGlobalSearch('');
-    setAppliedFilters({
-      marketCap: 'All',
-      volume: 'All',
-      price: 'All',
-      change: 'All',
-      search: ''
-    });
-  };
-
-  const checkRange = (value, range) => {
-    if (range === 'All') return true;
-    if (!value) return false;
-
-    if (range.startsWith('>')) {
-      const threshold = parseFloat(range.replace(/[^\d.]/g, ''));
-      const multiplier = range.includes('B') ? 1000000000 : (range.includes('K') ? 1000 : 1);
-      return value > threshold * multiplier;
-    }
-    if (range.startsWith('<')) {
-      const threshold = parseFloat(range.replace(/[^\d.]/g, ''));
-      return value < threshold;
-    }
-    if (range.includes('to')) {
-      let [min, max] = range.split(' to ');
-      const getVal = (str) => {
-        const num = parseFloat(str.replace(/[^\d.]/g, ''));
-        const mult = str.includes('B') ? 1000000000 : (str.includes('M') ? 1000000 : (str.includes('K') ? 1000 : 1));
-        return num * mult;
-      };
-      return value >= getVal(min) && value <= getVal(max);
-    }
-    return true;
-  };
-
-  const checkChangeRange = (value, range) => {
-    if (range === 'All') return true;
-    if (value === null || value === undefined) return false;
-
-    if (range === '> +50%') return value > 50;
-    if (range === '+10% to +50%') return value >= 10 && value <= 50;
-    if (range === '0% to +10%') return value >= 0 && value < 10;
-    if (range === '-10% to 0%') return value >= -10 && value < 0;
-    if (range === '-50% to -10%') return value >= -50 && value < -10;
-    if (range === '< -50%') return value < -50;
-    return true;
-  };
-
-  const filteredCoins = useMemo(() => {
-    return coins.filter(coin => {
-      const matchesSearch = globalSearch === '' ||
-        coin.name.toLowerCase().includes(globalSearch.toLowerCase()) ||
-        coin.symbol.toLowerCase().includes(globalSearch.toLowerCase());
-
-      if (!matchesSearch) return false;
-
-      // Only apply range filters if they are not 'All'
-      const matchesMarketCap = checkRange(coin.market_cap, appliedFilters.marketCap);
-      const matchesVolume = checkRange(coin.total_volume, appliedFilters.volume);
-      const matchesPrice = checkRange(coin.current_price, appliedFilters.price);
-      const matchesChange = checkChangeRange(coin.price_change_percentage_24h_in_currency, appliedFilters.change);
-
-      return matchesMarketCap && matchesVolume && matchesPrice && matchesChange;
-    });
-  }, [coins, appliedFilters, globalSearch]);
-
   const sortedAndFilteredCoins = useMemo(() => {
-    if (!sortConfig.key) return filteredCoins;
+    let filtered = coins;
+    if (searchQuery) {
+      filtered = coins.filter(coin =>
+        coin.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        coin.symbol.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
 
-    return [...filteredCoins].sort((a, b) => {
+    if (!sortConfig.key) return filtered;
+
+    return [...filtered].sort((a, b) => {
       let aVal = a[sortConfig.key] ?? 0;
       let bVal = b[sortConfig.key] ?? 0;
 
@@ -257,41 +86,13 @@ const Allcoins = () => {
       if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
       return 0;
     });
-  }, [filteredCoins, sortConfig]);
+  }, [coins, sortConfig, searchQuery]);
 
   const SortIcon = ({ columnKey }) => {
     if (sortConfig.key !== columnKey) return <ArrowUpRight size={14} className="opacity-20 flex-shrink-0" />;
     return sortConfig.direction === 'asc'
       ? <ChevronUp size={14} className="text-blue-500 flex-shrink-0" />
       : <ChevronDown size={14} className="text-blue-500 flex-shrink-0" />;
-  };
-
-  const formatCurrency = (val) => {
-    if (val === null || val === undefined) return '-';
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(val);
-  };
-
-  const formatCompact = (val) => {
-    if (val === null || val === undefined) return '-';
-    return new Intl.NumberFormat('en-US', {
-      notation: 'compact',
-      maximumFractionDigits: 2
-    }).format(val);
-  };
-
-  const renderPriceChange = (val) => {
-    if (val === null || val === undefined) return <span className="text-muted">-</span>;
-    const isPositive = val >= 0;
-    return (
-      <span className={`flex items-center gap-0.5 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
-        {isPositive ? '▲' : '▼'} {Math.abs(val).toFixed(1)}%
-      </span>
-    );
   };
 
   return (
@@ -308,124 +109,84 @@ const Allcoins = () => {
         ]}
       />
 
-      <div className='flex flex-col gap-1'>
-        <h1 className='text-2xl sm:text-3xl font-bold text-white'>All Cryptocurrencies</h1>
-        <p className='text-xs sm:text-sm text-muted'>View a full list of active cryptocurrencies</p>
-      </div>
-
-      {/* Filter Bar */}
-      <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
-        <div className="flex flex-wrap items-center gap-2 overflow-x-auto no-scrollbar py-1">
-          <FilterDropdown
-            label="Market Cap"
-            options={marketCapOptions}
-            selectedValue={selectedMarketCap}
-            onSelect={setSelectedMarketCap}
-            activeFilter={activeFilter}
-            setActiveFilter={setActiveFilter}
-          />
-          <FilterDropdown
-            label="24h Volume"
-            options={volumeOptions}
-            selectedValue={selectedVolume}
-            onSelect={setSelectedVolume}
-            activeFilter={activeFilter}
-            setActiveFilter={setActiveFilter}
-          />
-          <FilterDropdown
-            label="24h Change"
-            options={changeOptions}
-            selectedValue={selectedChange}
-            onSelect={setSelectedChange}
-            activeFilter={activeFilter}
-            setActiveFilter={setActiveFilter}
-          />
-          <FilterDropdown
-            label="Price"
-            options={priceOptions}
-            selectedValue={selectedPrice}
-            onSelect={setSelectedPrice}
-            activeFilter={activeFilter}
-            setActiveFilter={setActiveFilter}
-          />
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleSearchClick}
-              className='flex items-center gap-2 px-3 sm:px-4 py-1.5 bg-[#1a1c23] border border-gray-800 text-white font-bold rounded-md text-xs sm:text-sm hover:bg-[#252833] transition-colors'
-            >
-              <Search size={14} /> Search
-            </button>
-            <button
-              onClick={handleReset}
-              className='flex items-center gap-2 px-3 sm:px-4 py-1.5 bg-[#1a1c23] border border-gray-800 rounded-md text-xs sm:text-sm text-gray-300 hover:bg-[#252833] transition-colors'
-            >
-              <RotateCcw size={14} /> Reset
-            </button>
-          </div>
+      <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2'>
+        <div className='flex flex-col gap-1'>
+          <h1 className='text-2xl sm:text-3xl font-bold text-white'>All Cryptocurrencies</h1>
+          <p className='text-xs sm:text-sm text-muted'>View a full list of active cryptocurrencies</p>
         </div>
-
-        {/* Search Box for Coins */}
-        <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
-          <input
-            type="text"
+        <div className='w-full md:w-72'>
+          <SearchBar
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
             placeholder="Search coins..."
-            value={globalSearch}
-            onChange={(e) => setGlobalSearch(e.target.value)}
-            className="w-full bg-[#1a1c23] border border-gray-800 rounded-lg py-1.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
           />
-          {globalSearch && (
-            <button
-              onClick={() => setGlobalSearch('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white"
-            >
-              <X size={14} />
-            </button>
-          )}
         </div>
       </div>
 
-      {/* Table Section */}
-      <div className='w-full overflow-x-auto rounded-xl border border-white/5 relative'>
-        <table className='w-full min-w-[1200px] text-left text-sm'>
-          <thead className='border-b border-gray-800 text-muted bg-[#0b0e11] sticky top-0 z-20'>
+      <div className='w-full overflow-x-auto rounded-xl border border-gray-800/50 relative'>
+        <table className='w-full min-w-[750px] md:min-w-[1100px] text-left text-sm'>
+          <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
             <tr>
-              <tr>
-                <th className='py-2 px-1 w-[40px] md:w-[50px] cursor-pointer hover:text-white transition-colors sticky left-0 bg-[#0b0e11] z-30 text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('market_cap_rank')}>
-                  <div className='flex items-center gap-1'># <SortIcon columnKey="market_cap_rank" /></div>
-                </th>
-                <th className='py-2 px-2 min-w-[140px] md:min-w-[200px] cursor-pointer hover:text-white transition-colors sticky left-[40px] md:left-[50px] bg-[#0b0e11] z-30 text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('name')}>
-                  <div className='flex items-center gap-1'>Coin <SortIcon columnKey="name" /></div>
-                </th>
-                <th className='py-2 px-2 text-right cursor-pointer hover:text-white transition-colors text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('current_price')}>
-                  <div className='flex items-center justify-end gap-1'>Price <SortIcon columnKey="current_price" /></div>
-                </th>
-                <th className='py-2 px-2 text-right cursor-pointer hover:text-white transition-colors text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('price_change_percentage_1h_in_currency')}>
-                  <div className='flex items-center justify-end gap-1'>1h <SortIcon columnKey="price_change_percentage_1h_in_currency" /></div>
-                </th>
-                <th className='py-2 px-2 text-right cursor-pointer hover:text-white transition-colors text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('price_change_percentage_24h_in_currency')}>
-                  <div className='flex items-center justify-end gap-1'>24h <SortIcon columnKey="price_change_percentage_24h_in_currency" /></div>
-                </th>
-                <th className='py-2 px-2 text-right cursor-pointer hover:text-white transition-colors text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('price_change_percentage_7d_in_currency')}>
-                  <div className='flex items-center justify-end gap-1'>7d <SortIcon columnKey="price_change_percentage_7d_in_currency" /></div>
-                </th>
-                <th className='py-2 px-2 text-right cursor-pointer hover:text-white transition-colors text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('price_change_percentage_30d_in_currency')}>
-                  <div className='flex items-center justify-end gap-1'>30d <SortIcon columnKey="price_change_percentage_30d_in_currency" /></div>
-                </th>
-                <th className='py-2 px-2 text-right cursor-pointer hover:text-white transition-colors text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('total_volume')}>
-                  <div className='flex items-center justify-end gap-1 whitespace-nowrap'>24h Vol <SortIcon columnKey="total_volume" /></div>
-                </th>
-                <th className='py-2 px-2 text-right cursor-pointer hover:text-white transition-colors text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('circulating_supply')}>
-                  <div className='flex items-center justify-end gap-1 whitespace-nowrap'>Circ Supply <SortIcon columnKey="circulating_supply" /></div>
-                </th>
-                <th className='py-2 px-2 text-right cursor-pointer hover:text-white transition-colors text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('total_supply')}>
-                  <div className='flex items-center justify-end gap-1 whitespace-nowrap'>Total Supply <SortIcon columnKey="total_supply" /></div>
-                </th>
-                <th className='py-2 px-2 text-right cursor-pointer hover:text-white transition-colors text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('market_cap')}>
-                  <div className='flex items-center justify-end gap-1 whitespace-nowrap'>Mkt Cap <SortIcon columnKey="market_cap" /></div>
-                </th>
-              </tr>
+              <th className='py-2 px-0 sticky left-0 bg-main z-30 w-[18px] min-w-[18px] max-w-[18px] transition-colors hover:text-white cursor-pointer select-none text-center' onClick={() => handleSort('market_cap_rank')}>
+                <div className="text-[8px] md:text-xs">#</div>
+              </th>
+              <th className='py-2 px-0.5 md:px-2 sticky left-[18px] md:left-[60px] bg-main z-30 w-[55px] min-w-[55px] max-w-[55px] overflow-hidden transition-colors hover:text-white cursor-pointer select-none border-r border-gray-800/50' onClick={() => handleSort('name')}>
+                <div className="flex items-center gap-0.5 text-[9px] md:text-xs uppercase tracking-wider">Coin <SortIcon columnKey="name" /></div>
+              </th>
+              <th className='py-2 px-1 w-[10%] min-w-[85px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('current_price')}>
+                <div className="relative flex justify-end items-center pr-4">
+                  <span className="text-[9px] md:text-xs uppercase tracking-wider">Price</span>
+                  <div className="absolute right-0"><SortIcon columnKey="current_price" /></div>
+                </div>
+              </th>
+              <th className='py-2 px-1 w-[6%] min-w-[45px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_1h_in_currency')}>
+                <div className="relative flex justify-end items-center pr-4">
+                  <span className="text-[9px] md:text-xs uppercase tracking-wider">1h</span>
+                  <div className="absolute right-0"><SortIcon columnKey="price_change_percentage_1h_in_currency" /></div>
+                </div>
+              </th>
+              <th className='py-2 px-1 w-[6%] min-w-[45px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_24h_in_currency')}>
+                <div className="relative flex justify-end items-center pr-4">
+                  <span className="text-[9px] md:text-xs uppercase tracking-wider">24h</span>
+                  <div className="absolute right-0"><SortIcon columnKey="price_change_percentage_24h_in_currency" /></div>
+                </div>
+              </th>
+              <th className='py-2 px-1 w-[6%] min-w-[45px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_7d_in_currency')}>
+                <div className="relative flex justify-end items-center pr-4">
+                  <span className="text-[9px] md:text-xs uppercase tracking-wider">7d</span>
+                  <div className="absolute right-0"><SortIcon columnKey="price_change_percentage_7d_in_currency" /></div>
+                </div>
+              </th>
+              <th className='py-2 px-1 w-[6%] min-w-[45px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_30d_in_currency')}>
+                <div className="relative flex justify-end items-center pr-4">
+                  <span className="text-[9px] md:text-xs uppercase tracking-wider">30d</span>
+                  <div className="absolute right-0"><SortIcon columnKey="price_change_percentage_30d_in_currency" /></div>
+                </div>
+              </th>
+              <th className='py-2 px-1 w-[11%] min-w-[70px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('total_volume')}>
+                <div className="relative flex justify-end items-center pr-4">
+                  <span className="text-[9px] md:text-xs uppercase tracking-wider">Vol</span>
+                  <div className="absolute right-0"><SortIcon columnKey="total_volume" /></div>
+                </div>
+              </th>
+              <th className='py-2 px-1 w-[11%] min-w-[70px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('circulating_supply')}>
+                <div className="relative flex justify-end items-center pr-4">
+                  <span className="text-[9px] md:text-xs uppercase tracking-wider">Circ</span>
+                  <div className="absolute right-0"><SortIcon columnKey="circulating_supply" /></div>
+                </div>
+              </th>
+              <th className='py-2 px-1 w-[11%] min-w-[70px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('total_supply')}>
+                <div className="relative flex justify-end items-center pr-4">
+                  <span className="text-[9px] md:text-xs uppercase tracking-wider">Total</span>
+                  <div className="absolute right-0"><SortIcon columnKey="total_supply" /></div>
+                </div>
+              </th>
+              <th className='py-2 px-1 w-[11%] min-w-[70px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('market_cap')}>
+                <div className="relative flex justify-end items-center pr-4">
+                  <span className="text-[9px] md:text-xs uppercase tracking-wider">Cap</span>
+                  <div className="absolute right-0"><SortIcon columnKey="market_cap" /></div>
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -441,52 +202,72 @@ const Allcoins = () => {
               </tr>
             ) : sortedAndFilteredCoins.length === 0 ? (
               <tr>
-                <td colSpan="11" className="py-20 text-center text-muted">No coins match your filters.</td>
+                <td colSpan="11" className="py-20 text-center text-muted">No coins found for this page.</td>
               </tr>
             ) : (
-              sortedAndFilteredCoins.map((coin) => (
+              sortedAndFilteredCoins.map((coin, index) => (
                 <tr
-                  key={coin.id}
+                  key={coin.id || index}
                   onClick={() => navigate(`/cryptocurrencies/marketcap/${coin.id}`)}
-                  className='border-b border-gray-800/50 hover:bg-white/5 transition-colors cursor-pointer group'
+                  className='border-b border-gray-800 hover:bg-card transition-colors cursor-pointer group'
                 >
-                  <td className='py-2 px-1 text-muted sticky left-0 bg-main group-hover:bg-card transition-all z-10 text-xs'>{coin.market_cap_rank}</td>
-                  <td className='py-2 px-2 sticky left-[40px] md:left-[50px] bg-main group-hover:bg-card transition-all z-10'>
-                    <div className='flex items-center gap-2'>
-                      <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6 rounded-full' />
-                      <div className='flex flex-col'>
-                        <span className='font-bold text-white text-[11px] sm:text-sm whitespace-nowrap'>
-                          {coin.name} <span className='text-[10px] text-muted uppercase ml-1'>{coin.symbol}</span>
-                        </span>
+                  <td className='py-2 px-0 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[18px] min-w-[18px] max-w-[18px] text-[8px] sm:text-xs text-muted text-center'>
+                    {coin.market_cap_rank}
+                  </td>
+                  <td className='py-2 px-0.5 md:px-2 sticky left-[18px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10 w-[55px] min-w-[55px] max-w-[55px] overflow-hidden border-r border-gray-800/50'>
+                    <div className='flex items-center gap-0.5 md:gap-2'>
+                      <img src={coin.image} alt={coin.name} className='w-3 h-3 sm:w-6 sm:h-6 rounded-full' />
+                      <div className='flex flex-col gap-0 min-w-0'>
+                        <span className='font-bold truncate text-[9px] sm:text-sm text-white leading-tight block md:hidden uppercase'>{coin.symbol}</span>
+                        <span className='font-bold truncate text-[9px] sm:text-sm text-white leading-tight hidden md:block'>{coin.name}</span>
+                        <span className='text-[7px] sm:text-[10px] text-muted uppercase leading-none hidden md:block'>{coin.symbol}</span>
                       </div>
                     </div>
                   </td>
-                  <td className='py-2 px-2 text-right font-bold text-xs sm:text-sm'>
-                    {formatCurrency(coin.current_price)}
+                  <td className='py-2 px-1 w-[10%] min-w-[85px] text-[9px] sm:text-xs font-bold'>
+                    <div className="flex justify-end pr-4 text-white">
+                      {formatCurrency(coin.current_price)}
+                    </div>
                   </td>
-                  <td className='py-2 px-2 text-right text-xs sm:text-sm'>
-                    {renderPriceChange(coin.price_change_percentage_1h_in_currency)}
+                  <td className='py-2 px-1 w-[6%] min-w-[45px]'>
+                    <div className="flex justify-end pr-4 text-[9px]">
+                      {renderPriceChange(coin.price_change_percentage_1h_in_currency)}
+                    </div>
                   </td>
-                  <td className='py-2 px-2 text-right text-xs sm:text-sm'>
-                    {renderPriceChange(coin.price_change_percentage_24h_in_currency)}
+                  <td className='py-2 px-1 w-[6%] min-w-[45px]'>
+                    <div className="flex justify-end pr-4 text-[9px]">
+                      {renderPriceChange(coin.price_change_percentage_24h_in_currency)}
+                    </div>
                   </td>
-                  <td className='py-2 px-2 text-right text-xs sm:text-sm'>
-                    {renderPriceChange(coin.price_change_percentage_7d_in_currency)}
+                  <td className='py-2 px-1 w-[6%] min-w-[45px]'>
+                    <div className="flex justify-end pr-4 text-[9px]">
+                      {renderPriceChange(coin.price_change_percentage_7d_in_currency)}
+                    </div>
                   </td>
-                  <td className='py-2 px-2 text-right text-xs sm:text-sm'>
-                    {renderPriceChange(coin.price_change_percentage_30d_in_currency)}
+                  <td className='py-2 px-1 w-[6%] min-w-[45px]'>
+                    <div className="flex justify-end pr-4 text-[9px]">
+                      {renderPriceChange(coin.price_change_percentage_30d_in_currency)}
+                    </div>
                   </td>
-                  <td className='py-2 px-2 text-right text-gray-300 text-xs sm:text-sm'>
-                    {formatCompact(coin.total_volume)}
+                  <td className='py-2 px-1 w-[11%] min-w-[70px] text-muted font-mono'>
+                    <div className="flex justify-end pr-4 text-[9px] sm:text-xs">
+                      {formatCompact(coin.total_volume)}
+                    </div>
                   </td>
-                  <td className='py-2 px-2 text-right text-gray-300 text-xs sm:text-sm'>
-                    {formatCompact(coin.circulating_supply)}
+                  <td className='py-2 px-1 w-[11%] min-w-[70px] text-muted font-mono'>
+                    <div className="flex justify-end pr-4 text-[9px] sm:text-xs">
+                      {formatCompact(coin.circulating_supply)}
+                    </div>
                   </td>
-                  <td className='py-2 px-2 text-right text-gray-300 text-xs sm:text-sm'>
-                    {coin.total_supply ? formatCompact(coin.total_supply) : (coin.max_supply ? formatCompact(coin.max_supply) : '∞')}
+                  <td className='py-2 px-1 w-[11%] min-w-[70px] text-muted font-mono'>
+                    <div className="flex justify-end pr-4 text-[9px] sm:text-xs">
+                      {coin.total_supply ? formatCompact(coin.total_supply) : (coin.max_supply ? formatCompact(coin.max_supply) : '∞')}
+                    </div>
                   </td>
-                  <td className='py-2 px-2 text-right text-gray-300 text-xs sm:text-sm whitespace-nowrap font-medium'>
-                    {formatCompact(coin.market_cap)}
+                  <td className='py-2 px-1 w-[11%] min-w-[70px] text-muted font-mono'>
+                    <div className="flex justify-end pr-4 text-[9px] sm:text-xs whitespace-nowrap">
+                      {formatCompact(coin.market_cap)}
+                    </div>
                   </td>
                 </tr>
               ))
@@ -505,7 +286,7 @@ const Allcoins = () => {
         />
       </div>
     </motion.div>
-  )
-}
+  );
+};
 
-export default Allcoins
+export default Allcoins;

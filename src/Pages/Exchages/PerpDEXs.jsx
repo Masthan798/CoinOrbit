@@ -4,6 +4,7 @@ import { PerpDerivativesData } from '../../services/AllcoinsData';
 import Pagination from '../../Components/Pagination/Pagination';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
+import SearchBar from '../../Components/Inputs/SearchBar';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -33,6 +34,7 @@ const PerpDEXs = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const fetchPerpDexsData = async () => {
     setloading(true);
@@ -54,8 +56,13 @@ const PerpDEXs = () => {
     fetchPerpDexsData();
   }, []) // Fix infinite loop
 
-  // Local pagination since the service function doesn't take params
-  const paginatedData = perpDexs.slice(
+  // Local search and pagination
+  const filteredData = perpDexs.filter(dex =>
+    dex.market.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    dex.symbol.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * perPage,
     currentPage * perPage
   );
@@ -77,6 +84,11 @@ const PerpDEXs = () => {
           <h1 className='text-2xl sm:text-3xl font-bold'>Perpetual DEXs</h1>
           <p className='text-xs sm:text-sm text-muted'>Ranked by Open Interest & Trade Volume. Tracking {perpDexs.length} contracts.</p>
         </div>
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search markets..."
+        />
       </motion.div>
 
       <motion.div variants={itemVariants} className='w-full overflow-x-auto h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative rounded-xl border border-gray-800/50'>
@@ -163,7 +175,7 @@ const PerpDEXs = () => {
           setCurrentPage={setCurrentPage}
           perPage={perPage}
           setPerPage={setPerPage}
-          totalItems={perpDexs.length}
+          totalItems={filteredData.length}
         />
       </motion.div>
 
