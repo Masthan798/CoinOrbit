@@ -163,15 +163,15 @@ const Converter = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full min-h-screen p-4 pb-20 flex flex-col items-center gap-8 bg-main"
+      className="w-full min-h-screen p-2 pb-20 flex flex-col items-center gap-8 bg-main"
     >
-      <div className="w-full max-w-7xl flex flex-col gap-8">
+      <div className="w-full flex flex-col gap-8">
 
 
         <Breadcrumbs
           crumbs={[
             { label: 'Cryptocurrencies', path: '/' },
-            { label: 'Converter', path: '/converter' }
+            { label: 'Converter' }
           ]}
         />
 
@@ -184,7 +184,7 @@ const Converter = () => {
         {/* Converter Box */}
         <div className="w-full bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 md:p-10 flex flex-col gap-8 shadow-2xl">
 
-          <div className="flex flex-col md:flex-row items-end gap-4">
+          <div className="flex flex-col md:flex-row items-center md:items-end gap-4">
 
             {/* Amount Input */}
             <div className="flex-1 w-full flex flex-col gap-2">

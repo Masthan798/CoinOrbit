@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { LineChart, Line, ResponsiveContainer, AreaChart, Area } from 'recharts';
-import { ArrowLeftIcon, ArrowRightIcon, ChevronDown, ChevronUp, Star, Flame, Rocket, TrendingUp, TrendingDown, Eye, Lock, Zap, ArrowUpRight } from 'lucide-react';
+import { ArrowLeftIcon, ArrowRightIcon, ChevronDown, ChevronUp, Star, Flame, Rocket, TrendingUp, TrendingDown, Eye, Lock, Zap, ArrowUpRight, Search } from 'lucide-react';
 import { CategoriesData, TrendingCoinsData, AllcoinsData } from '../../services/AllcoinsData';
 import { motion, AnimatePresence } from 'framer-motion';
 import Pagination from '../../Components/Pagination/Pagination';
 import CardSkeleton from '../../Components/Loadings/CardSkeleton';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
+import SearchBar from '../../Components/Inputs/SearchBar';
 
 // Animation variants
 const containerVariants = {
@@ -53,6 +54,8 @@ const Categories = () => {
   const [perPage, setPerPage] = useState(10);
   const [error, setError] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -111,9 +114,16 @@ const Categories = () => {
   };
 
   const getSortedCategories = () => {
-    if (!sortConfig.key) return categories;
+    let filteredCategories = categories;
+    if (searchQuery) {
+      filteredCategories = categories.filter(category =>
+        category.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
 
-    return [...categories].sort((a, b) => {
+    if (!sortConfig.key) return filteredCategories;
+
+    return [...filteredCategories].sort((a, b) => {
       let aVal = a[sortConfig.key];
       let bVal = b[sortConfig.key];
 
@@ -133,7 +143,8 @@ const Categories = () => {
       : <ChevronDown size={14} className="text-blue-500 flex-shrink-0" />;
   };
 
-  const paginatedCategories = getSortedCategories().slice(
+  const sortedCategoriesList = getSortedCategories();
+  const paginatedCategories = sortedCategoriesList.slice(
     (currentPage - 1) * perPage,
     currentPage * perPage
   );
@@ -205,7 +216,7 @@ const Categories = () => {
         <Breadcrumbs
           crumbs={[
             { label: 'Cryptocurrencies', path: '/' },
-            { label: 'Highlights', path: '/highlights' }
+            { label: 'Highlights' }
           ]}
         />
       </div>
@@ -217,22 +228,73 @@ const Categories = () => {
           <p className='text-xs sm:text-sm text-muted'>Which cryptocurrencies are people more interested in? Track and discover market trends.</p>
         </div>
 
-        <div className="flex items-center gap-4 bg-[#0d0e12] p-1 rounded-lg border border-gray-800">
-          {['all', 'highlights'].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === tab
-                ? 'bg-gray-800 text-white shadow-sm'
-                : 'text-muted hover:text-white'
-                } capitalize`}
-            >
-              {tab}
-            </button>
-          ))}
-          <button className="px-4 py-1.5 rounded-md text-sm font-medium text-muted hover:text-white border-l border-gray-800 ml-2">
-            Customize
-          </button>
+        <div className="flex items-center justify-end flex-1 md:flex-initial w-full md:w-auto">
+          {/* Desktop Layout: Always show tabs and search */}
+          <div className="hidden md:flex items-center gap-4 w-full">
+            <div className="flex items-center gap-2 bg-[#0d0e12] p-1 rounded-lg border border-gray-800 overflow-hidden">
+              {['all', 'highlights'].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === tab
+                    ? 'bg-gray-800 text-white shadow-sm'
+                    : 'text-muted hover:text-white'
+                    } capitalize whitespace-nowrap`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+            {activeTab === 'all' && (
+              <SearchBar
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder="Search categories..."
+                className="max-w-[250px]"
+              />
+            )}
+          </div>
+
+          {/* Mobile Layout: Toggleable search */}
+          <div className="flex md:hidden items-center justify-end w-full">
+            {!isSearchExpanded ? (
+              <div className="flex items-center gap-2 w-full justify-between">
+                <div className="flex items-center gap-2 bg-[#0d0e12] p-1 rounded-lg border border-gray-800 overflow-hidden">
+                  {['all', 'highlights'].map((tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveTab(tab)}
+                      className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${activeTab === tab
+                        ? 'bg-gray-800 text-white shadow-sm'
+                        : 'text-muted hover:text-white'
+                        } capitalize whitespace-nowrap`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+                {activeTab === 'all' && (
+                  <button
+                    onClick={() => setIsSearchExpanded(true)}
+                    className="p-2.5 bg-[#0d0e12] border border-gray-800 rounded-lg text-muted hover:text-white transition-colors"
+                  >
+                    <Search className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="w-full flex items-center">
+                <SearchBar
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  onClose={() => setIsSearchExpanded(false)}
+                  autoFocus={true}
+                  placeholder="Search categories..."
+                  className="max-w-full"
+                />
+              </div>
+            )}
+          </div>
         </div>
       </motion.div>
 
@@ -301,7 +363,7 @@ const Categories = () => {
             exit="hidden"
             className='w-full'
           >
-            <div className='w-full overflow-x-auto h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative rounded-xl border border-white/5'>
+            <div className='w-full overflow-x-auto min-h-[400px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative rounded-xl border border-white/5'>
               <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
                 <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
                   <tr>
@@ -374,7 +436,7 @@ const Categories = () => {
                 setCurrentPage={setCurrentPage}
                 perPage={perPage}
                 setPerPage={setPerPage}
-                totalItems={categories.length}
+                totalItems={sortedCategoriesList.length}
               />
             </div>
           </motion.div>

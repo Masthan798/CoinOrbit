@@ -18,6 +18,7 @@ const Breadcrumbs = ({ crumbs }) => {
 
     return (
         <motion.div
+            variants={itemVariants}
             initial="hidden"
             animate="visible"
             className='flex items-center gap-2 text-sm mb-2'
@@ -26,8 +27,8 @@ const Breadcrumbs = ({ crumbs }) => {
                 <React.Fragment key={index}>
                     <span
                         className={`transition-colors flex items-center gap-2 ${crumb.path
-                                ? 'text-muted cursor-pointer hover:text-white'
-                                : 'text-white font-medium cursor-default'
+                            ? 'text-muted cursor-pointer hover:text-white'
+                            : 'text-white font-medium cursor-default'
                             }`}
                         onClick={() => crumb.path && navigate(crumb.path)}
                     >

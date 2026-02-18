@@ -13,6 +13,7 @@ import { ResponsiveContainer, AreaChart, Area } from 'recharts';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import CardSkeleton from '../../Components/Loadings/CardSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
+import SearchBar from '../../Components/Inputs/SearchBar';
 
 
 
@@ -80,6 +81,7 @@ const ExchangeDetail = () => {
     const [perPage, setPerPage] = useState(50);
     const [volumeSparkline, setVolumeSparkline] = useState(null);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+    const [searchQuery, setSearchQuery] = useState('');
 
 
     const tabs = ['Spot', 'Perpetuals', 'Features'];
@@ -238,9 +240,18 @@ const ExchangeDetail = () => {
     };
 
     const getSortedExhangeData = () => {
-        if (!sortConfig.key) return exhangeData;
+        let filteredData = exhangeData;
+        if (searchQuery) {
+            filteredData = exhangeData.filter(ticker =>
+                ticker.base.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                ticker.target.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                ticker.coin_id.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
 
-        return [...exhangeData].sort((a, b) => {
+        if (!sortConfig.key) return filteredData;
+
+        return [...filteredData].sort((a, b) => {
             let aVal = a[sortConfig.key];
             let bVal = b[sortConfig.key];
 
@@ -449,6 +460,14 @@ const ExchangeDetail = () => {
                             </div>
                         </div>
                     </motion.div>
+                </motion.div>
+
+                <motion.div variants={itemVariants} className='w-full flex justify-end'>
+                    <SearchBar
+                        value={searchQuery}
+                        onChange={setSearchQuery}
+                        placeholder="Search pairs..."
+                    />
                 </motion.div>
 
                 <motion.div variants={itemVariants} className='w-full overflow-x-auto h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative'>

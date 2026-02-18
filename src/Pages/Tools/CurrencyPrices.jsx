@@ -179,19 +179,19 @@ const CurrencyPrices = () => {
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="w-full flex flex-col items-center bg-main min-h-screen p-4 pb-20 gap-8"
+            className="w-full flex flex-col items-center bg-main min-h-screen p-2 pb-20 gap-8"
         >
-            <div className="w-full max-w-7xl">
+            <div className="w-full">
                 <Breadcrumbs
                     crumbs={[
                         { label: 'Cryptocurrencies', path: '/' },
                         { label: 'Converter', path: '/converter' },
-                        { label: `Cryptocurrency Prices ${currencyUpper}` }
+                        { label: `Price ${currencyUpper}` }
                     ]}
                 />
             </div>
 
-            <div className="w-full max-w-7xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div className="flex flex-col gap-1">
                     <h1 className="text-3xl font-bold text-white">Cryptocurrency Prices in {globalData?.total_market_cap?.[currency] ? '' : ''} {currencyUpper}</h1>
                     <p className="text-muted text-sm">Find the price of top cryptocurrencies in {currencyUpper}. Price and market data are updated frequently.</p>
@@ -213,7 +213,7 @@ const CurrencyPrices = () => {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        className="w-full max-w-7xl overflow-hidden"
+                        className="w-full overflow-hidden"
                     >
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                             {highlightsLoading ? (
@@ -221,7 +221,7 @@ const CurrencyPrices = () => {
                             ) : (
                                 <>
                                     <div className="flex flex-col gap-3 min-h-[210px]">
-                                        <div className="bg-[#0b0e11] border border-gray-800 rounded-2xl p-4 flex flex-1 items-center justify-between hover:border-blue-500 transition-all group">
+                                        <div className="bg-[#0b0e11] border border-gray-800 rounded-2xl p-4 flex flex-1 items-center justify-between hover:border-green-500 transition-all group">
                                             <div className="flex flex-col">
                                                 <span className="text-xl font-bold text-white">{formatCurrency(globalData?.total_market_cap?.[currency])}</span>
                                                 <span className="text-sm text-muted">Market Cap</span>
@@ -298,12 +298,12 @@ const CurrencyPrices = () => {
                 )}
             </AnimatePresence>
 
-            <div className="w-full max-w-7xl overflow-x-auto custom-scrollbar bg-[#0b0e11] border border-gray-800 rounded-3xl">
+            <div className="w-full overflow-x-auto h-[600px] overflow-y-auto no-scrollbar relative rounded-3xl border border-gray-800 bg-[#0b0e11]">
                 <table className="w-full text-left text-sm border-collapse min-w-[1000px]">
-                    <thead className="text-muted border-b border-gray-800">
+                    <thead className="text-muted border-b border-gray-800 sticky top-0 bg-[#0b0e11] z-20">
                         <tr>
-                            <th className="p-4 w-12 text-center">#</th>
-                            <th className="p-4 transition-colors hover:text-white cursor-pointer" onClick={() => handleSort('name')}>
+                            <th className="p-4 w-12 text-center sticky left-0 bg-[#0b0e11] z-30">#</th>
+                            <th className="p-4 transition-colors hover:text-white cursor-pointer sticky left-12 bg-[#0b0e11] z-30 min-w-[150px]" onClick={() => handleSort('name')}>
                                 <div className="flex items-center gap-1">Coin <SortIcon columnKey="name" /></div>
                             </th>
                             <th className="p-4 transition-colors hover:text-white cursor-pointer" onClick={() => handleSort('current_price')}>
@@ -329,8 +329,8 @@ const CurrencyPrices = () => {
                         ) : (
                             sortedCoins.map((coin, idx) => (
                                 <tr key={coin.id} onClick={() => navigate(`/marketcap/${coin.id}`)} className="border-b border-gray-800/50 hover:bg-card/50 transition-colors cursor-pointer group">
-                                    <td className="p-4 text-center text-muted font-medium">{(currentPage - 1) * perPage + idx + 1}</td>
-                                    <td className="p-4">
+                                    <td className="p-4 text-center text-muted font-medium sticky left-0 bg-[#0b0e11] group-hover:bg-card/50 z-10">{(currentPage - 1) * perPage + idx + 1}</td>
+                                    <td className="p-4 sticky left-12 bg-[#0b0e11] group-hover:bg-card/50 z-10 min-w-[150px]">
                                         <div className="flex items-center gap-3">
                                             <img src={coin.image} alt="" className="w-6 h-6" />
                                             <div className="flex flex-col">
@@ -373,7 +373,7 @@ const CurrencyPrices = () => {
                 </table>
             </div>
 
-            <div className="w-full max-w-7xl">
+            <div className="w-full">
                 <Pagination
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}

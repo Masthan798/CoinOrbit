@@ -55,12 +55,12 @@ const CoinPerformanceBlock = ({ coin }) => {
                             </label>
                         </div>
                     </div>
-                    <a href="#" className="text-xs text-gray-400 underline hover:text-white transition-colors">Need more data? Explore our API</a>
+                    <a href="#" className="text-xs text-gray-400 underline hover:text-white transition-colors hidden sm:block">Need more data? Explore our API</a>
                 </div>
 
-                <div className="grid grid-cols-6 gap-0 bg-[#0d0e12] border border-white/5 rounded-2xl overflow-hidden">
+                <div className="flex sm:grid sm:grid-cols-6 gap-0 bg-[#0d0e12] border border-white/5 rounded-2xl overflow-x-auto sm:overflow-hidden no-scrollbar">
                     {returns.map((item, i) => (
-                        <div key={i} className="flex flex-col items-center justify-center py-4 border-r border-white/5 last:border-0 hover:bg-white/5 transition-colors">
+                        <div key={i} className="flex-none sm:flex-1 w-[80px] sm:w-auto flex flex-col items-center justify-center py-4 border-r border-white/5 last:border-0 hover:bg-white/5 transition-colors">
                             <span className="text-xs text-gray-500 font-bold mb-1">{item.label}</span>
                             <div className={`text-sm font-bold flex items-center gap-0.5 ${item.value >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                                 {item.value >= 0 ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
