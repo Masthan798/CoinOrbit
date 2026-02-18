@@ -51,7 +51,7 @@ const FilterDropdown = ({ label, options, selectedValue, onSelect, activeFilter,
                                 />
                             </div>
                         </div>
-                        <div className="max-h-64 overflow-y-auto custom-scrollbar">
+                        <div className="max-h-64 overflow-y-auto no-scrollbar">
                             {filteredOptions.length > 0 ? (
                                 filteredOptions.map((option) => (
                                     <button
