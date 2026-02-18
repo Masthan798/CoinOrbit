@@ -44,7 +44,7 @@ const PopularComparisons = ({ onSelect, coinsList }) => {
                 <span className="text-xs text-muted">Updates every 10m</span>
             </div>
 
-            <div className="flex flex-col gap-4 overflow-y-auto max-h-[300px] pr-2 custom-scrollbar">
+            <div className="flex flex-col gap-4 overflow-y-auto max-h-[300px] no-scrollbar">
                 {displayedPairs.map((pair, index) => {
                     const c1 = getCoin(pair.id1);
                     const c2 = getCoin(pair.id2);
