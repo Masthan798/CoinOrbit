@@ -1,7 +1,11 @@
 import { coingeckoFetch } from "../api/coingeckoClient";
 
-export function AllcoinsData(per_page = 100, page = 1, vs_currency = 'usd', price_change = '1h,24h,7d,30d'){
-    return coingeckoFetch(`/coins/markets?vs_currency=${vs_currency}&order=market_cap_desc&per_page=${per_page}&page=${page}&sparkline=false&price_change_percentage=${price_change}`)
+export function AllcoinsData(per_page = 100, page = 1, vs_currency = 'usd', order = 'market_cap_desc', price_change = '1h,24h,7d,30d'){
+    return coingeckoFetch(`/coins/markets?vs_currency=${vs_currency}&order=${order}&per_page=${per_page}&page=${page}&sparkline=false&price_change_percentage=${price_change}`)
+}
+
+export function GlobalData(){
+    return coingeckoFetch("/global");
 }
 
 

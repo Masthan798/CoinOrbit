@@ -72,13 +72,13 @@ const GlobalMarketGraph = ({ apiKey }) => {
         if (active && payload && payload.length) {
             return (
                 <div className="bg-[#1a1c23]/95 backdrop-blur-xl border border-white/10 p-2 sm:p-4 rounded-xl sm:rounded-2xl shadow-2xl min-w-[140px] sm:min-w-[200px]">
-                    <p className="text-[9px] sm:text-[10px] text-gray-400 font-bold uppercase mb-2 opacity-60 tracking-wider">
+                    <p className="text-xs sm:text-sm text-gray-400 font-bold uppercase mb-2 opacity-60 tracking-wider">
                         {new Date(label).toLocaleDateString(undefined, {
                             weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
                         })}
                     </p>
                     <div className="flex items-center gap-2">
-                        <span className="text-xs sm:text-sm font-black text-white">
+                        <span className="text-sm sm:text-lg font-black text-white">
                             ${(payload[0].value / 1e9).toFixed(2)} Billion
                         </span>
                     </div>
@@ -93,8 +93,8 @@ const GlobalMarketGraph = ({ apiKey }) => {
             {/* Header & Controls */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/5 pb-4">
                 <div>
-                    <h3 className="text-base sm:text-lg font-bold text-white">Market Trend Chart (BTC)</h3>
-                    <p className="text-[10px] sm:text-xs text-gray-400 max-w-xl mt-1">
+                    <h3 className="text-lg sm:text-2xl font-bold text-white">Market Trend Chart (BTC)</h3>
+                    <p className="text-xs sm:text-sm text-gray-400 max-w-xl mt-1 font-bold">
                         Bitcoin market cap history as global trend reference.
                     </p>
                 </div>
@@ -103,7 +103,7 @@ const GlobalMarketGraph = ({ apiKey }) => {
                         <button
                             key={tf.label}
                             onClick={() => setTimeframe(tf)}
-                            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-[9px] sm:text-[10px] font-bold transition-all ${timeframe.label === tf.label ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20' : 'text-gray-400 hover:text-white'}`}
+                            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all ${timeframe.label === tf.label ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20' : 'text-gray-400 hover:text-white'}`}
                         >
                             {tf.label}
                         </button>

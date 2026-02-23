@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Iceland&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -66,10 +67,10 @@ html.light {
         @apply antialiased;
         background-color: var(--bg-main);
         color: var(--text-body);
-        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+        font-family: 'Iceland', cursive, system-ui, -apple-system, BlinkMacSystemFont,
             "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        font-size: 14px;
-        line-height: 1.6;
+        font-size: 18px;
+        line-height: 1.5;
     }
 
     /* Headings */
@@ -79,19 +80,19 @@ html.light {
     h4,
     h5,
     h6 {
-        font-family: Inter, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+        font-family: 'Iceland', cursive, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
         color: var(--text-heading);
         font-weight: 700;
-        letter-spacing: -0.02em;
-        line-height: 1.25;
+        letter-spacing: 0.02em;
+        line-height: 1.2;
     }
 
     /* Paragraph / body text */
     p {
-        font-size: 14px;
+        font-size: 18px;
         font-weight: 400;
         color: var(--text-body);
-        line-height: 1.6;
+        line-height: 1.5;
     }
 }
 
@@ -125,28 +126,28 @@ html.light {
 
     /* Typography utilities */
     .heading-xl {
-        font-size: 32px;
+        font-size: 48px;
         font-weight: 700;
         letter-spacing: -0.03em;
         color: var(--text-heading);
     }
 
     .heading-lg {
-        font-size: 24px;
+        font-size: 38px;
         font-weight: 600;
         letter-spacing: -0.02em;
         color: var(--text-heading);
     }
 
     .heading-md {
-        font-size: 18px;
+        font-size: 28px;
         font-weight: 600;
         letter-spacing: -0.01em;
         color: var(--text-heading);
     }
 
     .text-sub {
-        font-size: 13px;
+        font-size: 16px;
         font-weight: 500;
         letter-spacing: 0.06em;
         color: var(--text-muted);

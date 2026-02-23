@@ -1,17 +1,12 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { AllcoinsData } from '../../services/AllcoinsData';
+import { ArrowUpRight, ChevronUp, ChevronDown } from 'lucide-react';
+import { AllcoinsData, GlobalData } from '../../services/AllcoinsData';
 import Pagination from '../../Components/Pagination/Pagination';
-import Breadcrumbs from '../../Components/common/Breadcrumbs';
-import { ArrowUpRight, ChevronUp, ChevronDown, Rocket, Flame, ArrowRight, ArrowLeft } from 'lucide-react';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
-
-// Utilities
-import { formatCurrency, formatCompact, renderPriceChange } from '../../utils/formatters.jsx';
-
-// Sub-components
-import SearchBar from '../../Components/Inputs/SearchBar';
+import Breadcrumbs from '../../Components/common/Breadcrumbs';
+import TableFilterHeader from '../../Components/common/TableFilterHeader';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -24,21 +19,49 @@ const containerVariants = {
   }
 };
 
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" }
+  }
+};
+
 const Allcoins = () => {
   const navigate = useNavigate();
   const [coins, setCoins] = useState([]);
+  const [globalData, setGlobalData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('All');
   const [sortConfig, setSortConfig] = useState({ key: 'market_cap_rank', direction: 'asc' });
+
+  const fetchGlobalData = async () => {
+    try {
+      const response = await GlobalData();
+      if (response && response.data) {
+        setGlobalData(response.data);
+      }
+    } catch (err) {
+      console.error("Error fetching global data:", err);
+    }
+  };
 
   const fetchCoins = async () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await AllcoinsData(perPage, currentPage);
+      let order = 'market_cap_desc';
+      if (activeTab === 'Top Gainers') order = 'price_change_percentage_24h_desc';
+      else if (activeTab === 'Top Losers') order = 'price_change_percentage_24h_asc';
+      else if (activeTab === 'New Coins') order = 'id_desc';
+      else if (activeTab === 'Upcoming Coins') order = 'gecko_desc';
+
+      const response = await AllcoinsData(perPage, currentPage, 'usd', order);
       if (response && Array.isArray(response)) {
         setCoins(response);
       } else {
@@ -53,8 +76,12 @@ const Allcoins = () => {
   };
 
   useEffect(() => {
+    fetchGlobalData();
+  }, []);
+
+  useEffect(() => {
     fetchCoins();
-  }, [currentPage, perPage]);
+  }, [currentPage, perPage, activeTab]);
 
   const handleSort = (key) => {
     let direction = 'asc';
@@ -109,19 +136,29 @@ const Allcoins = () => {
         ]}
       />
 
-      <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2'>
-        <div className='flex flex-col gap-1'>
-          <h1 className='text-2xl sm:text-3xl font-bold text-white'>All Cryptocurrencies</h1>
-          <p className='text-xs sm:text-sm text-muted'>View a full list of active cryptocurrencies</p>
+      <motion.div variants={itemVariants} className='w-full flex items-center justify-between gap-4'>
+        <div className='flex flex-col gap-0.5'>
+          <h1 className='text-2xl sm:text-5xl font-bold whitespace-nowrap'>All Cryptocurrencies</h1>
+          <p className='text-sm sm:text-xl text-muted'>
+            Global cap: <span className="text-white font-bold">{globalData ? formatCurrency(globalData.total_market_cap.usd) : '...'}</span>
+            <span className={`ml-1 ${globalData?.market_cap_change_percentage_24h_usd >= 0 ? "text-green-500" : "text-red-500"}`}>
+              {globalData?.market_cap_change_percentage_24h_usd?.toFixed(2)}%
+            </span>
+          </p>
         </div>
-        <div className='w-full md:w-72'>
-          <SearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            placeholder="Search coins..."
-          />
-        </div>
-      </div>
+      </motion.div>
+
+      <TableFilterHeader
+        activeTab={activeTab}
+        onTabChange={(tab) => {
+          setActiveTab(tab);
+          setCurrentPage(1);
+          setSearchQuery('');
+        }}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        placeholder="Search coins..."
+      />
 
       <div className='w-full overflow-x-auto rounded-xl border border-gray-800/50 relative'>
         <table className='w-full min-w-[750px] md:min-w-[1100px] text-left text-sm'>
@@ -211,61 +248,61 @@ const Allcoins = () => {
                   onClick={() => navigate(`/cryptocurrencies/marketcap/${coin.id}`)}
                   className='border-b border-gray-800 hover:bg-card transition-colors cursor-pointer group'
                 >
-                  <td className='py-2 px-0 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[18px] min-w-[18px] max-w-[18px] text-[8px] sm:text-xs text-muted text-center'>
+                  <td className='py-3 px-0 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[22px] min-w-[22px] max-w-[22px] text-xs sm:text-sm text-muted text-center font-bold'>
                     {coin.market_cap_rank}
                   </td>
                   <td className='py-2 px-0.5 md:px-2 sticky left-[18px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10 w-[55px] min-w-[55px] max-w-[55px] overflow-hidden border-r border-gray-800/50'>
                     <div className='flex items-center gap-0.5 md:gap-2'>
                       <img src={coin.image} alt={coin.name} className='w-3 h-3 sm:w-6 sm:h-6 rounded-full' />
                       <div className='flex flex-col gap-0 min-w-0'>
-                        <span className='font-bold truncate text-[9px] sm:text-sm text-white leading-tight block md:hidden uppercase'>{coin.symbol}</span>
-                        <span className='font-bold truncate text-[9px] sm:text-sm text-white leading-tight hidden md:block'>{coin.name}</span>
-                        <span className='text-[7px] sm:text-[10px] text-muted uppercase leading-none hidden md:block'>{coin.symbol}</span>
+                        <span className='font-bold truncate text-sm sm:text-lg text-white leading-tight block md:hidden uppercase'>{coin.symbol}</span>
+                        <span className='font-bold truncate text-sm sm:text-lg text-white leading-tight hidden md:block'>{coin.name}</span>
+                        <span className='text-xs sm:text-sm text-muted uppercase leading-none hidden md:block font-bold'>{coin.symbol}</span>
                       </div>
                     </div>
                   </td>
-                  <td className='py-2 px-1 w-[10%] min-w-[85px] text-[9px] sm:text-xs font-bold'>
+                  <td className='py-3 px-1 w-[10%] min-w-[85px] text-sm sm:text-base font-bold'>
                     <div className="flex justify-end pr-4 text-white">
                       {formatCurrency(coin.current_price)}
                     </div>
                   </td>
-                  <td className='py-2 px-1 w-[6%] min-w-[45px]'>
-                    <div className="flex justify-end pr-4 text-[9px]">
+                  <td className='py-3 px-1 w-[6%] min-w-[45px]'>
+                    <div className="flex justify-end pr-4 text-sm sm:text-base">
                       {renderPriceChange(coin.price_change_percentage_1h_in_currency)}
                     </div>
                   </td>
-                  <td className='py-2 px-1 w-[6%] min-w-[45px]'>
-                    <div className="flex justify-end pr-4 text-[9px]">
+                  <td className='py-3 px-1 w-[6%] min-w-[45px]'>
+                    <div className="flex justify-end pr-4 text-sm sm:text-base">
                       {renderPriceChange(coin.price_change_percentage_24h_in_currency)}
                     </div>
                   </td>
-                  <td className='py-2 px-1 w-[6%] min-w-[45px]'>
-                    <div className="flex justify-end pr-4 text-[9px]">
+                  <td className='py-3 px-1 w-[6%] min-w-[45px]'>
+                    <div className="flex justify-end pr-4 text-sm sm:text-base">
                       {renderPriceChange(coin.price_change_percentage_7d_in_currency)}
                     </div>
                   </td>
-                  <td className='py-2 px-1 w-[6%] min-w-[45px]'>
-                    <div className="flex justify-end pr-4 text-[9px]">
+                  <td className='py-3 px-1 w-[6%] min-w-[45px]'>
+                    <div className="flex justify-end pr-4 text-sm sm:text-base">
                       {renderPriceChange(coin.price_change_percentage_30d_in_currency)}
                     </div>
                   </td>
-                  <td className='py-2 px-1 w-[11%] min-w-[70px] text-muted font-mono'>
-                    <div className="flex justify-end pr-4 text-[9px] sm:text-xs">
+                  <td className='py-3 px-1 w-[11%] min-w-[70px] text-muted font-bold'>
+                    <div className="flex justify-end pr-4 text-sm sm:text-base">
                       {formatCompact(coin.total_volume)}
                     </div>
                   </td>
-                  <td className='py-2 px-1 w-[11%] min-w-[70px] text-muted font-mono'>
-                    <div className="flex justify-end pr-4 text-[9px] sm:text-xs">
+                  <td className='py-3 px-1 w-[11%] min-w-[70px] text-muted font-bold'>
+                    <div className="flex justify-end pr-4 text-sm sm:text-base">
                       {formatCompact(coin.circulating_supply)}
                     </div>
                   </td>
-                  <td className='py-2 px-1 w-[11%] min-w-[70px] text-muted font-mono'>
-                    <div className="flex justify-end pr-4 text-[9px] sm:text-xs">
+                  <td className='py-3 px-1 w-[11%] min-w-[70px] text-muted font-bold'>
+                    <div className="flex justify-end pr-4 text-sm sm:text-base">
                       {coin.total_supply ? formatCompact(coin.total_supply) : (coin.max_supply ? formatCompact(coin.max_supply) : '∞')}
                     </div>
                   </td>
-                  <td className='py-2 px-1 w-[11%] min-w-[70px] text-muted font-mono'>
-                    <div className="flex justify-end pr-4 text-[9px] sm:text-xs whitespace-nowrap">
+                  <td className='py-3 px-1 w-[11%] min-w-[70px] text-muted font-bold'>
+                    <div className="flex justify-end pr-4 text-sm sm:text-base whitespace-nowrap">
                       {formatCompact(coin.market_cap)}
                     </div>
                   </td>
@@ -286,6 +323,32 @@ const Allcoins = () => {
         />
       </div>
     </motion.div>
+  );
+};
+
+const formatCurrency = (val) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 6
+  }).format(val);
+};
+
+const formatCompact = (val) => {
+  return new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    maximumFractionDigits: 2
+  }).format(val);
+};
+
+const renderPriceChange = (val) => {
+  if (val === null || val === undefined) return <span className="text-muted">-</span>;
+  const isPositive = val >= 0;
+  return (
+    <span className={isPositive ? 'text-green-500' : 'text-red-500'}>
+      {isPositive ? '+' : ''}{val.toFixed(2)}%
+    </span>
   );
 };
 

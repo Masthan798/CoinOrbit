@@ -25,13 +25,13 @@ const Breadcrumbs = ({ crumbs }) => {
             animate="visible"
             className='flex items-center justify-between w-full mb-4'
         >
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-xl sm:text-2xl font-bold">
                 {crumbs.map((crumb, index) => (
                     <React.Fragment key={index}>
                         <span
                             className={`transition-colors flex items-center gap-2 ${crumb.path
                                 ? 'text-muted cursor-pointer hover:text-white'
-                                : 'text-white font-medium cursor-default'
+                                : 'text-white font-bold cursor-default'
                                 }`}
                             onClick={() => crumb.path && navigate(crumb.path)}
                         >

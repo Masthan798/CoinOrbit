@@ -13,7 +13,7 @@ import { ResponsiveContainer, AreaChart, Area } from 'recharts';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import CardSkeleton from '../../Components/Loadings/CardSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
-import SearchBar from '../../Components/Inputs/SearchBar';
+import TableFilterHeader from '../../Components/common/TableFilterHeader';
 
 
 
@@ -351,22 +351,14 @@ const ExchangeDetail = () => {
                         </div>
                     </div>
 
-                    <div className='flex items-center md:justify-end w-full md:w-auto'>
-                        <div className='flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-2 bg-card rounded-md w-fit max-w-full no-scrollbar overflow-x-auto'>
-                            {tabs.map((tab) => (
-                                <span
-                                    key={tab}
-                                    onClick={() => setActiveTab(tab)}
-                                    className={`py-1 px-2 sm:px-3 text-xs sm:text-sm rounded-md cursor-pointer transition-colors duration-200 ${activeTab === tab
-                                        ? 'bg-main text-white'
-                                        : 'text-muted hover:bg-main hover:text-white'
-                                        }`}
-                                >
-                                    {tab}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
+                    <TableFilterHeader
+                        activeTab={activeTab}
+                        onTabChange={setActiveTab}
+                        searchQuery={searchQuery}
+                        onSearchChange={setSearchQuery}
+                        tabs={tabs}
+                        placeholder="Search pairs..."
+                    />
 
                 </div>
 
@@ -462,13 +454,6 @@ const ExchangeDetail = () => {
                     </motion.div>
                 </motion.div>
 
-                <motion.div variants={itemVariants} className='w-full flex justify-end'>
-                    <SearchBar
-                        value={searchQuery}
-                        onChange={setSearchQuery}
-                        placeholder="Search pairs..."
-                    />
-                </motion.div>
 
                 <motion.div variants={itemVariants} className='w-full overflow-x-auto h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative'>
 
@@ -550,44 +535,44 @@ const ExchangeDetail = () => {
                                         onClick={() => navigate(`/cryptocurrencies/marketcap/${ticker.coin_id}`)}
                                         className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer group'
                                     >
-                                        <td className='py-2 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[35px] min-w-[35px] md:w-[45px] md:min-w-[45px] text-[10px] md:text-xs text-muted'>
+                                        <td className='py-3 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[35px] min-w-[35px] md:w-[45px] md:min-w-[45px] text-xs md:text-sm text-muted font-bold'>
                                             {(currentPage - 1) * perPage + index + 1}
                                         </td>
-                                        <td className='py-2 px-1 sticky left-[35px] md:left-[45px] bg-main group-hover:bg-card transition-colors z-10 w-[100px] min-w-[100px] md:w-[150px] md:min-w-[150px]'>
+                                        <td className='py-3 px-1 sticky left-[35px] md:left-[45px] bg-main group-hover:bg-card transition-colors z-10 w-[100px] min-w-[100px] md:w-[150px] md:min-w-[150px]'>
                                             <div className='flex flex-col gap-0.5'>
-                                                <span className='font-bold truncate max-w-[80px] md:max-w-[130px]'>{ticker.base}</span>
-                                                <span className='text-[9px] text-muted uppercase leading-none'>{ticker.coin_id?.split('-')[0]}</span>
+                                                <span className='font-bold truncate max-w-[80px] md:max-w-[130px] text-sm md:text-lg'>{ticker.base}</span>
+                                                <span className='text-xs text-muted uppercase leading-none font-bold'>{ticker.coin_id?.split('-')[0]}</span>
                                             </div>
                                         </td>
-                                        <td className='py-2 px-2 font-medium text-white text-xs'>
+                                        <td className='py-3 px-2 font-bold text-white text-sm'>
                                             {activeTab === 'Perpetuals' ? (
-                                                <span className='px-1.5 py-0.5 bg-green-500/10 text-green-500 rounded text-[9px] font-bold border border-green-500/20 uppercase'>
+                                                <span className='px-2 py-0.5 bg-green-500/10 text-green-500 rounded text-xs font-bold border border-green-500/20 uppercase'>
                                                     Perp
                                                 </span>
                                             ) : (
-                                                <span className='text-muted group-hover:text-white transition-colors truncate max-w-[80px] block'>
+                                                <span className='text-muted group-hover:text-white transition-colors truncate max-w-[80px] block font-bold text-sm'>
                                                     {ticker.base}/{ticker.target}
                                                 </span>
                                             )}
                                         </td>
-                                        <td className='py-2 px-2 text-xs'>${ticker.converted_last?.usd?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</td>
-                                        <td className='py-2 px-2 text-muted text-xs'>{ticker.bid_ask_spread_percentage?.toFixed(2)}%</td>
+                                        <td className='py-3 px-2 text-sm sm:text-base font-bold'>${ticker.converted_last?.usd?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</td>
+                                        <td className='py-3 px-2 text-muted text-sm font-bold'>{ticker.bid_ask_spread_percentage?.toFixed(2)}%</td>
 
                                         {activeTab === 'Perpetuals' ? (
                                             <>
-                                                <td className='py-2 px-2 text-blue-400 text-xs'>${(ticker.open_interest_usd || 0).toLocaleString(undefined, { notation: 'compact' })}</td>
-                                                <td className='py-2 px-2 text-green-400 text-xs'>{(ticker.funding_rate || 0).toFixed(4)}%</td>
+                                                <td className='py-3 px-2 text-blue-400 text-sm sm:text-base font-bold'>${(ticker.open_interest_usd || 0).toLocaleString(undefined, { notation: 'compact' })}</td>
+                                                <td className='py-3 px-2 text-green-400 text-sm sm:text-base font-bold'>{(ticker.funding_rate || 0).toFixed(4)}%</td>
                                             </>
                                         ) : (
                                             <>
-                                                <td className='py-2 px-2 text-green-500/80 text-xs'>${ticker.cost_to_move_up_usd?.toLocaleString(undefined, { notation: 'compact' })}</td>
-                                                <td className='py-2 px-2 text-red-500/80 text-xs'>${ticker.cost_to_move_down_usd?.toLocaleString(undefined, { notation: 'compact' })}</td>
+                                                <td className='py-3 px-2 text-green-500/80 text-sm sm:text-base font-bold'>${ticker.cost_to_move_up_usd?.toLocaleString(undefined, { notation: 'compact' })}</td>
+                                                <td className='py-3 px-2 text-red-500/80 text-sm sm:text-base font-bold'>${ticker.cost_to_move_down_usd?.toLocaleString(undefined, { notation: 'compact' })}</td>
                                             </>
                                         )}
 
-                                        <td className='py-2 px-2 text-xs font-mono'>${ticker.converted_volume?.usd?.toLocaleString(undefined, { notation: 'compact' })}</td>
-                                        <td className='py-2 px-2 text-muted text-xs'>{((ticker.converted_volume?.usd / (exchange?.trade_volume_24h_btc_normalized || 1)) * 100).toFixed(2)}%</td>
-                                        <td className='py-2 px-2 text-[10px] text-muted'>{new Date(ticker.last_traded_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
+                                        <td className='py-3 px-2 text-sm sm:text-base font-bold text-gray-300'>${ticker.converted_volume?.usd?.toLocaleString(undefined, { notation: 'compact' })}</td>
+                                        <td className='py-3 px-2 text-muted text-sm font-bold'>{((ticker.converted_volume?.usd / (exchange?.trade_volume_24h_btc_normalized || 1)) * 100).toFixed(2)}%</td>
+                                        <td className='py-3 px-2 text-xs text-muted font-bold'>{new Date(ticker.last_traded_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
                                     </tr>
                                 ))
                             )}

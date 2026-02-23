@@ -6,7 +6,8 @@ import { AreaChart, Area, ResponsiveContainer } from 'recharts';
 import { TrendingCoinsData, AllcoinsData } from '../../services/AllcoinsData';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
-import SearchBar from '../../Components/Inputs/SearchBar';
+import TableFilterHeader from '../../Components/common/TableFilterHeader';
+import { Search } from 'lucide-react';
 
 const HighlightsDetail = () => {
     const { type } = useParams();
@@ -170,17 +171,26 @@ const HighlightsDetail = () => {
                     ]}
                 />
 
-                <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
-                    <div className='flex flex-col gap-2'>
-                        <h1 className='text-3xl font-bold'>{getTitle()}</h1>
-                        <p className='text-muted max-w-4xl'>{getDescription()}</p>
-                    </div>
-                    <SearchBar
-                        value={searchQuery}
-                        onChange={setSearchQuery}
-                        placeholder="Search coins..."
-                    />
-                </div>
+                <TableFilterHeader
+                    activeTab={
+                        type === 'trending' ? 'All' :
+                            type === 'top-gainers' ? 'Top Gainers' :
+                                type === 'top-losers' ? 'Top Losers' :
+                                    type === 'new-coins' ? 'New Coins' :
+                                        type === 'upcoming-coins' ? 'Upcoming Coins' : 'All'
+                    }
+                    onTabChange={(tab) => {
+                        setSearchQuery('');
+                        if (tab === 'All') navigate('/highlights/trending');
+                        else if (tab === 'Top Gainers') navigate('/highlights/top-gainers');
+                        else if (tab === 'Top Losers') navigate('/highlights/top-losers');
+                        else if (tab === 'New Coins') navigate('/highlights/new-coins');
+                        else if (tab === 'Upcoming Coins') navigate('/highlights/upcoming-coins');
+                    }}
+                    searchQuery={searchQuery}
+                    onSearchChange={setSearchQuery}
+                    placeholder="Search coins..."
+                />
             </div>
 
             <div className='w-full overflow-x-auto rounded-xl border border-gray-800/50'>
@@ -225,37 +235,37 @@ const HighlightsDetail = () => {
                                     onClick={() => navigate(`/cryptocurrencies/marketcap/${coin.id}`)}
                                     className='hover:bg-white/5 transition-colors cursor-pointer group'
                                 >
-                                    <td className='py-2 px-1 sticky left-0 bg-black group-hover:bg-card transition-colors z-10 w-[45px] text-muted text-xs'>{coin.market_cap_rank || index + 1}</td>
-                                    <td className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-black group-hover:bg-card transition-colors z-10 w-[120px]'>
+                                    <td className='py-3 px-1 sticky left-0 bg-black group-hover:bg-card transition-colors z-10 w-[45px] text-muted text-sm font-bold'>{coin.market_cap_rank || index + 1}</td>
+                                    <td className='py-3 px-2 sticky left-[45px] md:left-[60px] bg-black group-hover:bg-card transition-colors z-10 w-[120px]'>
                                         <div className='flex items-center gap-2'>
                                             <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6 rounded-full' />
                                             <div className="flex flex-col min-w-0">
-                                                <span className='font-bold text-white group-hover:text-blue-400 transition-colors truncate text-[11px] sm:text-sm'>{coin.name}</span>
-                                                <span className='text-[9px] sm:text-[10px] text-muted uppercase leading-none'>{coin.symbol}</span>
+                                                <span className='font-bold text-white group-hover:text-blue-400 transition-colors truncate text-base sm:text-lg'>{coin.name}</span>
+                                                <span className='text-xs sm:text-sm text-muted uppercase leading-none font-bold'>{coin.symbol}</span>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className='py-2 px-2 text-right text-[11px] sm:text-xs font-semibold'>
+                                    <td className='py-3 px-2 text-right text-sm sm:text-base font-bold'>
                                         {typeof coin.current_price === 'string' && coin.current_price.includes('$')
                                             ? coin.current_price
                                             : `$${(coin.current_price || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 8 })}`
                                         }
                                     </td>
-                                    <td className={`py-2 px-2 text-right text-[11px] sm:text-xs font-bold ${(coin.price_change_percentage_24h || 0) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                    <td className={`py-3 px-2 text-right text-sm sm:text-base font-bold ${(coin.price_change_percentage_24h || 0) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                                         {(coin.price_change_percentage_24h || 0).toFixed(1)}%
                                     </td>
                                     {type !== 'trending' && (
-                                        <td className={`py-2 px-2 text-right text-[11px] sm:text-xs font-bold ${(coin.price_change_percentage_7d_in_currency || 0) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                        <td className={`py-3 px-2 text-right text-sm sm:text-base font-bold ${(coin.price_change_percentage_7d_in_currency || 0) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                                             {(coin.price_change_percentage_7d_in_currency || 0).toFixed(1)}%
                                         </td>
                                     )}
-                                    <td className='py-2 px-2 text-right text-[11px] sm:text-xs text-muted font-mono'>
+                                    <td className='py-3 px-2 text-right text-sm sm:text-base text-gray-300 font-bold'>
                                         {typeof coin.total_volume === 'string'
                                             ? coin.total_volume
                                             : `$${(coin.total_volume || 0).toLocaleString(undefined, { notation: 'compact' })}`
                                         }
                                     </td>
-                                    <td className='py-2 px-2 text-right text-[11px] sm:text-xs text-muted font-mono'>
+                                    <td className='py-3 px-2 text-right text-sm sm:text-base text-gray-300 font-bold'>
                                         {typeof coin.market_cap === 'string'
                                             ? coin.market_cap
                                             : `$${(coin.market_cap || 0).toLocaleString(undefined, { notation: 'compact' })}`

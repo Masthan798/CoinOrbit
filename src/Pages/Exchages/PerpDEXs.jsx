@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion';
-import { PerpDerivativesData } from '../../services/AllcoinsData';
+import { PerpDerivativesData, GlobalData } from '../../services/AllcoinsData';
 import Pagination from '../../Components/Pagination/Pagination';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
-import SearchBar from '../../Components/Inputs/SearchBar';
+import TableFilterHeader from '../../Components/common/TableFilterHeader';
+import { Search } from 'lucide-react';
+
+const formatCurrency = (val) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(val);
+};
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -30,11 +40,13 @@ const itemVariants = {
 const PerpDEXs = () => {
 
   const [perpDexs, setPerpDexs] = useState([]);
+  const [globalData, setGlobalData] = useState(null);
   const [loading, setloading] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('All');
 
   const fetchPerpDexsData = async () => {
     setloading(true);
@@ -52,15 +64,42 @@ const PerpDEXs = () => {
     }
   }
 
+  const fetchGlobalData = async () => {
+    try {
+      const response = await GlobalData();
+      if (response && response.data) setGlobalData(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
+    fetchGlobalData();
     fetchPerpDexsData();
   }, []) // Fix infinite loop
 
-  // Local search and pagination
-  const filteredData = perpDexs.filter(dex =>
-    dex.market.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    dex.symbol.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Local searching and sorting
+  const getSortedData = () => {
+    let baseData = perpDexs;
+
+    // Tab-based filtering/sorting logic
+    if (activeTab === 'Top Gainers') {
+      baseData = [...perpDexs].sort((a, b) => (b.basis || 0) - (a.basis || 0));
+    } else if (activeTab === 'Top Losers') {
+      baseData = [...perpDexs].sort((a, b) => (a.basis || 0) - (b.basis || 0));
+    } else if (activeTab === 'New Coins') {
+      baseData = [...perpDexs].sort((a, b) => (b.last_traded_at || 0) - (a.last_traded_at || 0));
+    } else if (activeTab === 'Upcoming Coins') {
+      baseData = [...perpDexs].sort((a, b) => (b.spread || 0) - (a.spread || 0));
+    }
+
+    return baseData.filter(dex =>
+      dex.market.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      dex.symbol.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  const filteredData = getSortedData();
 
   const paginatedData = filteredData.slice(
     (currentPage - 1) * perPage,
@@ -73,23 +112,32 @@ const PerpDEXs = () => {
       <div className='w-full'>
         <Breadcrumbs
           crumbs={[
-            { label: 'Exchanges', path: '/' },
+            { label: 'Exchanges', path: '/exchanges' },
             { label: 'Perpetual DEXs' }
           ]}
         />
       </div>
 
-      <motion.div variants={itemVariants} className='w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4'>
-        <div className='flex flex-col gap-1 text-left'>
-          <h1 className='text-2xl sm:text-3xl font-bold'>Perpetual DEXs</h1>
-          <p className='text-xs sm:text-sm text-muted'>Ranked by Open Interest & Trade Volume. Tracking {perpDexs.length} contracts.</p>
+      <motion.div variants={itemVariants} className='w-full flex items-center justify-between gap-4'>
+        <div className='flex flex-col gap-0.5'>
+          <h1 className='text-2xl sm:text-5xl font-bold whitespace-nowrap'>Perpetual DEXs</h1>
+          <p className='text-sm sm:text-xl text-muted'>
+            24h Trading Volume: <span className="text-white font-bold">{globalData ? formatCurrency(globalData.total_volume.usd) : '...'}</span>
+          </p>
         </div>
-        <SearchBar
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="Search markets..."
-        />
       </motion.div>
+
+      <TableFilterHeader
+        activeTab={activeTab}
+        onTabChange={(tab) => {
+          setActiveTab(tab);
+          setCurrentPage(1);
+          setSearchQuery('');
+        }}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        placeholder="Search markets..."
+      />
 
       <motion.div variants={itemVariants} className='w-full overflow-x-auto h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative rounded-xl border border-gray-800/50'>
         <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
@@ -130,33 +178,33 @@ const PerpDEXs = () => {
             ) : (
               paginatedData.map((coin, index) => (
                 <tr key={`${coin.market}-${coin.symbol}-${index}`} className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer group'>
-                  <td className='py-2 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-left text-xs text-muted'>
+                  <td className='py-3 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-left text-sm text-muted font-bold'>
                     <span>{(currentPage - 1) * perPage + index + 1}</span>
                   </td>
-                  <td className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] text-left'>
+                  <td className='py-3 px-2 sticky left-[45px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] text-left'>
                     <div className='flex flex-col gap-0.5 min-w-0'>
-                      <span className='font-bold truncate text-[11px] sm:text-sm'>{coin.market}</span>
-                      <span className='text-[9px] sm:text-[10px] text-muted uppercase leading-none'>{coin.symbol}</span>
+                      <span className='font-bold truncate text-base sm:text-lg text-white'>{coin.market}</span>
+                      <span className='text-xs sm:text-sm text-muted uppercase leading-none font-bold'>{coin.symbol}</span>
                     </div>
                   </td>
-                  <td className='py-2 px-2 text-center'>
-                    <span className='px-1.5 py-0.5 bg-green-500/10 text-green-500 rounded text-[10px] md:text-xs font-bold border border-green-500/20 uppercase'>
+                  <td className='py-3 px-2 text-center'>
+                    <span className='px-2 py-0.5 bg-green-500/10 text-green-500 rounded text-sm md:text-base font-bold border border-green-500/20 uppercase'>
                       {coin.contract_type || "N/A"}
                     </span>
                   </td>
-                  <td className='py-2 px-2 text-center font-medium text-[11px] sm:text-xs'>
+                  <td className='py-3 px-2 text-center font-bold text-sm sm:text-base text-gray-200'>
                     ${Number(coin.price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
                   </td>
-                  <td className={`py-2 px-2 text-right text-[11px] sm:text-xs ${coin.basis < 0 ? 'text-red-500' : 'text-green-500'}`}>
+                  <td className={`py-3 px-2 text-right text-sm sm:text-base font-bold ${coin.basis < 0 ? 'text-red-500' : 'text-green-500'}`}>
                     {coin.basis ? coin.basis.toFixed(4) : "-"}
                   </td>
-                  <td className='py-2 px-2 text-right text-[11px] sm:text-xs text-muted'>
+                  <td className='py-3 px-2 text-right text-sm sm:text-base text-muted font-bold'>
                     {coin.spread ? coin.spread.toFixed(4) : "-"}
                   </td>
-                  <td className='py-2 px-2 text-right text-[11px] sm:text-xs font-mono text-muted'>
+                  <td className='py-3 px-2 text-right text-sm sm:text-base font-bold text-gray-300'>
                     ${Number(coin.open_interest).toLocaleString(undefined, { maximumFractionDigits: 0, notation: 'compact' })}
                   </td>
-                  <td className='py-2 px-2 text-right font-medium text-[11px] sm:text-xs font-mono text-muted'>
+                  <td className='py-3 px-2 text-right font-bold text-sm sm:text-base text-gray-300'>
                     ${Number(coin.volume_24h).toLocaleString(undefined, { maximumFractionDigits: 0, notation: 'compact' })}
                   </td>
                   <td className='py-2 px-2 text-right text-muted text-[10px] sm:text-[11px]'>
