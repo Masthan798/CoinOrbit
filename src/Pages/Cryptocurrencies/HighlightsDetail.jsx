@@ -7,11 +7,13 @@ import { TrendingCoinsData, AllcoinsData } from '../../services/AllcoinsData';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
 import TableFilterHeader from '../../Components/common/TableFilterHeader';
-import { Search } from 'lucide-react';
+import { Search, Globe } from 'lucide-react';
+import { useCurrency } from '../../Context/CurrencyContext';
 
 const HighlightsDetail = () => {
     const { type } = useParams();
     const navigate = useNavigate();
+    const { currency, formatPrice } = useCurrency();
     const [coins, setCoins] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -53,7 +55,7 @@ const HighlightsDetail = () => {
                         symbol: item.item.symbol,
                         image: item.item.large,
                         current_price: item.item.data.price,
-                        price_change_percentage_24h: item.item.data.price_change_percentage_24h.usd,
+                        price_change_percentage_24h: item.item.data.price_change_percentage_24h[currency.code] || item.item.data.price_change_percentage_24h.usd,
                         market_cap: item.item.data.market_cap,
                         total_volume: item.item.data.total_volume,
                         sparkline_in_7d: { price: Array.isArray(item.item.data.sparkline) ? item.item.data.sparkline : [] },
@@ -62,7 +64,7 @@ const HighlightsDetail = () => {
                     setCoins(normalized);
                 } else {
                     // For other categories, we fetch the top 200 coins and sort/filter
-                    const response = await AllcoinsData();
+                    const response = await AllcoinsData(200, 1, currency.code);
                     let filtered = [...response];
 
                     if (type === 'top-gainers') {
@@ -246,9 +248,9 @@ const HighlightsDetail = () => {
                                         </div>
                                     </td>
                                     <td className='py-3 px-2 text-right text-sm sm:text-base font-bold'>
-                                        {typeof coin.current_price === 'string' && coin.current_price.includes('$')
+                                        {typeof coin.current_price === 'string' && (coin.current_price.includes('$') || coin.current_price.includes('₹'))
                                             ? coin.current_price
-                                            : `$${(coin.current_price || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 8 })}`
+                                            : formatPrice(coin.current_price || 0, { maximumFractionDigits: 8 })
                                         }
                                     </td>
                                     <td className={`py-3 px-2 text-right text-sm sm:text-base font-bold ${(coin.price_change_percentage_24h || 0) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
@@ -262,13 +264,13 @@ const HighlightsDetail = () => {
                                     <td className='py-3 px-2 text-right text-sm sm:text-base text-gray-300 font-bold'>
                                         {typeof coin.total_volume === 'string'
                                             ? coin.total_volume
-                                            : `$${(coin.total_volume || 0).toLocaleString(undefined, { notation: 'compact' })}`
+                                            : formatPrice(coin.total_volume || 0, { notation: 'compact' })
                                         }
                                     </td>
                                     <td className='py-3 px-2 text-right text-sm sm:text-base text-gray-300 font-bold'>
                                         {typeof coin.market_cap === 'string'
                                             ? coin.market_cap
-                                            : `$${(coin.market_cap || 0).toLocaleString(undefined, { notation: 'compact' })}`
+                                            : formatPrice(coin.market_cap || 0, { notation: 'compact' })
                                         }
                                     </td>
                                     <td className='py-2 px-2 flex justify-end'>

@@ -8,6 +8,18 @@ export function GlobalData(){
     return coingeckoFetch("/global");
 }
 
+export function NftGlobalData(){
+    return coingeckoFetch("/nfts/list?per_page=1&page=1"); // For general count or specific global NFT endpoint if exists
+}
+
+export function NftMarketsData(vs_currency = 'usd', order = 'market_cap_usd_desc', per_page = 100, page = 1){
+    return coingeckoFetch(`/nfts/markets?vs_currency=${vs_currency}&order=${order}&per_page=${per_page}&page=${page}`);
+}
+
+export function SingleNftData(nftId){
+    return coingeckoFetch(`/nfts/${nftId}`);
+}
+
 
 
 export function CategoriesData(){
@@ -31,21 +43,21 @@ export function PerpDerivativesData(){
     return coingeckoFetch('/derivatives')
 }
 
-export function CoinDetailData(coinId,coinName,coinSymbol){
-    return coingeckoFetch(`simple/price?vs_currencies=usd&ids=${coinId}&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true`)
+export function CoinDetailData(coinId, vs_currency = 'usd'){
+    return coingeckoFetch(`simple/price?vs_currencies=${vs_currency}&ids=${coinId}&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true`)
 }
 
-export function CoinMarketChartData(coinId, days = '7', interval) {
+export function CoinMarketChartData(coinId, days = '7', vs_currency = 'usd', interval) {
     const intervalParam = interval === 'daily' ? `&interval=daily` : '';
-    return coingeckoFetch(`/coins/${coinId}/market_chart?vs_currency=usd&days=${days}${intervalParam}`);
+    return coingeckoFetch(`/coins/${coinId}/market_chart?vs_currency=${vs_currency}&days=${days}${intervalParam}`);
 }
 
-export function CoinOHLCData(coinId, days = '7') {
-    return coingeckoFetch(`/coins/${coinId}/ohlc?vs_currency=usd&days=${days}`);
+export function CoinOHLCData(coinId, days = '7', vs_currency = 'usd') {
+    return coingeckoFetch(`/coins/${coinId}/ohlc?vs_currency=${vs_currency}&days=${days}`);
 }
 
-export function CoinMarketChartRangeData(coinId, from, to) {
-    return coingeckoFetch(`/coins/${coinId}/market_chart/range?vs_currency=usd&from=${from}&to=${to}`);
+export function CoinMarketChartRangeData(coinId, from, to, vs_currency = 'usd') {
+    return coingeckoFetch(`/coins/${coinId}/market_chart/range?vs_currency=${vs_currency}&from=${from}&to=${to}`);
 }
 
 

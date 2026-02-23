@@ -6,15 +6,8 @@ import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
 import TableFilterHeader from '../../Components/common/TableFilterHeader';
 import { Search } from 'lucide-react';
+import { useCurrency } from '../../Context/CurrencyContext';
 
-const formatCurrency = (val) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(val);
-};
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -38,7 +31,7 @@ const itemVariants = {
 
 
 const PerpDEXs = () => {
-
+  const { currency, formatPrice } = useCurrency();
   const [perpDexs, setPerpDexs] = useState([]);
   const [globalData, setGlobalData] = useState(null);
   const [loading, setloading] = useState(false);
@@ -122,7 +115,7 @@ const PerpDEXs = () => {
         <div className='flex flex-col gap-0.5'>
           <h1 className='text-2xl sm:text-5xl font-bold whitespace-nowrap'>Perpetual DEXs</h1>
           <p className='text-sm sm:text-xl text-muted'>
-            24h Trading Volume: <span className="text-white font-bold">{globalData ? formatCurrency(globalData.total_volume.usd) : '...'}</span>
+            24h Trading Volume: <span className="text-white font-bold">{globalData ? formatPrice(globalData.total_volume[currency.code]) : '...'}</span>
           </p>
         </div>
       </motion.div>
@@ -193,7 +186,7 @@ const PerpDEXs = () => {
                     </span>
                   </td>
                   <td className='py-3 px-2 text-center font-bold text-sm sm:text-base text-gray-200'>
-                    ${Number(coin.price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
+                    {formatPrice(Number(coin.price), { maximumFractionDigits: 4 })}
                   </td>
                   <td className={`py-3 px-2 text-right text-sm sm:text-base font-bold ${coin.basis < 0 ? 'text-red-500' : 'text-green-500'}`}>
                     {coin.basis ? coin.basis.toFixed(4) : "-"}
@@ -201,11 +194,11 @@ const PerpDEXs = () => {
                   <td className='py-3 px-2 text-right text-sm sm:text-base text-muted font-bold'>
                     {coin.spread ? coin.spread.toFixed(4) : "-"}
                   </td>
-                  <td className='py-3 px-2 text-right text-sm sm:text-base font-bold text-gray-300'>
-                    ${Number(coin.open_interest).toLocaleString(undefined, { maximumFractionDigits: 0, notation: 'compact' })}
+                  <td className='py-3 px-2 text-right font-bold text-sm sm:text-base text-gray-300'>
+                    {formatPrice(Number(coin.open_interest), { notation: 'compact' })}
                   </td>
                   <td className='py-3 px-2 text-right font-bold text-sm sm:text-base text-gray-300'>
-                    ${Number(coin.volume_24h).toLocaleString(undefined, { maximumFractionDigits: 0, notation: 'compact' })}
+                    {formatPrice(Number(coin.volume_24h), { notation: 'compact' })}
                   </td>
                   <td className='py-2 px-2 text-right text-muted text-[10px] sm:text-[11px]'>
                     {coin.last_traded_at ? new Date(coin.last_traded_at * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "-"}

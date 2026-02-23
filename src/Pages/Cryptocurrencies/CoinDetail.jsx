@@ -8,6 +8,7 @@ import CoinDetailGraph from '../../Components/Graphs/CoinDetailGraph';
 import CoinInfoBlock from '../../Components/Coins/CoinInfoBlock';
 import CoinPerformanceBlock from '../../Components/Coins/CoinPerformanceBlock';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
+import { useCurrency } from '../../Context/CurrencyContext';
 
 
 const containerVariants = {
@@ -33,6 +34,7 @@ const itemVariants = {
 const CoinDetail = () => {
     const { coinId } = useParams();
     const navigate = useNavigate();
+    const { currency, formatPrice } = useCurrency();
     const [coin, setCoin] = useState(null);
     const [loading, setLoading] = useState(true);
     const [coincardsData, setCoinsCardData] = useState(null);
@@ -44,7 +46,7 @@ const CoinDetail = () => {
                 const response = await coingeckoFetch(`/coins/${coinId}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true`);
                 setCoin(response);
                 // Call fetchCoinCardsData once we have the coin's full name and symbol
-                fetchCoinCardsData(coinId, response.name, response.symbol);
+                fetchCoinCardsData(coinId, currency.code);
             } catch (error) {
                 console.error("Error fetching coin details:", error);
             } finally {
@@ -54,10 +56,9 @@ const CoinDetail = () => {
         fetchCoinDetail();
     }, [coinId]);
 
-
-    const fetchCoinCardsData = async (id, name, symbol) => {
+    const fetchCoinCardsData = async (id, vs_currency) => {
         try {
-            const response = await CoinDetailData(id, name, symbol);
+            const response = await CoinDetailData(id, vs_currency);
             setCoinsCardData(response[id] || null);
         }
         catch (error) {
@@ -162,7 +163,7 @@ const CoinDetail = () => {
                             </div>
                         </div>
                         <div className='flex flex-wrap items-baseline gap-2'>
-                            <span className='text-2xl sm:text-3xl font-bold'>${coin.market_data.current_price.usd.toLocaleString()}</span>
+                            <span className='text-2xl sm:text-3xl font-bold'>{formatPrice(coin.market_data.current_price[currency.code])}</span>
                             <span className={`text-xs sm:text-sm font-medium ${coin.market_data.price_change_percentage_24h > 0 ? 'text-green-500' : 'text-red-500'}`}>
                                 {coin.market_data.price_change_percentage_24h > 0 ? '+' : ''}{coin.market_data.price_change_percentage_24h.toFixed(2)}%
                             </span>
@@ -171,10 +172,10 @@ const CoinDetail = () => {
 
                     {/* Detailed Data Cards (from simple/price) */}
                     {[
-                        { val: coincardsData?.usd, label: `${coin.name} Price`, useLocal: true },
-                        { val: coincardsData?.usd_market_cap, label: 'Total Market Cap' },
-                        { val: coincardsData?.usd_24h_vol, label: '24h Volume' },
-                        { val: coincardsData?.usd_24h_change, label: '24h Change', isPerc: true }
+                        { val: coincardsData?.[currency.code], label: `${coin.name} Price`, useLocal: true },
+                        { val: coincardsData?.[`${currency.code}_market_cap`], label: 'Total Market Cap' },
+                        { val: coincardsData?.[`${currency.code}_24h_vol`], label: '24h Volume' },
+                        { val: coincardsData?.[`${currency.code}_24h_change`], label: '24h Change', isPerc: true }
                     ].map((card, idx) => (
                         <motion.div key={idx} variants={itemVariants} className='flex flex-col gap-1 sm:gap-2 justify-center items-start p-4 sm:p-6 border-gray-800 border-2 rounded-2xl bg-card/10 hover:bg-card/20 transition-all duration-300 group h-full overflow-hidden'>
                             {card.val !== undefined && card.val !== null ? (
@@ -184,7 +185,7 @@ const CoinDetail = () => {
                                             {card.val > 0 ? '+' : ''}{card.val?.toFixed(2)}%
                                         </span>
                                     ) : (
-                                        `$${card.useLocal ? card.val.toLocaleString() : formatCompactNumber(card.val)}`
+                                        `${card.useLocal ? formatPrice(card.val) : formatPrice(card.val, { notation: 'compact' })}`
                                     )}
                                 </p>
                             ) : (
@@ -226,37 +227,37 @@ const CoinDetail = () => {
 
                             <div className='flex flex-col gap-1'>
                                 <div className='flex items-baseline gap-2'>
-                                    <span className='text-3xl sm:text-5xl font-black tracking-tighter text-white'>${coin.market_data.current_price.usd.toLocaleString()}</span>
+                                    <span className='text-3xl sm:text-5xl font-black tracking-tighter text-white'>{formatPrice(coin.market_data.current_price[currency.code])}</span>
                                     <span className={coin.market_data.price_change_percentage_24h > 0 ? 'text-xs sm:text-base font-bold bg-green-500/10 px-2.5 py-1 rounded-lg text-green-500' : 'text-xs sm:text-base font-bold bg-red-500/10 px-2.5 py-1 rounded-lg text-red-500'}>
                                         {coin.market_data.price_change_percentage_24h > 0 ? '+' : ''}{coin.market_data.price_change_percentage_24h.toFixed(2)}%
                                     </span>
                                 </div>
-                                <p className='text-xs sm:text-sm text-muted font-bold uppercase tracking-widest opacity-60'>Current Price (USD)</p>
+                                <p className='text-xs sm:text-sm text-muted font-bold uppercase tracking-widest opacity-60'>Current Price ({currency.code.toUpperCase()})</p>
                             </div>
 
                             <div className='space-y-3 sm:space-y-4 pt-3 sm:pt-4 border-t border-gray-800/50'>
                                 <div className='flex justify-between items-center'>
                                     <span className='text-xs text-muted font-black uppercase tracking-tighter'>Daily Range</span>
                                     <div className='flex items-center gap-2'>
-                                        <span className='text-xs text-muted font-bold'>${coin.market_data.low_24h.usd.toLocaleString()}</span>
+                                        <span className='text-xs text-muted font-bold'>{formatPrice(coin.market_data.low_24h[currency.code])}</span>
                                         <div className='w-16 sm:w-24 h-1 sm:h-1.5 bg-gray-800 rounded-full relative overflow-hidden'>
                                             <div
                                                 className='absolute h-full bg-white/60'
                                                 style={{
                                                     width: `${Math.min(100, Math.max(0,
-                                                        ((coin.market_data.current_price.usd - coin.market_data.low_24h.usd) /
-                                                            (coin.market_data.high_24h.usd - coin.market_data.low_24h.usd)) * 100
+                                                        ((coin.market_data.current_price[currency.code] - coin.market_data.low_24h[currency.code]) /
+                                                            (coin.market_data.high_24h[currency.code] - coin.market_data.low_24h[currency.code])) * 100
                                                     ))}%`
                                                 }}
                                             />
                                         </div>
-                                        <span className='text-xs text-muted font-bold'>${coin.market_data.high_24h.usd.toLocaleString()}</span>
+                                        <span className='text-xs text-muted font-bold'>{formatPrice(coin.market_data.high_24h[currency.code])}</span>
                                     </div>
                                 </div>
                             </div>
 
                             <div className='pt-1 sm:pt-2 flex gap-3'>
-                                <button className='flex-1 flex items-center justify-center gap-2 p-3 sm:p-4 bg-white text-black text-xs sm:text-sm font-extrabold rounded-xl sm:rounded-2xl hover:bg-gray-200 transition-all active:scale-[0.98] shadow-lg shadow-white/10'>
+                                <button className='flex-1 flex items-center justify-center gap-2 p-3 sm:p-4 bg-card hover:bg-white/5 text-white text-xs sm:text-sm font-extrabold rounded-xl sm:rounded-2xl border border-white/10 transition-all active:scale-[0.98] shadow-lg shadow-black/20'>
                                     <StarIcon size={16} fill="currentColor" className="sm:w-[18px] sm:h-[18px]" />
                                     Add to Portfolio
                                 </button>
@@ -266,13 +267,13 @@ const CoinDetail = () => {
                         {/* Stats List */}
                         <div className='w-full flex flex-col gap-0.5 sm:gap-1 mt-4 sm:mt-0'>
                             {[
-                                { label: 'Market Cap', value: coin.market_data.market_cap.usd, tooltip: 'Current price multiplied by circulating supply.' },
-                                { label: 'Fully Diluted Valuation', value: coin.market_data.fully_diluted_valuation.usd, tooltip: 'Market cap if max supply was in circulation.' },
+                                { label: 'Market Cap', value: coin.market_data.market_cap[currency.code], tooltip: 'Current price multiplied by circulating supply.' },
+                                { label: 'Fully Diluted Valuation', value: coin.market_data.fully_diluted_valuation[currency.code], tooltip: 'Market cap if max supply was in circulation.' },
                                 { label: 'Circulating Supply', value: coin.market_data.circulating_supply, useLocal: true, symbol: coin.symbol.toUpperCase() },
                                 { label: 'Total Supply', value: coin.market_data.total_supply, useLocal: true, symbol: coin.symbol.toUpperCase() },
                                 { label: 'Max Supply', value: coin.market_data.max_supply, useLocal: true, symbol: coin.symbol.toUpperCase() },
-                                { label: 'All-Time High', value: coin.market_data.ath.usd, isPrice: true, date: coin.market_data.ath_date.usd },
-                                { label: 'All-Time Low', value: coin.market_data.atl.usd, isPrice: true, date: coin.market_data.atl_date.usd },
+                                { label: 'All-Time High', value: coin.market_data.ath[currency.code], isPrice: true, date: coin.market_data.ath_date[currency.code] },
+                                { label: 'All-Time Low', value: coin.market_data.atl[currency.code], isPrice: true, date: coin.market_data.atl_date[currency.code] },
                             ].map((stat, idx) => (
                                 <div key={idx} className='flex items-center justify-between py-2 sm:py-3 border-b border-gray-800/20 last:border-0 hover:bg-white/[0.03] px-2 sm:px-3 rounded-lg sm:rounded-xl transition-all duration-300 group'>
                                     <div className='flex items-center gap-2'>
@@ -281,9 +282,9 @@ const CoinDetail = () => {
                                     </div>
                                     <div className='flex flex-col items-end'>
                                         <p className='text-sm sm:text-base font-black tracking-tight text-white'>
-                                            {stat.isPrice ? `$${stat.value?.toLocaleString()}` :
+                                            {stat.isPrice ? formatPrice(stat.value) :
                                                 stat.useLocal ? `${stat.value?.toLocaleString() ?? '∞'} ${stat.symbol}` :
-                                                    stat.value ? `$${stat.value.toLocaleString()}` : 'N/A'}
+                                                    stat.value ? formatPrice(stat.value, { notation: 'compact' }) : 'N/A'}
                                         </p>
                                         {stat.date && <span className='text-xs text-muted/40 font-bold uppercase'>{new Date(stat.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>}
                                     </div>

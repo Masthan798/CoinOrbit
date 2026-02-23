@@ -21,20 +21,20 @@ import {
 import { coingeckoFetch } from '../../api/coingeckoClient';
 import NFTDetailGraph from '../../Components/Graphs/NFTDetailGraph';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
+import { useCurrency } from '../../Context/CurrencyContext';
 
 const StatRow = ({ label, value, change, isPositive, tooltip }) => (
-    <div className="flex items-center justify-between py-3.5 border-b border-gray-800/20 last:border-0 group transition-all hover:bg-white/[0.02] px-2 rounded-lg">
-        <div className="flex items-center gap-1.5 min-w-0 flex-1">
-            <span className="text-sm sm:text-base text-muted-foreground font-bold group-hover:text-white transition-colors truncate uppercase tracking-tighter">{label}</span>
-            {tooltip && <Info size={12} className="text-muted-foreground/30 cursor-help flex-shrink-0" />}
+    <div className="flex items-center justify-between py-2 sm:py-3 border-b border-gray-800/20 last:border-0 hover:bg-white/[0.03] px-2 sm:px-3 rounded-lg sm:rounded-xl transition-all duration-300 group">
+        <div className="flex items-center gap-2">
+            <span className="text-sm sm:text-base text-muted font-bold group-hover:text-white/80 transition-colors uppercase tracking-tight">{label}</span>
+            {tooltip && <span className='text-[10px] sm:text-xs text-muted/30 cursor-help' title={tooltip}>ⓘ</span>}
         </div>
-        <div className="flex flex-col items-end flex-shrink-0 ml-4">
+        <div className="flex flex-col items-end">
             <div className="flex items-center gap-2">
-                <span className="text-base sm:text-lg font-black text-white tracking-tight">{value}</span>
+                <span className="text-sm sm:text-base font-black tracking-tight text-white">{value}</span>
                 {change !== undefined && (
-                    <div className={`flex items-center gap-0.5 text-xs font-bold ${isPositive ? 'text-emerald-400' : 'text-rose-400'}`}>
-                        {isPositive ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-                        {Math.abs(change).toFixed(1)}%
+                    <div className={`flex items-center gap-1 text-xs font-bold ${isPositive ? 'text-emerald-400 bg-emerald-500/10' : 'text-rose-400 bg-rose-500/10'} px-1.5 py-0.5 rounded`}>
+                        {isPositive ? '+' : ''}{change?.toFixed(1)}%
                     </div>
                 )}
             </div>
@@ -44,6 +44,7 @@ const StatRow = ({ label, value, change, isPositive, tooltip }) => (
 
 const NFTDetail = () => {
     const { contractAddress } = useParams();
+    const { currency, formatPrice } = useCurrency();
     const [nftData, setNftData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -118,50 +119,53 @@ const NFTDetail = () => {
                 <div className="lg:col-span-4 xl:col-span-3 space-y-6">
 
                     {/* Header Info Block */}
-                    <div className="p-6 border-gray-800 border-2 rounded-2xl bg-card/20 backdrop-blur-md flex flex-col gap-6 shadow-2xl">
-                        <div className="flex items-center gap-4">
-                            <div className="p-1 bg-white/5 rounded-2xl border border-white/10 overflow-hidden">
-                                <img
-                                    src={nftData.image?.small || nftData.image?.large}
-                                    alt={nftData.name}
-                                    className="w-16 h-16 rounded-sm object-cover shadow-2xl"
-                                />
+                    <div className="p-4 sm:p-8 border-gray-800 border-2 rounded-3xl bg-card/20 backdrop-blur-md flex flex-col gap-4 sm:gap-6 shadow-2xl shadow-black/20">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3 sm:gap-4">
+                                <div className="p-1 bg-white/5 rounded-full border border-white/10">
+                                    <img
+                                        src={nftData.image?.small || nftData.image?.large}
+                                        alt={nftData.name}
+                                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-sm object-cover"
+                                    />
+                                </div>
+                                <div>
+                                    <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white uppercase">{nftData.name}</h1>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-sm text-muted uppercase font-bold tracking-widest leading-none">{nftData.asset_platform_id?.toUpperCase()}</span>
+                                        <span className="text-xs bg-white/5 border border-white/10 px-2 py-0.5 rounded-full text-muted font-bold">RANK #{nftData.market_cap_rank || 'N/A'}</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="flex flex-col gap-1 min-w-0">
-                                <h1 className="text-3xl sm:text-7xl font-black tracking-tighter text-white truncate leading-none uppercase">{nftData.name} Price</h1>
-                                <span className="text-base sm:text-lg bg-white/5 border border-white/10 px-4 py-1.5 rounded-full text-muted w-fit uppercase font-black tracking-widest leading-none">
-                                    RANK #{nftData.market_cap_rank || 'N/A'}
-                                </span>
-                            </div>
+                            <button className='p-2 sm:p-3 bg-white/5 hover:bg-white/10 rounded-xl sm:rounded-2xl border border-white/10 transition-all text-muted hover:text-white group'>
+                                <Bell size={18} className='group-hover:scale-110 transition-transform sm:w-5 sm:h-5' />
+                            </button>
                         </div>
 
                         <div className="flex flex-col gap-1">
                             <div className="flex items-baseline gap-2">
-                                <span className="text-5xl sm:text-8xl font-black tracking-tighter text-white leading-none">
+                                <span className="text-3xl sm:text-5xl font-black tracking-tighter text-white">
                                     {nftData.floor_price?.native_currency?.toLocaleString()} {nftData.native_currency_symbol?.toUpperCase()}
                                 </span>
-                                <div className={`text-xs font-bold px-2 py-0.5 rounded-lg flex items-center gap-1 ${isPositive ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`}>
-                                    {isPositive ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-                                    {Math.abs(priceChange).toFixed(1)}%
+                                <div className={`text-xs sm:text-base font-bold px-2.5 py-1 rounded-lg ${isPositive ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`}>
+                                    {isPositive ? '+' : ''}{priceChange.toFixed(2)}%
                                 </div>
                             </div>
-                            <p className="text-lg sm:text-3xl text-muted-foreground font-black tracking-tighter italic opacity-80 mt-1">
-                                ≈ ${nftData.floor_price?.usd?.toLocaleString()}
-                                <span className={`${nftData.floor_price_24h_percentage_change?.usd >= 0 ? 'text-emerald-400' : 'text-rose-400'} ml-2`}>
-                                    ({nftData.floor_price_24h_percentage_change?.usd >= 0 ? '+' : ''}{nftData.floor_price_24h_percentage_change?.usd?.toFixed(1)}%)
-                                </span>
+                            <p className="text-xs sm:text-sm text-muted font-bold uppercase tracking-widest opacity-60 mt-1">
+                                ≈ {formatPrice(nftData.floor_price?.[currency.code.toLowerCase()] || nftData.floor_price?.usd)}
                             </p>
                         </div>
 
-                        <button className="w-full flex items-center justify-center gap-2 py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all text-[11px] font-black uppercase tracking-widest text-[#888] hover:text-white group">
-                            <Star size={16} className="group-hover:text-yellow-400 transition-colors" />
-                            <span>Add to Watchlist</span>
-                            <span className="opacity-40 text-[9px] ml-1">{nftData.user_favorites_count?.toLocaleString()} added</span>
-                        </button>
+                        <div className='pt-1 sm:pt-2 flex gap-3'>
+                            <button className="flex-1 flex items-center justify-center gap-2 p-3 sm:p-4 bg-card hover:bg-white/5 text-white text-xs sm:text-sm font-extrabold rounded-xl sm:rounded-2xl border border-white/10 transition-all active:scale-[0.98] shadow-lg shadow-black/20 group">
+                                <Star size={16} fill="currentColor" className="group-hover:scale-110 transition-transform sm:w-[18px] sm:h-[18px]" />
+                                <span>Add to Watchlist</span>
+                            </button>
+                        </div>
                     </div>
 
                     {/* Stats List Block */}
-                    <div className="flex flex-col gap-1 border-gray-800 border-2 rounded-2xl bg-card/10 p-4">
+                    <div className="w-full flex flex-col gap-0.5 sm:gap-1">
                         <StatRow
                             label="Market Cap"
                             value={`${nftData.market_cap?.native_currency?.toLocaleString()} ${nftData.native_currency_symbol?.toUpperCase()}`}
@@ -192,17 +196,18 @@ const NFTDetail = () => {
                         />
                         <StatRow label="Total Assets" value={nftData.total_supply?.toLocaleString() || '-'} />
 
-                        <div className="pt-4 mt-2 border-t border-gray-800/50">
-                            <div className="flex items-center justify-between">
-                                <span className="text-sm text-muted font-bold uppercase tracking-widest">All-Time High</span>
-                                <div className="text-right flex flex-col items-end">
-                                    <span className="text-base sm:text-lg font-black text-white leading-tight">${nftData.ath?.usd?.toLocaleString()}</span>
-                                    <div className="text-xs font-bold text-rose-500 flex items-center gap-0.5">
-                                        <TrendingDown size={12} />
-                                        {Math.abs(nftData.ath_change_percentage?.native_currency || 0).toFixed(1)}%
-                                    </div>
-                                    <span className="text-xs text-muted/30 font-bold uppercase tracking-widest">{nftData.ath_date?.native_currency ? new Date(nftData.ath_date.native_currency).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : ''}</span>
+                        <div className="flex items-center justify-between py-2 sm:py-3 border-b border-gray-800/20 last:border-0 hover:bg-white/[0.03] px-2 sm:px-3 rounded-lg sm:rounded-xl transition-all duration-300 group">
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs text-muted font-black uppercase tracking-tighter">All-Time High</span>
+                            </div>
+                            <div className="text-right flex flex-col items-end">
+                                <p className="text-sm sm:text-base font-black tracking-tight text-white leading-tight">
+                                    {formatPrice(nftData.ath?.[currency.code.toLowerCase()] || nftData.ath?.usd)}
+                                </p>
+                                <div className={`text-[10px] font-bold flex items-center gap-0.5 ${nftData.ath_change_percentage?.native_currency < 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
+                                    {nftData.ath_change_percentage?.native_currency?.toFixed(1)}%
                                 </div>
+                                <span className="text-[10px] text-muted/40 font-bold uppercase">{nftData.ath_date?.native_currency ? new Date(nftData.ath_date.native_currency).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : ''}</span>
                             </div>
                         </div>
                     </div>
@@ -276,7 +281,7 @@ const NFTDetail = () => {
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
-                                className={`pb-4 text-[12px] font-bold tracking-wider transition-all relative whitespace-nowrap ${activeTab === tab ? 'text-white' : 'text-muted-foreground hover:text-white/80'}`}
+                                className={`pb-4 text-sm sm:text-lg font-bold tracking-wider transition-all relative whitespace-nowrap ${activeTab === tab ? 'text-white' : 'text-muted-foreground hover:text-white/80'}`}
                             >
                                 {tab}
                                 {activeTab === tab && (
@@ -296,7 +301,7 @@ const NFTDetail = () => {
                                         <button
                                             key={type}
                                             onClick={() => setDataType(type)}
-                                            className={`px-4 py-1.5 rounded-md text-[10px] font-bold uppercase transition-all ${dataType === type ? 'bg-white text-black shadow-lg scale-[1.02]' : 'text-muted-foreground hover:text-white'}`}
+                                            className={`px-4 py-1.5 rounded-md text-[10px] font-bold uppercase transition-all ${dataType === type ? 'bg-card text-white shadow-lg scale-[1.02] border border-white/10' : 'text-muted-foreground hover:text-white'}`}
                                         >
                                             {type.replace('_', ' ')}
                                         </button>
