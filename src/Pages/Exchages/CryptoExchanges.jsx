@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion'
 import { ChevronUp, ChevronDown, ArrowUpRight } from 'lucide-react';
-import { ExchagesData } from '../../services/AllcoinsData';
+import { ExchagesData, GlobalData } from '../../services/AllcoinsData';
 import Pagination from '../../Components/Pagination/Pagination';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
-import SearchBar from '../../Components/Inputs/SearchBar';
+import TableFilterHeader from '../../Components/common/TableFilterHeader';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -28,16 +28,42 @@ const itemVariants = {
   }
 };
 
+const formatCurrency = (val) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(val);
+};
+
 const CryptoExchanges = () => {
   const navigate = useNavigate();
   const TOTAL_EXCHANGES = 194;
   const [exchageData, setExchageData] = useState([]);
+  const [globalData, setGlobalData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('All');
+
+  const fetchGlobalData = async () => {
+    try {
+      const response = await GlobalData();
+      if (response && response.data) {
+        setGlobalData(response.data);
+      }
+    } catch (err) {
+      console.error("Error fetching global data:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchGlobalData();
+  }, []);
 
   useEffect(() => {
     const fetchExhageData = async () => {
@@ -73,8 +99,19 @@ const CryptoExchanges = () => {
 
   const getSortedExchanges = () => {
     let filteredExchanges = exchageData;
+
+    // Tab-based filtering/sorting
+    if (activeTab === 'Top Gainers') {
+      // Map to volume if price change not available in list
+      filteredExchanges = [...exchageData].sort((a, b) => b.trade_volume_24h_btc - a.trade_volume_24h_btc);
+    } else if (activeTab === 'Top Losers') {
+      filteredExchanges = [...exchageData].sort((a, b) => a.trade_volume_24h_btc - b.trade_volume_24h_btc);
+    } else if (activeTab === 'New Coins') {
+      filteredExchanges = [...exchageData].sort((a, b) => b.year_established - a.year_established);
+    }
+
     if (searchQuery) {
-      filteredExchanges = exchageData.filter(exchange =>
+      filteredExchanges = filteredExchanges.filter(exchange =>
         exchange.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         exchange.id.toLowerCase().includes(searchQuery.toLowerCase())
       );
@@ -114,17 +151,26 @@ const CryptoExchanges = () => {
         />
       </div>
 
-      <motion.div variants={itemVariants} className='w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4'>
-        <div className='flex flex-col gap-1'>
-          <h1 className='text-2xl sm:text-3xl font-bold'>Spot Exchanges</h1>
-          <p className='text-xs sm:text-sm text-muted'>Ranked by Trust Score. Tracking {TOTAL_EXCHANGES} exchanges.</p>
+      <motion.div variants={itemVariants} className='w-full flex items-center justify-between gap-4'>
+        <div className='flex flex-col gap-0.5'>
+          <h1 className='text-2xl sm:text-5xl font-bold whitespace-nowrap'>Top Crypto Exchanges</h1>
+          <p className='text-sm sm:text-xl text-muted'>
+            24h Trading Volume: <span className="text-white font-bold">{globalData ? formatCurrency(globalData.total_volume.usd) : '...'}</span>
+          </p>
         </div>
-        <SearchBar
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="Search exchanges..."
-        />
       </motion.div>
+
+      <TableFilterHeader
+        activeTab={activeTab}
+        onTabChange={(tab) => {
+          setActiveTab(tab);
+          setCurrentPage(1);
+          setSearchQuery('');
+        }}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        placeholder="Search exchanges..."
+      />
 
       <motion.div variants={itemVariants} className='w-full overflow-x-auto h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative rounded-xl border border-gray-800/50'>
         <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
@@ -195,20 +241,20 @@ const CryptoExchanges = () => {
                   onClick={() => navigate(`/exchanges/cryptoexchanges/${coin.id}`)}
                   className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer group'
                 >
-                  <td className='py-2 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-left text-xs text-muted'>
+                  <td className='py-3 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-left text-sm text-muted font-bold'>
                     <span>{coin.trust_score_rank}</span>
                   </td>
-                  <td className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10 w-[120px] min-w-[120px] md:w-[180px] md:min-w-[180px] text-left'>
+                  <td className='py-3 px-2 sticky left-[45px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10 w-[120px] min-w-[120px] md:w-[180px] md:min-w-[180px] text-left'>
                     <div className='flex items-center gap-2'>
                       <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6 rounded-full' />
                       <div className='flex flex-col gap-0.5 min-w-0'>
-                        <span className='font-bold truncate text-[11px] sm:text-sm'>{coin.name}</span>
-                        <span className='text-[9px] sm:text-[10px] text-muted uppercase leading-none'>{coin.id}</span>
+                        <span className='font-bold truncate text-base sm:text-lg text-white'>{coin.name}</span>
+                        <span className='text-xs sm:text-sm text-muted uppercase leading-none font-bold'>{coin.id}</span>
                       </div>
                     </div>
                   </td>
-                  <td className='py-2 px-2 text-center'>
-                    <span className='px-1.5 py-0.5 bg-green-500/10 text-green-500 rounded text-[10px] md:text-xs font-bold border border-green-500/20'>
+                  <td className='py-3 px-2 text-center'>
+                    <span className='px-2 py-0.5 bg-green-500/10 text-green-500 rounded text-sm md:text-base font-bold border border-green-500/20'>
                       {coin.trust_score || "0"}/10
                     </span>
                   </td>

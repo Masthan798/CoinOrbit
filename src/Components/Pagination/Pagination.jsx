@@ -47,11 +47,11 @@ const Pagination = ({
     return (
         <div className='w-full flex flex-row flex-nowrap items-center justify-between gap-2 sm:gap-4 mt-8 px-2 sm:px-4 text-muted'>
             {/* Section 1: Result Range */}
-            <div className='flex items-center gap-2 font-medium shrink-0'>
-                <span className='text-xs sm:text-sm text-white whitespace-nowrap'>
+            <div className='flex items-center gap-2 font-black shrink-0'>
+                <span className='text-sm sm:text-lg text-white whitespace-nowrap font-bold'>
                     {(currentPage - 1) * perPage + 1}-{Math.min(currentPage * perPage, totalItems)}
                 </span>
-                <div className='hidden md:flex flex-col text-[8px] sm:text-[10px] leading-tight text-muted uppercase'>
+                <div className='hidden md:flex flex-col text-xs leading-tight text-muted uppercase font-bold'>
                     <span>of {totalItems}+</span>
                 </div>
             </div>
@@ -81,10 +81,10 @@ const Pagination = ({
                             <button
                                 key={page}
                                 onClick={() => handlePageChange(page)}
-                                className={`w-6 h-6 sm:w-8 sm:h-8 items-center justify-center rounded-lg transition-colors ${showOnMobile ? 'flex' : 'hidden md:flex'
+                                className={`w-8 h-8 sm:w-10 sm:h-10 items-center justify-center rounded-lg transition-colors text-sm sm:text-base ${showOnMobile ? 'flex' : 'hidden md:flex'
                                     } ${currentPage === page
-                                        ? 'bg-card text-white font-bold'
-                                        : 'hover:bg-card'
+                                        ? 'bg-card text-white font-black'
+                                        : 'text-muted hover:bg-card hover:text-white font-bold'
                                     }`}
                             >
                                 {page}
@@ -129,7 +129,7 @@ const Pagination = ({
                                             setCurrentPage(1);
                                             setIsDropdownOpen(false);
                                         }}
-                                        className={`w-full text-left px-3 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-sm transition-colors hover:bg-gray-800 ${perPage === value ? 'bg-gray-800 text-white font-bold' : 'text-white'
+                                        className={`w-full text-left px-4 py-2.5 sm:py-3.5 text-xs sm:text-base transition-colors hover:bg-gray-800 ${perPage === value ? 'bg-gray-800 text-white font-black' : 'text-white font-bold'
                                             }`}
                                     >
                                         {value}

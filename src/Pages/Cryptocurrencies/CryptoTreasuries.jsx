@@ -7,7 +7,7 @@ import Pagination from '../../Components/Pagination/Pagination';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import StatsCardSkeleton from '../../Components/Loadings/StatsCardSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
-import SearchBar from '../../Components/Inputs/SearchBar';
+import TableFilterHeader from '../../Components/common/TableFilterHeader';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -39,6 +39,7 @@ const CryptoTreasuries = () => {
   const [perPage, setPerPage] = useState(10);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('All');
 
   useEffect(() => {
     const fetchTreasuriesData = async () => {
@@ -98,8 +99,18 @@ const CryptoTreasuries = () => {
 
   const getSortedTreasuries = () => {
     let filteredTreasuries = treasuries;
+
+    // Tab-based filtering/sorting logic
+    if (activeTab === 'Top Gainers') {
+      filteredTreasuries = [...treasuries].sort((a, b) => (b.total_current_value_usd || 0) - (a.total_current_value_usd || 0));
+    } else if (activeTab === 'Top Losers') {
+      filteredTreasuries = [...treasuries].sort((a, b) => (a.total_current_value_usd || 0) - (b.total_current_value_usd || 0));
+    } else if (activeTab === 'New Coins') {
+      filteredTreasuries = [...treasuries].sort((a, b) => (b.total_holdings || 0) - (a.total_holdings || 0));
+    }
+
     if (searchQuery) {
-      filteredTreasuries = treasuries.filter(entity =>
+      filteredTreasuries = filteredTreasuries.filter(entity =>
         entity.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         entity.symbol.toLowerCase().includes(searchQuery.toLowerCase())
       );
@@ -144,18 +155,6 @@ const CryptoTreasuries = () => {
           ]}
         />
       </div>
-
-      <motion.div variants={itemVariants} className='w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4'>
-        <div className='flex flex-col gap-1'>
-          <h1 className='text-3xl font-bold'>Crypto Treasuries</h1>
-          <p className='text-sm text-muted'>Public companies that have disclosed their Bitcoin holdings.</p>
-        </div>
-        <SearchBar
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="Search entities..."
-        />
-      </motion.div>
 
       <motion.div variants={itemVariants} className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4'>
         {loading ? (
@@ -208,6 +207,18 @@ const CryptoTreasuries = () => {
         )}
       </motion.div>
 
+      <TableFilterHeader
+        activeTab={activeTab}
+        onTabChange={(tab) => {
+          setActiveTab(tab);
+          setCurrentPage(1);
+          setSearchQuery('');
+        }}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        placeholder="Search entities..."
+      />
+
 
       <motion.div variants={itemVariants} className='w-full overflow-x-auto h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative'>
         <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
@@ -254,17 +265,17 @@ const CryptoTreasuries = () => {
 
                 return (
                   <tr key={entity.id || index} className='border-b border-gray-800 hover:bg-card transition-colors group'>
-                    <td className='py-4 px-2 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px]'>
+                    <td className='py-5 px-2 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px] text-sm md:text-base font-bold text-muted'>
                       {indexOfFirstItem + index + 1}
                     </td>
                     <td className='py-4 px-2 sticky left-[60px] md:left-[80px] bg-main group-hover:bg-card transition-colors z-10 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px]'>
                       <div className='flex flex-col'>
-                        <span className='font-bold text-white'>{entity.name || "Unknown"}</span>
-                        <span className='text-xs text-muted uppercase'>{entity.symbol || "N/A"}</span>
+                        <span className='font-bold text-base md:text-xl text-white'>{entity.name || "Unknown"}</span>
+                        <span className='text-xs md:text-sm text-muted uppercase font-bold'>{entity.symbol || "N/A"}</span>
                       </div>
                     </td>
-                    <td className='py-4 px-2 capitalize'>
-                      <p className='bg-green-500 text-white rounded-md text-center'>Company</p>
+                    <td className='py-5 px-2 capitalize'>
+                      <p className='bg-green-500 text-white rounded-md text-center py-1 font-bold text-xs md:text-sm'>Company</p>
                     </td>
                     <td className='py-4 px-2 '>
                       <div className='flex items-center gap-2'>
@@ -280,17 +291,17 @@ const CryptoTreasuries = () => {
                         </div>
                       </div>
                     </td>
-                    <td className='py-4 px-2'>{entity.country || "N/A"}</td>
-                    <td className='py-4 px-2 font-medium'>
+                    <td className='py-5 px-2 font-bold text-sm md:text-base text-gray-300'>{entity.country || "N/A"}</td>
+                    <td className='py-5 px-2 font-bold text-sm md:text-base text-gray-300'>
                       {Number(amount).toLocaleString()}
                     </td>
-                    <td className='py-4 px-2 font-medium'>
+                    <td className='py-5 px-2 font-bold text-sm md:text-base text-gray-300'>
                       ${Number(entity.total_entry_value_usd || 0).toLocaleString()}
                     </td>
-                    <td className='py-4 px-2 font-medium'>
+                    <td className='py-5 px-2 font-bold text-sm md:text-base text-gray-300'>
                       ${Number(entity.total_current_value_usd || 0).toLocaleString()}
                     </td>
-                    <td className='py-4 px-2 text-green-500'>
+                    <td className='py-5 px-2 text-green-500 font-bold text-sm md:text-base'>
                       {percentage}%
                     </td>
                   </tr>
@@ -312,7 +323,7 @@ const CryptoTreasuries = () => {
         />
       </motion.div>
 
-    </motion.div>
+    </motion.div >
   )
 }
 

@@ -154,15 +154,15 @@ const CoinDetail = () => {
                         <div className='flex items-center gap-3 w-full'>
                             <img src={coin.image.large} alt={coin.name} className='w-10 h-10 sm:w-12 sm:h-12 rounded-full' />
                             <div className='flex flex-col min-w-0'>
-                                <h1 className='text-lg sm:text-xl font-bold tracking-tight truncate w-full'>{coin.name.toUpperCase()}</h1>
+                                <h1 className='text-xl sm:text-2xl font-bold tracking-tight truncate w-full'>{coin.name.toUpperCase()}</h1>
                                 <div className='flex items-center gap-1.5 flex-wrap'>
-                                    <span className='text-[10px] sm:text-xs text-muted font-medium'>{coin.symbol.toUpperCase()}</span>
-                                    <span className='text-[8px] sm:text-[10px] bg-white/10 px-1.5 py-0.5 rounded-full text-muted border border-white/5 whitespace-nowrap'>RANK #{coin.market_cap_rank}</span>
+                                    <span className='text-xs sm:text-sm text-muted font-bold'>{coin.symbol.toUpperCase()}</span>
+                                    <span className='text-[10px] sm:text-xs bg-white/10 px-2 py-0.5 rounded-full text-muted border border-white/5 whitespace-nowrap font-bold'>RANK #{coin.market_cap_rank}</span>
                                 </div>
                             </div>
                         </div>
                         <div className='flex flex-wrap items-baseline gap-2'>
-                            <span className='text-xl sm:text-2xl font-bold'>${coin.market_data.current_price.usd.toLocaleString()}</span>
+                            <span className='text-2xl sm:text-3xl font-bold'>${coin.market_data.current_price.usd.toLocaleString()}</span>
                             <span className={`text-xs sm:text-sm font-medium ${coin.market_data.price_change_percentage_24h > 0 ? 'text-green-500' : 'text-red-500'}`}>
                                 {coin.market_data.price_change_percentage_24h > 0 ? '+' : ''}{coin.market_data.price_change_percentage_24h.toFixed(2)}%
                             </span>
@@ -178,7 +178,7 @@ const CoinDetail = () => {
                     ].map((card, idx) => (
                         <motion.div key={idx} variants={itemVariants} className='flex flex-col gap-1 sm:gap-2 justify-center items-start p-4 sm:p-6 border-gray-800 border-2 rounded-2xl bg-card/10 hover:bg-card/20 transition-all duration-300 group h-full overflow-hidden'>
                             {card.val !== undefined && card.val !== null ? (
-                                <p className='text-xl sm:text-2xl font-bold tracking-tight whitespace-nowrap truncate w-full'>
+                                <p className='text-2xl sm:text-3xl font-black tracking-tight whitespace-nowrap truncate w-full'>
                                     {card.isPerc ? (
                                         <span className={card.val >= 0 ? 'text-green-500' : 'text-red-500'}>
                                             {card.val > 0 ? '+' : ''}{card.val?.toFixed(2)}%
@@ -212,10 +212,10 @@ const CoinDetail = () => {
                                         <img src={coin.image.large} alt={coin.name} className='w-10 h-10 sm:w-12 sm:h-12 rounded-full' />
                                     </div>
                                     <div>
-                                        <h3 className='text-lg sm:text-xl font-bold'>{coin.name}</h3>
+                                        <h3 className='text-xl sm:text-2xl font-bold'>{coin.name}</h3>
                                         <div className='flex items-center gap-2'>
-                                            <span className='text-xs text-muted uppercase font-bold tracking-widest'>{coin.symbol}</span>
-                                            <span className='text-[10px] bg-white/5 border border-white/10 px-2 py-0.5 rounded-full text-muted'>#{coin.market_cap_rank}</span>
+                                            <span className='text-sm text-muted uppercase font-bold tracking-widest leading-none'>{coin.symbol}</span>
+                                            <span className='text-xs bg-white/5 border border-white/10 px-2 py-0.5 rounded-full text-muted font-bold'>#{coin.market_cap_rank}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -226,19 +226,19 @@ const CoinDetail = () => {
 
                             <div className='flex flex-col gap-1'>
                                 <div className='flex items-baseline gap-2'>
-                                    <span className='text-2xl sm:text-4xl font-extrabold tracking-tighter'>${coin.market_data.current_price.usd.toLocaleString()}</span>
-                                    <span className={coin.market_data.price_change_percentage_24h > 0 ? 'text-[10px] sm:text-sm font-bold bg-green-500/10 px-2 py-0.5 rounded-lg text-green-500' : 'text-[10px] sm:text-sm font-bold bg-red-500/10 px-2 py-0.5 rounded-lg text-red-500'}>
+                                    <span className='text-3xl sm:text-5xl font-black tracking-tighter text-white'>${coin.market_data.current_price.usd.toLocaleString()}</span>
+                                    <span className={coin.market_data.price_change_percentage_24h > 0 ? 'text-xs sm:text-base font-bold bg-green-500/10 px-2.5 py-1 rounded-lg text-green-500' : 'text-xs sm:text-base font-bold bg-red-500/10 px-2.5 py-1 rounded-lg text-red-500'}>
                                         {coin.market_data.price_change_percentage_24h > 0 ? '+' : ''}{coin.market_data.price_change_percentage_24h.toFixed(2)}%
                                     </span>
                                 </div>
-                                <p className='text-[10px] sm:text-xs text-muted font-bold uppercase tracking-widest opacity-60'>Current Price (USD)</p>
+                                <p className='text-xs sm:text-sm text-muted font-bold uppercase tracking-widest opacity-60'>Current Price (USD)</p>
                             </div>
 
                             <div className='space-y-3 sm:space-y-4 pt-3 sm:pt-4 border-t border-gray-800/50'>
                                 <div className='flex justify-between items-center'>
-                                    <span className='text-[10px] text-muted font-black uppercase tracking-tighter'>Daily Range</span>
+                                    <span className='text-xs text-muted font-black uppercase tracking-tighter'>Daily Range</span>
                                     <div className='flex items-center gap-2'>
-                                        <span className='text-[9px] sm:text-[10px] text-muted font-bold'>${coin.market_data.low_24h.usd.toLocaleString()}</span>
+                                        <span className='text-xs text-muted font-bold'>${coin.market_data.low_24h.usd.toLocaleString()}</span>
                                         <div className='w-16 sm:w-24 h-1 sm:h-1.5 bg-gray-800 rounded-full relative overflow-hidden'>
                                             <div
                                                 className='absolute h-full bg-white/60'
@@ -250,7 +250,7 @@ const CoinDetail = () => {
                                                 }}
                                             />
                                         </div>
-                                        <span className='text-[9px] sm:text-[10px] text-muted font-bold'>${coin.market_data.high_24h.usd.toLocaleString()}</span>
+                                        <span className='text-xs text-muted font-bold'>${coin.market_data.high_24h.usd.toLocaleString()}</span>
                                     </div>
                                 </div>
                             </div>
@@ -276,16 +276,16 @@ const CoinDetail = () => {
                             ].map((stat, idx) => (
                                 <div key={idx} className='flex items-center justify-between py-2 sm:py-3 border-b border-gray-800/20 last:border-0 hover:bg-white/[0.03] px-2 sm:px-3 rounded-lg sm:rounded-xl transition-all duration-300 group'>
                                     <div className='flex items-center gap-2'>
-                                        <p className='text-[11px] sm:text-sm text-muted font-semibold group-hover:text-white/80 transition-colors'>{stat.label}</p>
-                                        {stat.tooltip && <span className='text-[9px] sm:text-[10px] text-muted/30 cursor-help' title={stat.tooltip}>ⓘ</span>}
+                                        <p className='text-sm sm:text-base text-muted font-bold group-hover:text-white/80 transition-colors'>{stat.label}</p>
+                                        {stat.tooltip && <span className='text-[10px] sm:text-xs text-muted/30 cursor-help' title={stat.tooltip}>ⓘ</span>}
                                     </div>
                                     <div className='flex flex-col items-end'>
-                                        <p className='text-[11px] sm:text-sm font-bold tracking-tight'>
+                                        <p className='text-sm sm:text-base font-black tracking-tight text-white'>
                                             {stat.isPrice ? `$${stat.value?.toLocaleString()}` :
                                                 stat.useLocal ? `${stat.value?.toLocaleString() ?? '∞'} ${stat.symbol}` :
                                                     stat.value ? `$${stat.value.toLocaleString()}` : 'N/A'}
                                         </p>
-                                        {stat.date && <span className='text-[9px] sm:text-[10px] text-muted/40 font-bold uppercase'>{new Date(stat.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>}
+                                        {stat.date && <span className='text-xs text-muted/40 font-bold uppercase'>{new Date(stat.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>}
                                     </div>
                                 </div>
                             ))}

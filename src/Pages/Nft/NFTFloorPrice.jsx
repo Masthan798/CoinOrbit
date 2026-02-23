@@ -5,6 +5,7 @@ import { Search, TrendingUp, TrendingDown, ArrowUpRight, Flame, Layers, Star, Ex
 
 import { coingeckoFetch } from '../../api/coingeckoClient';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
+import TableFilterHeader from '../../Components/common/TableFilterHeader';
 
 
 const NFTCard = ({ nft }) => {
@@ -102,15 +103,15 @@ const NFTCard = ({ nft }) => {
 
         <div className="flex justify-between items-start gap-4">
           <div className="flex flex-col gap-1 flex-1 overflow-hidden">
-            <h3 className="text-sm sm:text-lg font-black text-[var(--text-heading)] truncate leading-tight tracking-tight uppercase group-hover:text-white transition-colors">
+            <h3 className="text-base sm:text-2xl font-black text-[var(--text-heading)] truncate leading-tight tracking-tight uppercase group-hover:text-white transition-colors">
               {nftTitle}
             </h3>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] sm:text-[11px] text-[var(--text-muted)] uppercase tracking-widest font-black opacity-60">
+              <span className="text-xs sm:text-sm text-[var(--text-muted)] uppercase tracking-widest font-black opacity-60">
                 {symbol}
               </span>
               <div className="w-1 h-1 rounded-full bg-white/10" />
-              <span className="text-[9px] font-bold text-[var(--text-disabled)] tracking-widest uppercase">ID: {data.contract_address?.slice(2, 10).toUpperCase() || 'RARE'}</span>
+              <span className="text-xs font-bold text-[var(--text-disabled)] tracking-widest uppercase">ID: {data.contract_address?.slice(2, 10).toUpperCase() || 'RARE'}</span>
             </div>
           </div>
 
@@ -118,7 +119,7 @@ const NFTCard = ({ nft }) => {
             {data.floor_price_in_usd_24h_percentage_change !== undefined && (
               <div className={`px-2 py-1 rounded-lg flex items-center gap-1 ${data.floor_price_in_usd_24h_percentage_change >= 0 ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'}`}>
                 {data.floor_price_in_usd_24h_percentage_change >= 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-                <span className="text-[10px] font-black tracking-tighter">{Math.abs(data.floor_price_in_usd_24h_percentage_change || 0).toFixed(1)}%</span>
+                <span className="text-xs font-black tracking-tighter">{Math.abs(data.floor_price_in_usd_24h_percentage_change || 0).toFixed(1)}%</span>
               </div>
             )}
 
@@ -132,14 +133,14 @@ const NFTCard = ({ nft }) => {
           </div>
         </div>
 
-        <p className="text-[11px] text-[var(--text-body)] leading-relaxed line-clamp-2 italic font-medium opacity-50 border-l-2 border-white/5 pl-3">
+        <p className="text-xs text-[var(--text-body)] leading-relaxed line-clamp-2 italic font-bold opacity-70 border-l-2 border-white/5 pl-3">
           {data.description || `Premium collection verified on the ${data.asset_platform_id || 'ethereum'} network. Official contract: ${data.contract_address?.slice(0, 6)}...`}
         </p>
 
         <div className="mt-auto flex items-center justify-between pt-5 border-t border-white/5">
           <div className="flex flex-col">
-            <span className="text-[9px] text-[var(--text-muted)] uppercase font-black tracking-widest opacity-40">Floor Price</span>
-            <span className="text-[11px] font-black text-[var(--text-heading)] uppercase tracking-tighter">
+            <span className="text-xs text-[var(--text-muted)] uppercase font-black tracking-widest opacity-40">Floor Price</span>
+            <span className="text-sm sm:text-base font-black text-[var(--text-heading)] uppercase tracking-tighter">
               {data.floor_price?.usd ? `$${data.floor_price.usd.toLocaleString()}` : 'N/A'}
             </span>
           </div>
@@ -165,7 +166,7 @@ const NFTFloorPrice = () => {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [visibleCount, setVisibleCount] = useState(24);
-  const [activeTab, setActiveTab] = useState('Trending');
+  const [activeTab, setActiveTab] = useState('All');
 
   useEffect(() => {
     const loadAllData = async () => {
@@ -204,11 +205,11 @@ const NFTFloorPrice = () => {
     } else if (activeTab === 'All') {
       baseList = allNfts;
     } else if (activeTab === 'New') {
-      baseList = [...allNfts].reverse(); // Mock new by reverse
+      baseList = [...allNfts].reverse();
     } else if (activeTab === 'Top Gainers') {
-      baseList = allNfts; // Can't sort until metadata is fetched
+      baseList = [...allNfts].sort((a, b) => (b.floor_price_in_usd_24h_percentage_change || b.image?.floor_price_in_usd_24h_percentage_change || 0) - (a.floor_price_in_usd_24h_percentage_change || a.image?.floor_price_in_usd_24h_percentage_change || 0));
     } else if (activeTab === 'Top Losers') {
-      baseList = allNfts;
+      baseList = [...allNfts].sort((a, b) => (a.floor_price_in_usd_24h_percentage_change || a.image?.floor_price_in_usd_24h_percentage_change || 0) - (b.floor_price_in_usd_24h_percentage_change || b.image?.floor_price_in_usd_24h_percentage_change || 0));
     }
 
     const fullList = baseList.filter(item =>
@@ -226,75 +227,34 @@ const NFTFloorPrice = () => {
   const hasMore = visibleCount < totalCount;
 
   return (
-    <div className='w-full min-h-screen flex flex-col gap-3 sm:gap-12 p-2 sm:p-8 pb-32 overflow-x-hidden'>
+    <div className='w-full min-h-screen flex flex-col gap-3 sm:gap-12 p-2 sm:p-8 pb-32 overflow-x-hidden rounded-xl bg-main'>
       <div className='w-full'>
         <Breadcrumbs crumbs={[{ label: 'NFTs', path: '/nft-floor' }, { label: 'Explore' }]} />
       </div>
 
-      {/* Header Section - Modern Shrunken Style */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-        <div className="flex flex-col gap-1 text-left px-1">
-          <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tighter leading-none uppercase">Explore Digital Assets</h1>
-          <p className="text-[10px] sm:text-[11px] text-gray-500 font-bold uppercase tracking-[0.2em] opacity-80">
-            Real-time tracking of {totalCount} premium collections
+      <motion.div variants={itemVariants} className='w-full flex items-center justify-between gap-4'>
+        <div className='flex flex-col gap-0.5'>
+          <h1 className='text-2xl sm:text-5xl font-bold whitespace-nowrap text-white'>NFT Floor Price</h1>
+          <p className='text-sm sm:text-xl text-muted'>
+            Explore trending collections across all chains
           </p>
         </div>
+      </motion.div>
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto px-1">
-          {/* Tabs - Hidden on mobile here, shown on large screens next to search */}
-          <div className="hidden lg:flex items-center gap-1 bg-[#1a1c22]/30 p-1 rounded-xl border border-white/5">
-            {tabs.map((tab) => (
-              <button
-                key={tab}
-                onClick={() => {
-                  setActiveTab(tab);
-                  setVisibleCount(24);
-                }}
-                className={`whitespace-nowrap px-4 py-2 rounded-lg text-xs font-black uppercase tracking-tight transition-all duration-300 ${activeTab === tab
-                  ? 'bg-card text-white border border-white/10 shadow-lg'
-                  : 'text-gray-500 hover:text-white hover:bg-white/5'}`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-
-          {/* Search Bar - Full Width on Mobile */}
-          <div className="relative group w-full md:w-[320px]">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-500 transition-colors" size={14} />
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setVisibleCount(24);
-              }}
-              className="w-full bg-[#1a1c22] border border-white/5 rounded-xl py-2.5 pl-10 pr-4 text-[13px] text-white focus:outline-none focus:border-blue-500/50 transition-all font-medium placeholder:text-gray-600"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation Row - Category Tabs (Visible only on mobile/tablet) */}
-      <div className="w-full overflow-x-auto no-scrollbar pb-1 px-1 lg:hidden">
-        <div className="flex items-center gap-0.5 bg-[#1a1c22]/30 p-0.5 rounded-[8px] border border-white/5 w-fit sm:min-w-full">
-          {tabs.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => {
-                setActiveTab(tab);
-                setVisibleCount(24);
-              }}
-              className={`whitespace-nowrap flex-none px-4 py-2 rounded-[6px] text-[10px] sm:text-xs font-black uppercase tracking-tight transition-all duration-300 ${activeTab === tab
-                ? 'bg-card text-white border border-white/10 shadow-sm'
-                : 'text-gray-500 hover:text-white hover:bg-white/5'}`}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-      </div>
+      <TableFilterHeader
+        activeTab={activeTab}
+        onTabChange={(tab) => {
+          setActiveTab(tab);
+          setVisibleCount(24);
+          setSearchQuery('');
+        }}
+        searchQuery={searchQuery}
+        onSearchChange={(val) => {
+          setSearchQuery(val);
+          setVisibleCount(24);
+        }}
+        placeholder="Search NFTs..."
+      />
 
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xxl:grid-cols-5 gap-3 sm:gap-6 px-1">

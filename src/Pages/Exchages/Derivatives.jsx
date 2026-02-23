@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { DerivativesData } from '../../services/AllcoinsData';
+import { DerivativesData, GlobalData } from '../../services/AllcoinsData';
 import Pagination from '../../Components/Pagination/Pagination';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
-import SearchBar from '../../Components/Inputs/SearchBar';
+import TableFilterHeader from '../../Components/common/TableFilterHeader';
+
+const formatCurrency = (val) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(val);
+};
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -28,11 +37,13 @@ const itemVariants = {
 
 const Derivatives = () => {
   const [derivaties, setDervatiesData] = useState([]);
+  const [globalData, setGlobalData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('All');
 
   useEffect(() => {
     const fetchDerivatiesData = async () => {
@@ -51,14 +62,40 @@ const Derivatives = () => {
       }
     }
 
+    const fetchGlobalData = async () => {
+      try {
+        const response = await GlobalData();
+        if (response && response.data) setGlobalData(response.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchGlobalData();
     fetchDerivatiesData();
   }, []) // Fetch once, then paginate locally if API doesn't support it
 
-  // Local search and pagination
-  const filteredData = derivaties.filter(exchange =>
-    exchange.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    exchange.id.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Local search and sorting logic
+  const getSortedData = () => {
+    let baseData = derivaties;
+
+    if (activeTab === 'Top Gainers') {
+      baseData = [...derivaties].sort((a, b) => (b.trade_volume_24h_btc || 0) - (a.trade_volume_24h_btc || 0));
+    } else if (activeTab === 'Top Losers') {
+      baseData = [...derivaties].sort((a, b) => (a.trade_volume_24h_btc || 0) - (b.trade_volume_24h_btc || 0));
+    } else if (activeTab === 'New Coins') {
+      baseData = [...derivaties].sort((a, b) => (b.year_established || 0) - (a.year_established || 0));
+    } else if (activeTab === 'Upcoming Coins') {
+      baseData = [...derivaties].sort((a, b) => (b.open_interest_btc || 0) - (a.open_interest_btc || 0));
+    }
+
+    return baseData.filter(exchange =>
+      exchange.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      exchange.id.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  const filteredData = getSortedData();
 
   const paginatedData = filteredData.slice(
     (currentPage - 1) * perPage,
@@ -71,23 +108,32 @@ const Derivatives = () => {
       <div className='w-full'>
         <Breadcrumbs
           crumbs={[
-            { label: 'Exchanges', path: '/' },
+            { label: 'Exchanges', path: '/exchanges' },
             { label: 'Derivatives' }
           ]}
         />
       </div>
 
-      <motion.div variants={itemVariants} className='w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4'>
-        <div className='flex flex-col gap-1 text-left'>
-          <h1 className='text-2xl sm:text-3xl font-bold'>Derivative Exchanges</h1>
-          <p className='text-xs sm:text-sm text-muted'>Ranked by Open Interest & Trade Volume. Tracking {derivaties.length} exchanges.</p>
+      <motion.div variants={itemVariants} className='w-full flex items-center justify-between gap-4'>
+        <div className='flex flex-col gap-0.5'>
+          <h1 className='text-2xl sm:text-5xl font-bold whitespace-nowrap'>Derivative Exchanges</h1>
+          <p className='text-sm sm:text-xl text-muted'>
+            24h Trading Volume: <span className="text-white font-bold">{globalData ? formatCurrency(globalData.total_volume.usd) : '...'}</span>
+          </p>
         </div>
-        <SearchBar
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="Search exchanges..."
-        />
       </motion.div>
+
+      <TableFilterHeader
+        activeTab={activeTab}
+        onTabChange={(tab) => {
+          setActiveTab(tab);
+          setCurrentPage(1);
+          setSearchQuery('');
+        }}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        placeholder="Search exchanges..."
+      />
 
 
       <motion.div variants={itemVariants} className='w-full overflow-x-auto h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative rounded-xl border border-gray-800/50'>
@@ -128,29 +174,29 @@ const Derivatives = () => {
             ) : (
               paginatedData.map((coin, index) => (
                 <tr key={coin.id || index} className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer group'>
-                  <td className='py-2 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-left text-xs text-muted'>
+                  <td className='py-3 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-left text-sm text-muted font-bold'>
                     <span>{(currentPage - 1) * perPage + index + 1}</span>
                   </td>
-                  <td className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] text-left'>
+                  <td className='py-3 px-2 sticky left-[45px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] text-left'>
                     <div className='flex items-center gap-2'>
                       <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6 rounded-full' />
                       <div className='flex flex-col gap-0.5 min-w-0'>
-                        <span className='font-bold truncate text-[11px] sm:text-sm'>{coin.name}</span>
-                        <span className='text-[9px] sm:text-[10px] text-muted uppercase leading-none'>{coin.id}</span>
+                        <span className='font-bold truncate text-base sm:text-lg text-white'>{coin.name}</span>
+                        <span className='text-xs sm:text-sm text-muted uppercase leading-none font-bold'>{coin.id}</span>
                       </div>
                     </div>
                   </td>
 
-                  <td className='py-2 px-2 text-[11px] sm:text-xs font-mono text-muted'>
+                  <td className='py-3 px-2 text-sm sm:text-base font-bold text-gray-300'>
                     {Number(coin.open_interest_btc).toLocaleString(undefined, { maximumFractionDigits: 0, notation: 'compact' })} BTC
                   </td>
-                  <td className='py-2 px-2 text-[11px] sm:text-xs font-mono text-muted'>
+                  <td className='py-3 px-2 text-sm sm:text-base font-bold text-gray-300'>
                     {Number(coin.trade_volume_24h_btc).toLocaleString(undefined, { maximumFractionDigits: 0, notation: 'compact' })} BTC
                   </td>
-                  <td className='py-2 px-2 text-center text-[11px] sm:text-xs'>{coin.number_of_perpetual_pairs || 0}</td>
-                  <td className='py-2 px-2 text-center text-[11px] sm:text-xs'>{coin.number_of_futures_pairs || 0}</td>
-                  <td className='py-2 px-2 text-center text-muted text-[11px] sm:text-xs'>{coin.year_established || "-"}</td>
-                  <td className='py-2 px-2 truncate max-w-[100px] text-[11px] sm:text-xs text-muted'>{coin.country || "-"}</td>
+                  <td className='py-3 px-2 text-center text-sm sm:text-base font-bold text-gray-200'>{coin.number_of_perpetual_pairs || 0}</td>
+                  <td className='py-3 px-2 text-center text-sm sm:text-base font-bold text-gray-200'>{coin.number_of_futures_pairs || 0}</td>
+                  <td className='py-3 px-2 text-center text-gray-300 text-sm sm:text-base font-bold'>{coin.year_established || "-"}</td>
+                  <td className='py-3 px-2 truncate max-w-[100px] text-sm sm:text-base text-gray-300 font-bold'>{coin.country || "-"}</td>
                 </tr>
               ))
             )}

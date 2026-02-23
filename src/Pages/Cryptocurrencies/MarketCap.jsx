@@ -9,7 +9,7 @@ import Toggle from '../../Components/Toggles/Toggle';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import CardSkeleton from '../../Components/Loadings/CardSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
-import SearchBar from '../../Components/Inputs/SearchBar';
+import TableFilterHeader from '../../Components/common/TableFilterHeader';
 
 
 const data = [
@@ -39,6 +39,7 @@ const MarketCap = () => {
   });
   const [highlightsLoading, setHighlightsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('All');
 
   // Global Stats State
   const [globalData, setGlobalData] = useState(null);
@@ -108,8 +109,16 @@ const MarketCap = () => {
       setLoading(true);
       setError(null);
       try {
+        let order = 'market_cap_desc';
+        let customParams = '';
+
+        if (activeTab === 'Top Gainers') order = 'price_change_percentage_24h_desc';
+        else if (activeTab === 'Top Losers') order = 'price_change_percentage_24h_asc';
+        else if (activeTab === 'New Coins') order = 'id_desc';
+        else if (activeTab === 'Upcoming Coins') order = 'gecko_desc';
+
         const response = await coingeckoFetch(
-          `/coins/markets?vs_currency=inr&order=market_cap_desc&per_page=${perPage}&page=${currentPage}&sparkline=true&price_change_percentage=1h,24h,7d`
+          `/coins/markets?vs_currency=inr&order=${order}&per_page=${perPage}&page=${currentPage}&sparkline=true&price_change_percentage=1h,24h,7d${customParams}`
         );
         if (response && Array.isArray(response)) {
           SetallCoins(response);
@@ -125,7 +134,7 @@ const MarketCap = () => {
       }
     }
     fetchAllcoins();
-  }, [currentPage, perPage])
+  }, [currentPage, perPage, activeTab])
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -211,6 +220,9 @@ const MarketCap = () => {
       );
     }
 
+    // Additional client-side filtering logic if needed for specific tabs
+    // For now, the API handles the primary sorting via the 'order' parameter
+
     if (!sortConfig.key) return filteredCoins;
 
     return [...filteredCoins].sort((a, b) => {
@@ -272,11 +284,11 @@ const MarketCap = () => {
         />
       </div>
 
-      <motion.div variants={itemVariants} className='w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4'>
+      <motion.div variants={itemVariants} className='w-full flex items-center justify-between gap-4'>
 
-        <div className='flex flex-col gap-1'>
-          <h1 className='text-2xl sm:text-3xl font-bold'>Cryptocurrency Prices</h1>
-          <p className='text-xs sm:text-s text-muted'>
+        <div className='flex flex-col gap-0.5'>
+          <h1 className='text-2xl sm:text-5xl font-bold whitespace-nowrap'>Cryptocurrency Prices</h1>
+          <p className='text-sm sm:text-xl text-muted'>
             Global cap: <span className="text-white font-bold">{globalData ? formatCurrency(globalData.total_market_cap.usd) : '...'}</span>
             <span className={`ml-1 ${globalData?.market_cap_change_percentage_24h_usd >= 0 ? "text-green-500" : "text-red-500"}`}>
               {globalData?.market_cap_change_percentage_24h_usd?.toFixed(2)}%
@@ -284,10 +296,9 @@ const MarketCap = () => {
           </p>
         </div>
 
-        <div className='flex items-center gap-2 '>
-          <Toggle isOn={toggle} handleToggle={toggleHiglights} label="Highlights" />
+        <div className='flex items-center gap-2 flex-shrink-0'>
+          <Toggle isOn={toggle} handleToggle={() => setToggle(!toggle)} label="Highlights" />
         </div>
-
       </motion.div>
 
 
@@ -336,7 +347,7 @@ const MarketCap = () => {
                           <span className='text-xl truncate block font-bold text-white'>
                             {globalData ? formatCurrency(globalData.total_volume.usd) : '...'}
                           </span>
-                          <p className='text-sm text-muted'>Total 24h Volume</p>
+                          <p className='text-lg sm:text-2xl text-muted'>Total 24h Volume</p>
                         </div>
                         <div className='w-24 h-16'>
                           {sparklineData?.total_volumes && (
@@ -350,11 +361,11 @@ const MarketCap = () => {
                     <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col h-[210px] transition-all duration-300 group">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
-                          <Flame className="text-orange-500" size={20} />
-                          <h3 className="text-lg font-bold text-white">Trending</h3>
+                          <Flame className="text-orange-500" size={24} />
+                          <h3 className="text-2xl font-bold text-white">Trending</h3>
                         </div>
-                        <Link to="/highlights/trending" className="text-xs text-gray-400 hover:text-white flex items-center gap-1 transition-colors">
-                          View More <ArrowRight size={12} />
+                        <Link to="/highlights/trending" className="text-sm text-gray-400 hover:text-white flex items-center gap-1 transition-colors">
+                          View More <ArrowRight size={14} />
                         </Link>
                       </div>
 
@@ -366,13 +377,13 @@ const MarketCap = () => {
                             className="flex items-center justify-between p-2 hover:bg-white/5 transition-colors cursor-pointer rounded-lg px-2 group/item"
                           >
                             <div className="flex items-center gap-3">
-                              <img src={coin.item.thumb} alt={coin.item.name} className="w-5 h-5" />
-                              <span className="text-sm font-medium text-gray-300">{coin.item.symbol}</span>
+                              <img src={coin.item.thumb} alt={coin.item.name} className="w-6 h-6" />
+                              <span className="text-lg font-medium text-gray-300">{coin.item.symbol}</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs font-bold text-white">{formatCurrency(coin.price, 2)}</span>
+                            <div className="flex items-center gap-3">
+                              <span className="text-lg font-bold text-white">{formatCurrency(coin.price, 2)}</span>
                               {coin.change !== undefined && (
-                                <span className={`text-[10px] font-bold ${coin.change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                <span className={`text-sm font-bold ${coin.change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                                   {coin.change >= 0 ? '+' : ''}{coin.change.toFixed(1)}%
                                 </span>
                               )}
@@ -386,11 +397,11 @@ const MarketCap = () => {
                     <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col h-[210px]  transition-all duration-300 group">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
-                          <Rocket className="text-green-500" size={20} />
-                          <h3 className="text-lg font-bold text-white">Top Gainers</h3>
+                          <Rocket className="text-green-500" size={24} />
+                          <h3 className="text-2xl font-bold text-white">Top Gainers</h3>
                         </div>
-                        <Link to="/highlights/gainers-losers" className="text-xs text-gray-400 hover:text-white flex items-center gap-1 transition-colors">
-                          View More <ArrowRight size={12} />
+                        <Link to="/highlights/gainers-losers" className="text-sm text-gray-400 hover:text-white flex items-center gap-1 transition-colors">
+                          View More <ArrowRight size={14} />
                         </Link>
                       </div>
 
@@ -402,10 +413,10 @@ const MarketCap = () => {
                             className="flex items-center justify-between p-2 hover:bg-white/5 transition-colors cursor-pointer rounded-lg px-2 group/item"
                           >
                             <div className="flex items-center gap-3">
-                              <img src={coin.image} alt={coin.name} className="w-5 h-5 rounded-full" />
-                              <span className="text-sm font-medium text-gray-300">{coin.symbol.toUpperCase()}</span>
+                              <img src={coin.image} alt={coin.name} className="w-6 h-6 rounded-full" />
+                              <span className="text-lg font-medium text-gray-300">{coin.symbol.toUpperCase()}</span>
                             </div>
-                            <span className="text-xs font-bold text-green-500">
+                            <span className="text-sm font-bold text-green-500">
                               +{coin.price_change_percentage_24h?.toFixed(2)}%
                             </span>
                           </div>
@@ -424,10 +435,16 @@ const MarketCap = () => {
 
       </motion.div>
 
-      <motion.div variants={itemVariants} className='w-full flex justify-end'>
-        <SearchBar
-          value={searchQuery}
-          onChange={setSearchQuery}
+      <motion.div variants={itemVariants} className='w-full'>
+        <TableFilterHeader
+          activeTab={activeTab}
+          onTabChange={(tab) => {
+            setActiveTab(tab);
+            setCurrentPage(1);
+            setSearchQuery('');
+          }}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
           placeholder="Search coins..."
         />
       </motion.div>
@@ -507,7 +524,7 @@ const MarketCap = () => {
                   onClick={() => navigate(`/marketcap/${coin.id}`)}
                   className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer group'
                 >
-                  <td className='py-2 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-xs text-muted'>
+                  <td className='py-3 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-sm text-muted'>
                     <div className='flex items-center gap-1'>
                       <Star
                         onClick={(e) => {
@@ -526,23 +543,23 @@ const MarketCap = () => {
                     <div className='flex items-center gap-2'>
                       <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6' />
                       <div className='flex flex-col gap-0.5 min-w-0'>
-                        <span className='font-bold truncate text-[11px] sm:text-sm'>{coin.name}</span>
-                        <span className='text-[9px] sm:text-[10px] text-muted uppercase leading-none'>{coin.symbol}</span>
+                        <span className='font-bold truncate text-base sm:text-xl'>{coin.name}</span>
+                        <span className='text-xs sm:text-sm text-muted uppercase leading-none font-bold'>{coin.symbol}</span>
                       </div>
                     </div>
                   </td>
-                  <td className='py-2 px-2 text-[11px] sm:text-xs font-semibold'>₹{coin.current_price?.toLocaleString()}</td>
-                  <td className={`py-2 px-2 text-[11px] sm:text-xs font-bold ${coin.price_change_percentage_1h_in_currency < 0 ? 'text-red-500' : 'text-green-500'}`}>
+                  <td className='py-3 px-2 text-sm sm:text-base font-bold'>₹{coin.current_price?.toLocaleString()}</td>
+                  <td className={`py-3 px-2 text-sm sm:text-base font-bold ${coin.price_change_percentage_1h_in_currency < 0 ? 'text-red-500' : 'text-green-500'}`}>
                     {coin.price_change_percentage_1h_in_currency?.toFixed(1)}%
                   </td>
-                  <td className={`py-2 px-2 text-[11px] sm:text-xs font-bold ${coin.price_change_percentage_24h < 0 ? 'text-red-500' : 'text-green-500'}`}>
+                  <td className={`py-3 px-2 text-sm sm:text-base font-bold ${coin.price_change_percentage_24h < 0 ? 'text-red-500' : 'text-green-500'}`}>
                     {coin.price_change_percentage_24h?.toFixed(1)}%
                   </td>
-                  <td className={`py-2 px-2 text-[11px] sm:text-xs font-bold ${coin.price_change_percentage_7d_in_currency < 0 ? 'text-red-500' : 'text-green-500'}`}>
+                  <td className={`py-3 px-2 text-sm sm:text-base font-bold ${coin.price_change_percentage_7d_in_currency < 0 ? 'text-red-500' : 'text-green-500'}`}>
                     {coin.price_change_percentage_7d_in_currency?.toFixed(1)}%
                   </td>
-                  <td className='py-2 px-2 text-[11px] sm:text-xs text-muted font-mono'>₹{coin.total_volume?.toLocaleString(undefined, { notation: 'compact' })}</td>
-                  <td className='py-2 px-2 text-[11px] sm:text-xs text-muted font-mono'>₹{coin.market_cap?.toLocaleString(undefined, { notation: 'compact' })}</td>
+                  <td className='py-3 px-2 text-sm sm:text-base text-muted font-bold'>₹{coin.total_volume?.toLocaleString(undefined, { notation: 'compact' })}</td>
+                  <td className='py-3 px-2 text-sm sm:text-base text-muted font-bold'>₹{coin.market_cap?.toLocaleString(undefined, { notation: 'compact' })}</td>
                   <td className='py-2 px-2'>
                     <div className='w-20 sm:w-28 h-8 sm:h-10'>
                       <ResponsiveContainer width="100%" height="100%">

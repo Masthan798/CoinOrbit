@@ -23,17 +23,17 @@ import NFTDetailGraph from '../../Components/Graphs/NFTDetailGraph';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
 
 const StatRow = ({ label, value, change, isPositive, tooltip }) => (
-    <div className="flex items-center justify-between py-3 border-b border-gray-800/20 last:border-0 group">
+    <div className="flex items-center justify-between py-3.5 border-b border-gray-800/20 last:border-0 group transition-all hover:bg-white/[0.02] px-2 rounded-lg">
         <div className="flex items-center gap-1.5 min-w-0 flex-1">
-            <span className="text-[12px] text-muted-foreground font-semibold group-hover:text-white/80 transition-colors truncate">{label}</span>
-            {tooltip && <Info size={10} className="text-muted-foreground/30 cursor-help flex-shrink-0" />}
+            <span className="text-sm sm:text-base text-muted-foreground font-bold group-hover:text-white transition-colors truncate uppercase tracking-tighter">{label}</span>
+            {tooltip && <Info size={12} className="text-muted-foreground/30 cursor-help flex-shrink-0" />}
         </div>
         <div className="flex flex-col items-end flex-shrink-0 ml-4">
             <div className="flex items-center gap-2">
-                <span className="text-[13px] font-bold text-white tracking-tight">{value}</span>
+                <span className="text-base sm:text-lg font-black text-white tracking-tight">{value}</span>
                 {change !== undefined && (
-                    <div className={`flex items-center gap-0.5 text-[10px] font-bold ${isPositive ? 'text-emerald-400' : 'text-rose-400'}`}>
-                        {isPositive ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
+                    <div className={`flex items-center gap-0.5 text-xs font-bold ${isPositive ? 'text-emerald-400' : 'text-rose-400'}`}>
+                        {isPositive ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
                         {Math.abs(change).toFixed(1)}%
                     </div>
                 )}
@@ -128,8 +128,8 @@ const NFTDetail = () => {
                                 />
                             </div>
                             <div className="flex flex-col gap-1 min-w-0">
-                                <h1 className="text-xl font-bold tracking-tight text-white truncate">{nftData.name} Price</h1>
-                                <span className="text-[10px] bg-white/5 border border-white/10 px-2 py-0.5 rounded-full text-muted w-fit uppercase font-bold tracking-widest leading-none">
+                                <h1 className="text-3xl sm:text-7xl font-black tracking-tighter text-white truncate leading-none uppercase">{nftData.name} Price</h1>
+                                <span className="text-base sm:text-lg bg-white/5 border border-white/10 px-4 py-1.5 rounded-full text-muted w-fit uppercase font-black tracking-widest leading-none">
                                     RANK #{nftData.market_cap_rank || 'N/A'}
                                 </span>
                             </div>
@@ -137,7 +137,7 @@ const NFTDetail = () => {
 
                         <div className="flex flex-col gap-1">
                             <div className="flex items-baseline gap-2">
-                                <span className="text-3xl font-black tracking-tighter text-white">
+                                <span className="text-5xl sm:text-8xl font-black tracking-tighter text-white leading-none">
                                     {nftData.floor_price?.native_currency?.toLocaleString()} {nftData.native_currency_symbol?.toUpperCase()}
                                 </span>
                                 <div className={`text-xs font-bold px-2 py-0.5 rounded-lg flex items-center gap-1 ${isPositive ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`}>
@@ -145,9 +145,9 @@ const NFTDetail = () => {
                                     {Math.abs(priceChange).toFixed(1)}%
                                 </div>
                             </div>
-                            <p className="text-[11px] text-muted-foreground font-bold tracking-wide italic">
+                            <p className="text-lg sm:text-3xl text-muted-foreground font-black tracking-tighter italic opacity-80 mt-1">
                                 ≈ ${nftData.floor_price?.usd?.toLocaleString()}
-                                <span className={nftData.floor_price_24h_percentage_change?.usd >= 0 ? 'text-emerald-400' : 'text-rose-400'} ml-1>
+                                <span className={`${nftData.floor_price_24h_percentage_change?.usd >= 0 ? 'text-emerald-400' : 'text-rose-400'} ml-2`}>
                                     ({nftData.floor_price_24h_percentage_change?.usd >= 0 ? '+' : ''}{nftData.floor_price_24h_percentage_change?.usd?.toFixed(1)}%)
                                 </span>
                             </p>
@@ -194,14 +194,14 @@ const NFTDetail = () => {
 
                         <div className="pt-4 mt-2 border-t border-gray-800/50">
                             <div className="flex items-center justify-between">
-                                <span className="text-[11px] text-muted font-semibold uppercase tracking-wider">All-Time High</span>
+                                <span className="text-sm text-muted font-bold uppercase tracking-widest">All-Time High</span>
                                 <div className="text-right flex flex-col items-end">
-                                    <span className="text-[13px] font-bold text-white leading-tight">{nftData.ath?.native_currency?.toLocaleString()} {nftData.native_currency_symbol?.toUpperCase()}</span>
-                                    <div className="text-[10px] font-bold text-rose-500 flex items-center gap-0.5">
-                                        <TrendingDown size={10} />
+                                    <span className="text-base sm:text-lg font-black text-white leading-tight">${nftData.ath?.usd?.toLocaleString()}</span>
+                                    <div className="text-xs font-bold text-rose-500 flex items-center gap-0.5">
+                                        <TrendingDown size={12} />
                                         {Math.abs(nftData.ath_change_percentage?.native_currency || 0).toFixed(1)}%
                                     </div>
-                                    <span className="text-[9px] text-muted/30 font-bold uppercase">{nftData.ath_date?.native_currency ? new Date(nftData.ath_date.native_currency).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : ''}</span>
+                                    <span className="text-xs text-muted/30 font-bold uppercase tracking-widest">{nftData.ath_date?.native_currency ? new Date(nftData.ath_date.native_currency).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : ''}</span>
                                 </div>
                             </div>
                         </div>

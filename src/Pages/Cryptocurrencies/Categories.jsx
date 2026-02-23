@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { LineChart, Line, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { ArrowLeftIcon, ArrowRightIcon, ChevronDown, ChevronUp, Star, Flame, Rocket, TrendingUp, TrendingDown, Eye, Lock, Zap, ArrowUpRight, Search } from 'lucide-react';
-import { CategoriesData, TrendingCoinsData, AllcoinsData } from '../../services/AllcoinsData';
+import { CategoriesData, TrendingCoinsData, AllcoinsData, GlobalData } from '../../services/AllcoinsData';
 import { motion, AnimatePresence } from 'framer-motion';
 import Pagination from '../../Components/Pagination/Pagination';
 import CardSkeleton from '../../Components/Loadings/CardSkeleton';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
-import SearchBar from '../../Components/Inputs/SearchBar';
+import TableFilterHeader from '../../Components/common/TableFilterHeader';
 
 // Animation variants
 const containerVariants = {
@@ -40,11 +40,21 @@ const itemVariants = {
   }
 };
 
+const formatCurrency = (val) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(val);
+};
+
 const Categories = () => {
   const TOTAL_COINS = 14000;
   // Tabs: 'all' | 'highlights'
   const [activeTab, setActiveTab] = useState('all');
   const [categories, setCategories] = useState([]);
+  const [globalData, setGlobalData] = useState(null);
   const [trendingCoins, setTrendingCoins] = useState([]);
   const [marketData, setMarketData] = useState([]);
   const [favorites, setFavorites] = useState([]);
@@ -58,6 +68,15 @@ const Categories = () => {
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
   useEffect(() => {
+    const fetchGlobalData = async () => {
+      try {
+        const response = await GlobalData();
+        if (response && response.data) setGlobalData(response.data);
+      } catch (err) {
+        console.error("Global Data Error:", err);
+      }
+    };
+
     const fetchCategories = async () => {
       setLoading(true);
       setError(null);
@@ -73,6 +92,7 @@ const Categories = () => {
         setLoading(false);
       }
     }
+    fetchGlobalData();
     fetchCategories();
   }, [])
 
@@ -163,12 +183,12 @@ const Categories = () => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             {icon}
-            <h3 className="text-md font-bold text-white">{title}</h3>
+            <h3 className="text-2xl font-bold text-white">{title}</h3>
           </div>
-          <span onClick={() => navigate(moreLink)} className="text-xs text-muted hover:text-white cursor-pointer transition-colors select-none">more &gt;</span>
+          <span onClick={() => navigate(moreLink)} className="text-sm text-muted hover:text-white cursor-pointer transition-colors select-none">more &gt;</span>
         </div>
         <div className="flex flex-col gap-3">
-          <div className="flex justify-between text-xs text-muted pb-2 border-b border-gray-800/50">
+          <div className="flex justify-between text-sm text-muted pb-2 border-b border-gray-800/50">
             <span>Coin</span>
             <div className="flex gap-4">
               <span>{type === 'volume' ? 'Volume' : 'Price'}</span>
@@ -183,11 +203,11 @@ const Categories = () => {
             >
               <div className="flex items-center gap-2">
                 <img src={coin.image || coin.thumb || coin.item?.thumb} alt={coin.name || coin.item?.name} className="w-5 h-5 rounded-full" />
-                <span className="text-sm font-medium text-gray-200 group-hover:text-white truncate max-w-[100px]">
+                <span className="text-lg font-medium text-gray-200 group-hover:text-white truncate max-w-[100px]">
                   {coin.symbol?.toUpperCase() || coin.item?.symbol}
                 </span>
               </div>
-              <div className="flex gap-4 text-sm">
+              <div className="flex gap-4 text-lg">
                 <span className="text-gray-300">
                   {type === 'volume'
                     ? `$${(coin.total_volume || 0).toLocaleString(undefined, { notation: "compact" })}`
@@ -197,7 +217,7 @@ const Categories = () => {
                   }
                 </span>
                 {type !== 'volume' && (
-                  <span className={`w-12 text-right ${(coin.price_change_percentage_24h || coin.item?.data?.price_change_percentage_24h?.usd) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  <span className={`w-14 text-right text-sm ${(coin.price_change_percentage_24h || coin.item?.data?.price_change_percentage_24h?.usd) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                     {(coin.price_change_percentage_24h || coin.item?.data?.price_change_percentage_24h?.usd || 0).toFixed(1)}%
                   </span>
                 )}
@@ -216,87 +236,36 @@ const Categories = () => {
         <Breadcrumbs
           crumbs={[
             { label: 'Cryptocurrencies', path: '/' },
-            { label: 'Highlights' }
+            { label: 'Categories' }
           ]}
         />
       </div>
 
-      {/* Header & Tabs */}
-      <motion.div variants={itemVariants} className='w-full flex flex-col md:flex-row items-start md:items-center justify-between gap-6'>
-        <div className='flex flex-col gap-1'>
-          <h1 className='text-2xl sm:text-3xl font-bold'>Crypto Highlights</h1>
-          <p className='text-xs sm:text-sm text-muted'>Which cryptocurrencies are people more interested in? Track and discover market trends.</p>
-        </div>
-
-        <div className="flex items-center justify-end flex-1 md:flex-initial w-full md:w-auto">
-          {/* Desktop Layout: Always show tabs and search */}
-          <div className="hidden md:flex items-center gap-4 w-full">
-            <div className="flex items-center gap-2 bg-[#0d0e12] p-1 rounded-lg border border-gray-800 overflow-hidden">
-              {['all', 'highlights'].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === tab
-                    ? 'bg-gray-800 text-white shadow-sm'
-                    : 'text-muted hover:text-white'
-                    } capitalize whitespace-nowrap`}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-            {activeTab === 'all' && (
-              <SearchBar
-                value={searchQuery}
-                onChange={setSearchQuery}
-                placeholder="Search categories..."
-                className="max-w-[250px]"
-              />
-            )}
-          </div>
-
-          {/* Mobile Layout: Toggleable search */}
-          <div className="flex md:hidden items-center justify-end w-full">
-            {!isSearchExpanded ? (
-              <div className="flex items-center gap-2 w-full justify-between">
-                <div className="flex items-center gap-2 bg-[#0d0e12] p-1 rounded-lg border border-gray-800 overflow-hidden">
-                  {['all', 'highlights'].map((tab) => (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${activeTab === tab
-                        ? 'bg-gray-800 text-white shadow-sm'
-                        : 'text-muted hover:text-white'
-                        } capitalize whitespace-nowrap`}
-                    >
-                      {tab}
-                    </button>
-                  ))}
-                </div>
-                {activeTab === 'all' && (
-                  <button
-                    onClick={() => setIsSearchExpanded(true)}
-                    className="p-2.5 bg-[#0d0e12] border border-gray-800 rounded-lg text-muted hover:text-white transition-colors"
-                  >
-                    <Search className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
-            ) : (
-              <div className="w-full flex items-center">
-                <SearchBar
-                  value={searchQuery}
-                  onChange={setSearchQuery}
-                  onClose={() => setIsSearchExpanded(false)}
-                  autoFocus={true}
-                  placeholder="Search categories..."
-                  className="max-w-full"
-                />
-              </div>
-            )}
-          </div>
+      <motion.div variants={itemVariants} className='w-full flex items-center justify-between gap-4'>
+        <div className='flex flex-col gap-0.5'>
+          <h1 className='text-2xl sm:text-5xl font-bold whitespace-nowrap'>Top Crypto Categories</h1>
+          <p className='text-sm sm:text-xl text-muted'>
+            Global cap: <span className="text-white font-bold">{globalData ? formatCurrency(globalData.total_market_cap.usd) : '...'}</span>
+            <span className={`ml-1 ${globalData?.market_cap_change_percentage_24h_usd >= 0 ? "text-green-500" : "text-red-500"}`}>
+              {globalData?.market_cap_change_percentage_24h_usd?.toFixed(2)}%
+            </span>
+          </p>
         </div>
       </motion.div>
+
+      <TableFilterHeader
+        activeTab={activeTab === 'all' ? 'All' : 'Highlights'}
+        onTabChange={(tab) => {
+          if (tab === 'All') setActiveTab('all');
+          else if (tab === 'Highlights') setActiveTab('highlights');
+          setCurrentPage(1);
+          setSearchQuery('');
+        }}
+        tabs={['All', 'Highlights']}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        placeholder="Search..."
+      />
 
       {/* Content Area */}
       <AnimatePresence mode='wait'>
@@ -393,7 +362,7 @@ const Categories = () => {
                   ) : (
                     paginatedCategories.map((coin, index) => (
                       <tr key={coin.id || index} className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer group'>
-                        <td className='py-2 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 text-xs text-muted'>
+                        <td className='py-3 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 text-sm text-muted'>
                           <div className='flex items-center gap-1'>
                             <Star
                               onClick={(e) => {
@@ -409,7 +378,7 @@ const Categories = () => {
                           </div>
                         </td>
                         <td className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10'>
-                          <span className='font-bold truncate block max-w-[110px] sm:max-w-[180px] text-[11px] sm:text-sm'>{coin.name}</span>
+                          <span className='font-bold truncate block max-w-[110px] sm:max-w-[180px] text-sm sm:text-lg'>{coin.name}</span>
                         </td>
                         <td className='py-2 px-2'>
                           <div className='flex items-center -space-x-1 sm:-space-x-2'>
@@ -418,11 +387,11 @@ const Categories = () => {
                             ))}
                           </div>
                         </td>
-                        <td className={`py-2 px-2 text-xs sm:text-sm font-medium ${coin.market_cap_change_24h < 0 ? 'text-red-500' : 'text-green-500'}`}>
+                        <td className={`py-3 px-2 text-sm sm:text-base font-bold ${coin.market_cap_change_24h < 0 ? 'text-red-500' : 'text-green-500'}`}>
                           {coin.market_cap_change_24h?.toFixed(1)}%
                         </td>
-                        <td className='py-2 px-2 text-xs sm:text-sm font-medium'>₹{coin.market_cap?.toLocaleString(undefined, { notation: 'compact' })}</td>
-                        <td className='py-2 px-2 text-xs sm:text-sm font-medium'>₹{coin.volume_24h?.toLocaleString(undefined, { notation: 'compact' })}</td>
+                        <td className='py-3 px-2 text-sm sm:text-base font-bold text-gray-300'>₹{coin.market_cap?.toLocaleString(undefined, { notation: 'compact' })}</td>
+                        <td className='py-3 px-2 text-sm sm:text-base font-bold text-gray-300'>₹{coin.volume_24h?.toLocaleString(undefined, { notation: 'compact' })}</td>
                       </tr>
                     ))
                   )}

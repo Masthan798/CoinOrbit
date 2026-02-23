@@ -247,36 +247,36 @@ const CompareCoins = () => {
                 <div className='flex flex-col gap-6 items-center w-full px-4 py-6 border-gray-800 border rounded-md hover:border-gray-500 transition-all relative overflow-hidden bg-card/10'>
 
                   <div className='flex items-center text-center px-2'>
-                    <span className='flex flex-wrap items-center justify-center text-md gap-1 text-muted'>
-                      <img src={coin1Data.image.small} alt={coin1Data.name} className='w-6 h-6' />
-                      <span className='font-bold text-lg text-white'>{coin1Data.name}</span>
-                      <span>{metrics.headerText}</span>
-                      <img src={coin2Data.image.small} alt={coin2Data.name} className='w-6 h-6 ml-1' />
-                      <span className='font-bold text-lg text-white'>{coin2Data.name}</span>
+                    <span className='flex flex-wrap items-center justify-center text-lg gap-2 text-muted'>
+                      <img src={coin1Data.image.small} alt={coin1Data.name} className='w-7 h-7' />
+                      <span className='font-bold text-xl sm:text-2xl text-white'>{coin1Data.name}</span>
+                      <span className='font-bold'>{metrics.headerText}</span>
+                      <img src={coin2Data.image.small} alt={coin2Data.name} className='w-7 h-7 ml-1' />
+                      <span className='font-bold text-xl sm:text-2xl text-white'>{coin2Data.name}</span>
                     </span>
                   </div>
 
                   <div className='flex flex-col items-center gap-1'>
-                    <span className='text-3xl font-bold'>{formatCurrency(metrics.mainValue)}</span>
-                    <span className={`text-lg font-medium ${metrics.multiplier >= 1 ? 'text-green-500' : 'text-red-500'}`}>
+                    <span className='text-4xl sm:text-6xl font-black text-white'>{formatCurrency(metrics.mainValue)}</span>
+                    <span className={`text-xl sm:text-2xl font-bold ${metrics.multiplier >= 1 ? 'text-green-500' : 'text-red-500'}`}>
                       ({metrics.multiplier.toFixed(2)}x)
                     </span>
                   </div>
 
                   <div className='flex flex-col w-full gap-2 border-t border-gray-800 pt-4 mt-2'>
-                    <div className='flex justify-between items-center px-3 py-2 border border-gray-800 rounded-md hover:bg-card/30 transition-colors'>
+                    <div className='flex justify-between items-center px-4 py-3 border border-gray-800 rounded-xl hover:bg-card/30 transition-colors'>
                       <div className='flex items-center gap-2'>
-                        <span className='text-sm text-muted'>{coin1Data.symbol.toUpperCase()} {metrics.subLabel}</span>
-                        <span className='px-1.5 py-0.5 text-[10px] bg-white/10 rounded text-gray-300'>#{coin1Data.market_cap_rank}</span>
+                        <span className='text-base text-muted font-bold'>{coin1Data.symbol.toUpperCase()} {metrics.subLabel}</span>
+                        <span className='px-1.5 py-0.5 text-xs bg-white/10 rounded text-gray-300 font-bold'>#{coin1Data.market_cap_rank}</span>
                       </div>
-                      <span className='text-white font-mono text-sm'>{formatCurrency(metrics.subValue1)}</span>
+                      <span className='text-white font-mono text-base sm:text-lg font-bold'>{formatCurrency(metrics.subValue1)}</span>
                     </div>
-                    <div className='flex justify-between items-center px-3 py-2 border border-gray-800 rounded-md hover:bg-card/30 transition-colors'>
+                    <div className='flex justify-between items-center px-4 py-3 border border-gray-800 rounded-xl hover:bg-card/30 transition-colors'>
                       <div className='flex items-center gap-2'>
-                        <span className='text-sm text-muted'>{coin2Data.symbol.toUpperCase()} {metrics.subLabel}</span>
-                        <span className='px-1.5 py-0.5 text-[10px] bg-white/10 rounded text-gray-300'>#{coin2Data.market_cap_rank}</span>
+                        <span className='text-base text-muted font-bold'>{coin2Data.symbol.toUpperCase()} {metrics.subLabel}</span>
+                        <span className='px-1.5 py-0.5 text-xs bg-white/10 rounded text-gray-300 font-bold'>#{coin2Data.market_cap_rank}</span>
                       </div>
-                      <span className='text-white font-mono text-sm'>{formatCurrency(metrics.subValue2)}</span>
+                      <span className='text-white font-mono text-base sm:text-lg font-bold'>{formatCurrency(metrics.subValue2)}</span>
                     </div>
                   </div>
 

@@ -173,7 +173,7 @@ const Navbar = () => {
                             <nav className="flex-1 px-4 overflow-y-auto no-scrollbar pb-8">
                                 {navItems.map((category, index) => (
                                     <div key={index} className="mb-6">
-                                        <p className="px-4 text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-3">{category.type}</p>
+                                        <p className="px-4 text-sm uppercase tracking-widest text-gray-500 font-bold mb-3">{category.type}</p>
                                         <div className="space-y-1">
                                             {category.items.map((item, itemIdx) => (
                                                 <button
@@ -185,7 +185,7 @@ const Navbar = () => {
                                                     className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all ${isActive(item.path) ? 'bg-white/10 text-white' : 'text-muted'}`}
                                                 >
                                                     {item.icon}
-                                                    <span className="font-medium text-sm">{item.label}</span>
+                                                    <span className="font-bold text-base">{item.label}</span>
                                                 </button>
                                             ))}
                                         </div>
@@ -262,7 +262,7 @@ const Navbar = () => {
                                             initial="collapsed"
                                             animate="expanded"
                                             exit="collapsed"
-                                            className="text-[10px] uppercase tracking-wider text-gray-500 font-medium whitespace-nowrap"
+                                            className="text-sm uppercase tracking-wider text-gray-500 font-bold whitespace-nowrap"
                                         >
                                             {category.type}
                                         </motion.p>
@@ -292,7 +292,7 @@ const Navbar = () => {
                                                         initial="collapsed"
                                                         animate="expanded"
                                                         exit="collapsed"
-                                                        className="font-medium whitespace-nowrap text-sm"
+                                                        className="font-bold whitespace-nowrap text-lg"
                                                     >
                                                         {item.label}
                                                     </motion.span>
@@ -329,7 +329,7 @@ const Navbar = () => {
                                             initial="collapsed"
                                             animate="expanded"
                                             exit="collapsed"
-                                            className="font-medium whitespace-nowrap text-sm"
+                                            className="font-bold whitespace-nowrap text-lg"
                                         >
                                             {item.label}
                                         </motion.span>
