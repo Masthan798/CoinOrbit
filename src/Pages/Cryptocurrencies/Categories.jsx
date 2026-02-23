@@ -202,7 +202,7 @@ const Categories = () => {
               className="flex justify-between items-center group cursor-pointer hover:bg-white/5 p-1 rounded"
             >
               <div className="flex items-center gap-2">
-                <img src={coin.image || coin.thumb || coin.item?.thumb} alt={coin.name || coin.item?.name} className="w-5 h-5 rounded-full" />
+                <img src={coin.image || coin.thumb || coin.item?.thumb} alt={coin.name || coin.item?.name} className="w-5 h-5 rounded-sm" />
                 <span className="text-lg font-medium text-gray-200 group-hover:text-white truncate max-w-[100px]">
                   {coin.symbol?.toUpperCase() || coin.item?.symbol}
                 </span>
@@ -383,7 +383,7 @@ const Categories = () => {
                         <td className='py-2 px-2'>
                           <div className='flex items-center -space-x-1 sm:-space-x-2'>
                             {coin.top_3_coins?.map((img, i) => (
-                              <img key={i} src={img} alt="" className='w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-gray-900' />
+                              <img key={i} src={img} alt="" className='w-5 h-5 sm:w-6 sm:h-6 rounded-sm border border-gray-900' />
                             ))}
                           </div>
                         </td>

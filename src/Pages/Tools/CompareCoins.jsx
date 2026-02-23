@@ -248,10 +248,10 @@ const CompareCoins = () => {
 
                   <div className='flex items-center text-center px-2'>
                     <span className='flex flex-wrap items-center justify-center text-lg gap-2 text-muted'>
-                      <img src={coin1Data.image.small} alt={coin1Data.name} className='w-7 h-7' />
+                      <img src={coin1Data.image.small} alt={coin1Data.name} className='w-7 h-7 rounded-sm' />
                       <span className='font-bold text-xl sm:text-2xl text-white'>{coin1Data.name}</span>
                       <span className='font-bold'>{metrics.headerText}</span>
-                      <img src={coin2Data.image.small} alt={coin2Data.name} className='w-7 h-7 ml-1' />
+                      <img src={coin2Data.image.small} alt={coin2Data.name} className='w-7 h-7 ml-1 rounded-sm' />
                       <span className='font-bold text-xl sm:text-2xl text-white'>{coin2Data.name}</span>
                     </span>
                   </div>
@@ -285,9 +285,9 @@ const CompareCoins = () => {
               ) : (
                 <div className='flex flex-col gap-6 items-center w-full px-4 py-6 border-gray-800 border rounded-md relative overflow-hidden bg-card/10 animate-pulse h-[250px]'>
                   <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 bg-gray-800 rounded-full"></div>
+                    <div className="w-6 h-6 bg-gray-800 rounded-sm"></div>
                     <div className="h-4 w-24 bg-gray-800 rounded"></div>
-                    <div className="w-6 h-6 bg-gray-800 rounded-full"></div>
+                    <div className="w-6 h-6 bg-gray-800 rounded-sm"></div>
                     <div className="h-4 w-24 bg-gray-800 rounded"></div>
                   </div>
                   <div className="flex flex-col items-center gap-2 mt-4">

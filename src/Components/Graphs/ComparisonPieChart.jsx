@@ -46,7 +46,7 @@ const ComparisonsPieChart = ({ data, title }) => {
                     return (
                         <li key={`item-${index}`} className="flex items-center justify-between text-gray-400 gap-4">
                             <div className="flex items-center gap-2">
-                                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }} />
+                                <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: entry.color }} />
                                 <span>{entry.value}</span>
                             </div>
                             <span className="font-mono text-white">{percent.toFixed(2)}%</span>

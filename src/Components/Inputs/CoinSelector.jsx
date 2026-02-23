@@ -32,7 +32,7 @@ const CoinSelector = ({ selectedCoinId, onSelect, coinsList, loading }) => {
             >
                 {selectedCoin ? (
                     <div className="flex items-center gap-3">
-                        <img src={selectedCoin.image} alt={selectedCoin.name} className="w-6 h-6 rounded-full" />
+                        <img src={selectedCoin.image} alt={selectedCoin.name} className="w-6 h-6 rounded-sm" />
                         <span className="truncate">{selectedCoin.name} <span className="text-muted text-sm uppercase">({selectedCoin.symbol})</span></span>
                     </div>
                 ) : (
@@ -56,7 +56,7 @@ const CoinSelector = ({ selectedCoinId, onSelect, coinsList, loading }) => {
                                 <div className="flex flex-col gap-2 p-2">
                                     {[...Array(5)].map((_, i) => (
                                         <div key={i} className="flex items-center gap-3 px-2 py-2 animate-pulse">
-                                            <div className="w-6 h-6 bg-gray-800 rounded-full"></div>
+                                            <div className="w-6 h-6 bg-gray-800 rounded-sm"></div>
                                             <div className="flex flex-col gap-1 w-full">
                                                 <div className="h-4 w-24 bg-gray-800 rounded"></div>
                                                 <div className="h-3 w-12 bg-gray-800 rounded"></div>
@@ -74,7 +74,7 @@ const CoinSelector = ({ selectedCoinId, onSelect, coinsList, loading }) => {
                                         }}
                                         className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors ${coin.id === selectedCoinId ? 'bg-primary/20 text-white' : 'hover:bg-card text-gray-300 hover:text-white'}`}
                                     >
-                                        <img src={coin.image} alt={coin.name} className="w-6 h-6 rounded-full" />
+                                        <img src={coin.image} alt={coin.name} className="w-6 h-6 rounded-sm" />
                                         <div className="flex flex-col">
                                             <span className="font-medium text-sm">{coin.name}</span>
                                             <span className="text-xs text-muted uppercase">{coin.symbol}</span>

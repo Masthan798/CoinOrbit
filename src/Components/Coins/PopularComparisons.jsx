@@ -59,7 +59,7 @@ const PopularComparisons = ({ onSelect, coinsList }) => {
                             className="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 cursor-pointer group transition-all"
                         >
                             <div className="flex items-center gap-3 flex-1">
-                                <img src={c1.image} alt={c1.name} className="w-8 h-8 rounded-full" />
+                                <img src={c1.image} alt={c1.name} className="w-8 h-8 rounded-sm" />
                                 <span className="font-bold text-gray-200 group-hover:text-white transition-colors">{c1.name}</span>
                             </div>
 
@@ -67,7 +67,7 @@ const PopularComparisons = ({ onSelect, coinsList }) => {
 
                             <div className="flex items-center gap-3 flex-1 justify-end">
                                 <span className="font-bold text-gray-200 group-hover:text-white transition-colors text-right">{c2.name}</span>
-                                <img src={c2.image} alt={c2.name} className="w-8 h-8 rounded-full" />
+                                <img src={c2.image} alt={c2.name} className="w-8 h-8 rounded-sm" />
                             </div>
                         </div>
                     );

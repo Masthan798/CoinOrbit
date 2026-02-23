@@ -107,7 +107,7 @@ const NFTDetail = () => {
             <Breadcrumbs
                 crumbs={[
                     { label: 'NFT', path: '/nft-floor' },
-                    { label: `${nftData.asset_platform_id?.toUpperCase()} NFT`, path: '/nft-floor' },
+                    { label: `${nftData.asset_platform_id?.toUpperCase()}`, path: '/nft-floor' },
                     { label: nftData.name }
                 ]}
             />
@@ -124,7 +124,7 @@ const NFTDetail = () => {
                                 <img
                                     src={nftData.image?.small || nftData.image?.large}
                                     alt={nftData.name}
-                                    className="w-16 h-16 rounded-xl object-cover shadow-2xl"
+                                    className="w-16 h-16 rounded-sm object-cover shadow-2xl"
                                 />
                             </div>
                             <div className="flex flex-col gap-1 min-w-0">

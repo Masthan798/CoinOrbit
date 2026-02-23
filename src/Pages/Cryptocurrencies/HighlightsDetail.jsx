@@ -166,8 +166,8 @@ const HighlightsDetail = () => {
                 <Breadcrumbs
                     crumbs={[
                         { label: 'Cryptocurrencies', path: '/' },
-                        { label: 'Highlights', path: '/categories' },
-                        { label: type.charAt(0).toUpperCase() + type.slice(1).replace('-', ' ') }
+                        { label: 'Highlights', path: '/highlights' },
+                        { label: `${type.charAt(0).toUpperCase() + type.slice(1).replace('-', ' ')} Assets` }
                     ]}
                 />
 
@@ -238,7 +238,7 @@ const HighlightsDetail = () => {
                                     <td className='py-3 px-1 sticky left-0 bg-black group-hover:bg-card transition-colors z-10 w-[45px] text-muted text-sm font-bold'>{coin.market_cap_rank || index + 1}</td>
                                     <td className='py-3 px-2 sticky left-[45px] md:left-[60px] bg-black group-hover:bg-card transition-colors z-10 w-[120px]'>
                                         <div className='flex items-center gap-2'>
-                                            <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6 rounded-full' />
+                                            <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6 rounded-sm' />
                                             <div className="flex flex-col min-w-0">
                                                 <span className='font-bold text-white group-hover:text-blue-400 transition-colors truncate text-base sm:text-lg'>{coin.name}</span>
                                                 <span className='text-xs sm:text-sm text-muted uppercase leading-none font-bold'>{coin.symbol}</span>

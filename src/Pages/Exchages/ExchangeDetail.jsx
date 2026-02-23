@@ -286,7 +286,7 @@ const ExchangeDetail = () => {
             <div className='w-full min-h-screen p-6 flex flex-col gap-8 animate-pulse'>
                 {/* Header Skeleton */}
                 <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 bg-gray-800 rounded-full"></div>
+                    <div className="w-16 h-16 bg-gray-800 rounded-sm"></div>
                     <div className="flex flex-col gap-2">
                         <div className="h-8 bg-gray-800 rounded w-48"></div>
                         <div className="h-4 bg-gray-800 rounded w-24"></div>
@@ -344,7 +344,7 @@ const ExchangeDetail = () => {
                 <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-4 max-w-full overflow-hidden'>
 
                     <div className="flex flex-wrap items-center gap-3 min-w-0">
-                        <img src={exchange.image} alt={exchange.name} className="w-12 h-12 sm:w-16 sm:h-16 rounded-full shrink-0" />
+                        <img src={exchange.image} alt={exchange.name} className="w-12 h-12 sm:w-16 sm:h-16 rounded-sm shrink-0" />
                         <div className='flex flex-col sm:flex-row sm:items-center gap-2 min-w-0'>
                             <p className='text-xl sm:text-3xl font-bold truncate'>{exchange.name}</p>
                             <p className='text-muted text-xs sm:text-sm p-1 px-2 rounded-md bg-card w-fit whitespace-nowrap'>{exchange.centralized ? 'Centralized' : 'Decentralized'} Exchange</p>

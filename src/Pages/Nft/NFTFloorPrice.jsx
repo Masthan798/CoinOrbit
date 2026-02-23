@@ -86,7 +86,7 @@ const NFTCard = ({ nft }) => {
       <div className="px-5 sm:px-8 pb-6 sm:pb-8 flex flex-col flex-1 gap-4 sm:gap-6 relative">
         {/* Profile/Logo Image Overlay (Cleaned borders) */}
         <div className="relative -mt-8 sm:-mt-12 mb-1 z-20">
-          <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-4 border-[var(--bg-card)] shadow-2xl bg-[#1A1A1A]">
+          <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-sm overflow-hidden border-4 border-[var(--bg-card)] shadow-2xl bg-[#1A1A1A]">
             {logoUrl ? (
               <img
                 src={logoUrl}

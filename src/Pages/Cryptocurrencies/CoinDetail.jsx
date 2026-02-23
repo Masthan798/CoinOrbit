@@ -139,7 +139,7 @@ const CoinDetail = () => {
                 crumbs={[
                     { label: 'Cryptocurrencies', path: '/' },
                     { label: 'Market Cap', path: '/marketcap' },
-                    { label: coin.name }
+                    { label: `${coin.name} (${coin.symbol.toUpperCase()})` }
                 ]}
             />
 
@@ -152,7 +152,7 @@ const CoinDetail = () => {
                     {/* Main Coin Info Card (First in the row) */}
                     <motion.div variants={itemVariants} className='flex flex-col items-start justify-center gap-3 p-4 sm:p-6 border-gray-800 border-2 rounded-2xl bg-card/30 backdrop-blur-sm h-full'>
                         <div className='flex items-center gap-3 w-full'>
-                            <img src={coin.image.large} alt={coin.name} className='w-10 h-10 sm:w-12 sm:h-12 rounded-full' />
+                            <img src={coin.image.large} alt={coin.name} className='w-10 h-10 sm:w-12 sm:h-12 rounded-sm' />
                             <div className='flex flex-col min-w-0'>
                                 <h1 className='text-xl sm:text-2xl font-bold tracking-tight truncate w-full'>{coin.name.toUpperCase()}</h1>
                                 <div className='flex items-center gap-1.5 flex-wrap'>
@@ -209,7 +209,7 @@ const CoinDetail = () => {
                             <div className='flex items-center justify-between'>
                                 <div className='flex items-center gap-3 sm:gap-4'>
                                     <div className='p-1 bg-white/5 rounded-full border border-white/10'>
-                                        <img src={coin.image.large} alt={coin.name} className='w-10 h-10 sm:w-12 sm:h-12 rounded-full' />
+                                        <img src={coin.image.large} alt={coin.name} className='w-10 h-10 sm:w-12 sm:h-12 rounded-sm' />
                                     </div>
                                     <div>
                                         <h3 className='text-xl sm:text-2xl font-bold'>{coin.name}</h3>

@@ -17,7 +17,7 @@ const ExchangeInfo = ({ exchange }) => {
             {/* Left: General Info */}
             <div className="flex-1 bg-[#0d0e12] border border-white/5 rounded-2xl p-6 flex flex-col gap-4">
                 <div className="flex items-center gap-3 mb-2">
-                    <img src={exchange.image} alt={exchange.name} className="w-10 h-10 rounded-full" />
+                    <img src={exchange.image} alt={exchange.name} className="w-10 h-10 rounded-sm" />
                     <div>
                         <h2 className="text-xl font-bold text-white">About {exchange.name}</h2>
                         {exchange.year_established && (

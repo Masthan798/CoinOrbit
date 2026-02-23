@@ -12,7 +12,7 @@ const CoinTableRow = ({ coin, navigate }) => {
             </td>
             <td className='py-2 px-2 sticky left-[40px] md:left-[50px] bg-main group-hover:bg-card transition-all z-10'>
                 <div className='flex items-center gap-2'>
-                    <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6 rounded-full' />
+                    <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6 rounded-sm' />
                     <div className='flex flex-col'>
                         <span className='font-bold text-white text-[11px] sm:text-sm whitespace-nowrap'>
                             {coin.name} <span className='text-[10px] text-muted uppercase ml-1'>{coin.symbol}</span>
