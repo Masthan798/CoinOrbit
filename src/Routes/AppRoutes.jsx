@@ -23,8 +23,7 @@ import CoinConversionDetail from "../Pages/Tools/CoinConversionDetail"
 import CompareCoins from "../Pages/Tools/CompareCoins"
 import GlobalChart from "../Pages/Tools/GlobalChart"
 import CurrencyPrices from "../Pages/Tools/CurrencyPrices"
-
-
+import NFTDetail from "../Pages/Nft/NFTDetail"
 
 // Helper component for legacy redirects with parameters
 const RedirectWithParam = ({ to, paramName }) => {
@@ -86,6 +85,8 @@ const AppRouter = () => {
                 <Route path="/nft-coins" element={<NFTRelatedCoins />} />
                 <Route path="/nft-watchlist" element={<NFTWatchlist />} />
                 <Route path="/nft-charts" element={<NFTGlobalChart />} />
+                <Route path="/nft-detail/:contractAddress" element={<NFTDetail />} />
+
 
                 {/* Tools legacy redirects */}
                 <Route path="/tools/allcoins" element={<Navigate to="/allcoins" replace />} />
