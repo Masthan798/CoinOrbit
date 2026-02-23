@@ -6,9 +6,35 @@ import { Search, TrendingUp, TrendingDown, ArrowUpRight, Flame, Layers, Star, Ex
 import { coingeckoFetch } from '../../api/coingeckoClient';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
 import TableFilterHeader from '../../Components/common/TableFilterHeader';
+import { useCurrency } from '../../Context/CurrencyContext';
 
+
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.3
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+      ease: [0.4, 0, 0.2, 1]
+    }
+  }
+};
 
 const NFTCard = ({ nft }) => {
+  const { currency, formatPrice } = useCurrency();
   const [details, setDetails] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -141,7 +167,7 @@ const NFTCard = ({ nft }) => {
           <div className="flex flex-col">
             <span className="text-xs text-[var(--text-muted)] uppercase font-black tracking-widest opacity-40">Floor Price</span>
             <span className="text-sm sm:text-base font-black text-[var(--text-heading)] uppercase tracking-tighter">
-              {data.floor_price?.usd ? `$${data.floor_price.usd.toLocaleString()}` : 'N/A'}
+              {data.floor_price?.[currency.code] ? formatPrice(data.floor_price[currency.code]) : 'N/A'}
             </span>
           </div>
           <Link to={`/nft-detail/${data.id || data.contract_address}`}>
@@ -166,7 +192,6 @@ const NFTFloorPrice = () => {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [visibleCount, setVisibleCount] = useState(24);
-  const [activeTab, setActiveTab] = useState('All');
 
   useEffect(() => {
     const loadAllData = async () => {
@@ -195,22 +220,9 @@ const NFTFloorPrice = () => {
     loadAllData();
   }, []);
 
-  const tabs = ['All', 'Trending', 'New', 'Top Gainers', 'Top Losers'];
 
   const getFilteredData = useMemo(() => {
     let baseList = allNfts;
-
-    if (activeTab === 'Trending') {
-      baseList = allNfts; // Default order from API
-    } else if (activeTab === 'All') {
-      baseList = allNfts;
-    } else if (activeTab === 'New') {
-      baseList = [...allNfts].reverse();
-    } else if (activeTab === 'Top Gainers') {
-      baseList = [...allNfts].sort((a, b) => (b.floor_price_in_usd_24h_percentage_change || b.image?.floor_price_in_usd_24h_percentage_change || 0) - (a.floor_price_in_usd_24h_percentage_change || a.image?.floor_price_in_usd_24h_percentage_change || 0));
-    } else if (activeTab === 'Top Losers') {
-      baseList = [...allNfts].sort((a, b) => (a.floor_price_in_usd_24h_percentage_change || a.image?.floor_price_in_usd_24h_percentage_change || 0) - (b.floor_price_in_usd_24h_percentage_change || b.image?.floor_price_in_usd_24h_percentage_change || 0));
-    }
 
     const fullList = baseList.filter(item =>
       (item.name || item.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -221,13 +233,18 @@ const NFTFloorPrice = () => {
       display: fullList.slice(0, visibleCount),
       totalCount: fullList.length
     };
-  }, [activeTab, allNfts, searchQuery, visibleCount]);
+  }, [allNfts, searchQuery, visibleCount]);
 
   const { display: filteredList, totalCount } = getFilteredData;
   const hasMore = visibleCount < totalCount;
 
   return (
-    <div className='w-full min-h-screen flex flex-col gap-3 sm:gap-12 p-2 sm:p-8 pb-32 overflow-x-hidden rounded-xl bg-main'>
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className='w-full min-h-screen flex flex-col gap-3 sm:gap-12 p-2 sm:p-8 pb-32 overflow-x-hidden rounded-xl bg-main'
+    >
       <div className='w-full'>
         <Breadcrumbs crumbs={[{ label: 'NFTs', path: '/nft-floor' }, { label: 'Explore' }]} />
       </div>
@@ -242,12 +259,7 @@ const NFTFloorPrice = () => {
       </motion.div>
 
       <TableFilterHeader
-        activeTab={activeTab}
-        onTabChange={(tab) => {
-          setActiveTab(tab);
-          setVisibleCount(24);
-          setSearchQuery('');
-        }}
+        showTabs={false}
         searchQuery={searchQuery}
         onSearchChange={(val) => {
           setSearchQuery(val);
@@ -323,7 +335,7 @@ const NFTFloorPrice = () => {
           )}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

@@ -10,6 +10,7 @@ import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import CardSkeleton from '../../Components/Loadings/CardSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
 import TableFilterHeader from '../../Components/common/TableFilterHeader';
+import { useCurrency } from '../../Context/CurrencyContext';
 
 
 const data = [
@@ -24,6 +25,7 @@ const data = [
 
 const MarketCap = () => {
   const navigate = useNavigate();
+  const { currency, formatPrice } = useCurrency();
   const TOTAL_COINS = 14000;
   const [favorites, setFavorites] = useState([]);
   const [Allcoins, SetallCoins] = useState([]);
@@ -64,7 +66,7 @@ const MarketCap = () => {
         if (globalJson?.data) setGlobalData(globalJson.data);
 
         // 2. Fetch 7-Day Sparkline Data (BTC Proxy)
-        const sparkJson = await coingeckoFetch('/coins/bitcoin/market_chart?days=7&vs_currency=usd');
+        const sparkJson = await coingeckoFetch(`/coins/bitcoin/market_chart?days=7&vs_currency=${currency.code}`);
         if (sparkJson?.market_caps) {
           setSparklineData({
             market_caps: sparkJson.market_caps.map(item => item[1]),
@@ -79,18 +81,18 @@ const MarketCap = () => {
           const ids = topTrending.map(c => c.item.id).join(',');
 
           // Fetch simple prices for trending coins
-          const priceJson = await coingeckoFetch(`/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`);
+          const priceJson = await coingeckoFetch(`/simple/price?ids=${ids}&vs_currencies=${currency.code}&include_24hr_change=true`);
 
           const trendingWithPrices = topTrending.map(coin => ({
             ...coin,
-            price: priceJson?.[coin.item.id]?.usd,
-            change: priceJson?.[coin.item.id]?.usd_24h_change
+            price: priceJson?.[coin.item.id]?.[currency.code],
+            change: priceJson?.[coin.item.id]?.[`${currency.code}_24h_change`]
           }));
           setTrendingData(trendingWithPrices);
         }
 
         // 4. Fetch Top Gainers
-        const marketsJson = await coingeckoFetch('/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=24h');
+        const marketsJson = await coingeckoFetch(`/coins/markets?vs_currency=${currency.code}&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=24h`);
         if (Array.isArray(marketsJson)) {
           const sorted = [...marketsJson].sort((a, b) => (b.price_change_percentage_24h || 0) - (a.price_change_percentage_24h || 0));
           setGainersData(sorted.slice(0, 3));
@@ -102,7 +104,7 @@ const MarketCap = () => {
       }
     };
     fetchGlobalStats();
-  }, []);
+  }, [currency]);
 
   useEffect(() => {
     const fetchAllcoins = async () => {
@@ -118,7 +120,7 @@ const MarketCap = () => {
         else if (activeTab === 'Upcoming Coins') order = 'gecko_desc';
 
         const response = await coingeckoFetch(
-          `/coins/markets?vs_currency=inr&order=${order}&per_page=${perPage}&page=${currentPage}&sparkline=true&price_change_percentage=1h,24h,7d${customParams}`
+          `/coins/markets?vs_currency=${currency.code}&order=${order}&per_page=${perPage}&page=${currentPage}&sparkline=true&price_change_percentage=1h,24h,7d${customParams}`
         );
         if (response && Array.isArray(response)) {
           SetallCoins(response);
@@ -134,7 +136,7 @@ const MarketCap = () => {
       }
     }
     fetchAllcoins();
-  }, [currentPage, perPage, activeTab])
+  }, [currentPage, perPage, activeTab, currency])
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -192,16 +194,6 @@ const MarketCap = () => {
     setToggle(newState);
     localStorage.setItem('marketCapHighlights', JSON.stringify(newState));
   }
-
-  const formatCurrency = (val, maximumFractionDigits = 0) => {
-    if (val === undefined || val === null) return '...';
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: maximumFractionDigits
-    }).format(val);
-  };
 
   const handleSort = (key) => {
     let direction = 'asc';
@@ -290,7 +282,7 @@ const MarketCap = () => {
           <h1 className='text-xl sm:text-5xl font-bold truncate tracking-tight'>Cryptocurrency Prices</h1>
           <div className='flex items-center gap-1 text-[10px] sm:text-lg text-muted whitespace-nowrap'>
             <span>Global cap:</span>
-            <span className="text-white font-bold">{globalData ? formatCurrency(globalData.total_market_cap.usd) : '...'}</span>
+            <span className="text-white font-bold">{globalData ? formatPrice(globalData.total_market_cap[currency.code]) : '...'}</span>
             <span className={`font-bold ${globalData?.market_cap_change_percentage_24h_usd >= 0 ? "text-green-500" : "text-red-500"}`}>
               {globalData?.market_cap_change_percentage_24h_usd > 0 ? '+' : ''}{globalData?.market_cap_change_percentage_24h_usd?.toFixed(2)}%
             </span>
@@ -331,7 +323,7 @@ const MarketCap = () => {
 
                         <div className='flex flex-col min-w-0'>
                           <span className='text-xl truncate block font-bold text-white'>
-                            {globalData ? formatCurrency(globalData.total_market_cap.usd) : '...'}
+                            {globalData ? formatPrice(globalData.total_market_cap[currency.code]) : '...'}
                           </span>
                           <p className='text-sm text-muted'>Total Market Cap</p>
                         </div>
@@ -346,7 +338,7 @@ const MarketCap = () => {
 
                         <div className='flex flex-col min-w-0'>
                           <span className='text-xl truncate block font-bold text-white'>
-                            {globalData ? formatCurrency(globalData.total_volume.usd) : '...'}
+                            {globalData ? formatPrice(globalData.total_volume[currency.code]) : '...'}
                           </span>
                           <p className='text-lg sm:text-2xl text-muted'>Total 24h Volume</p>
                         </div>
@@ -382,7 +374,7 @@ const MarketCap = () => {
                               <span className="text-lg font-medium text-gray-300">{coin.item.symbol}</span>
                             </div>
                             <div className="flex items-center gap-3">
-                              <span className="text-lg font-bold text-white">{formatCurrency(coin.price, 2)}</span>
+                              <span className="text-lg font-bold text-white">{formatPrice(coin.price, { maximumFractionDigits: 2 })}</span>
                               {coin.change !== undefined && (
                                 <span className={`text-sm font-bold ${coin.change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                                   {coin.change >= 0 ? '+' : ''}{coin.change.toFixed(1)}%
@@ -549,7 +541,7 @@ const MarketCap = () => {
                       </div>
                     </div>
                   </td>
-                  <td className='py-3 px-2 text-sm sm:text-base font-bold'>₹{coin.current_price?.toLocaleString()}</td>
+                  <td className='py-3 px-2 text-sm sm:text-base font-bold'>{formatPrice(coin.current_price, { maximumFractionDigits: 4 })}</td>
                   <td className={`py-3 px-2 text-sm sm:text-base font-bold ${coin.price_change_percentage_1h_in_currency < 0 ? 'text-red-500' : 'text-green-500'}`}>
                     {coin.price_change_percentage_1h_in_currency?.toFixed(1)}%
                   </td>
@@ -559,8 +551,8 @@ const MarketCap = () => {
                   <td className={`py-3 px-2 text-sm sm:text-base font-bold ${coin.price_change_percentage_7d_in_currency < 0 ? 'text-red-500' : 'text-green-500'}`}>
                     {coin.price_change_percentage_7d_in_currency?.toFixed(1)}%
                   </td>
-                  <td className='py-3 px-2 text-sm sm:text-base text-muted font-bold'>₹{coin.total_volume?.toLocaleString(undefined, { notation: 'compact' })}</td>
-                  <td className='py-3 px-2 text-sm sm:text-base text-muted font-bold'>₹{coin.market_cap?.toLocaleString(undefined, { notation: 'compact' })}</td>
+                  <td className='py-3 px-2 text-sm sm:text-base text-muted font-bold'>{formatPrice(coin.total_volume, { notation: 'compact' })}</td>
+                  <td className='py-3 px-2 text-sm sm:text-base text-muted font-bold'>{formatPrice(coin.market_cap, { notation: 'compact' })}</td>
                   <td className='py-2 px-2'>
                     <div className='w-20 sm:w-28 h-8 sm:h-10'>
                       <ResponsiveContainer width="100%" height="100%">

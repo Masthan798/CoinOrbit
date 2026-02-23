@@ -9,6 +9,7 @@ import CardSkeleton from '../../Components/Loadings/CardSkeleton';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
 import TableFilterHeader from '../../Components/common/TableFilterHeader';
+import { useCurrency } from '../../Context/CurrencyContext';
 
 // Animation variants
 const containerVariants = {
@@ -40,16 +41,9 @@ const itemVariants = {
   }
 };
 
-const formatCurrency = (val) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(val);
-};
 
 const Categories = () => {
+  const { currency, formatPrice } = useCurrency();
   const TOTAL_COINS = 14000;
   // Tabs: 'all' | 'highlights'
   const [activeTab, setActiveTab] = useState('all');
@@ -210,9 +204,9 @@ const Categories = () => {
               <div className="flex gap-4 text-lg">
                 <span className="text-gray-300">
                   {type === 'volume'
-                    ? `$${(coin.total_volume || 0).toLocaleString(undefined, { notation: "compact" })}`
+                    ? formatPrice(coin.total_volume || 0, { notation: "compact" })
                     : (coin.current_price || coin.item?.data?.price)
-                      ? `$${(coin.current_price || coin.item?.data?.price).toLocaleString()}`
+                      ? formatPrice(coin.current_price || coin.item?.data?.price)
                       : 'N/A'
                   }
                 </span>
@@ -245,7 +239,7 @@ const Categories = () => {
         <div className='flex flex-col gap-0.5'>
           <h1 className='text-2xl sm:text-5xl font-bold whitespace-nowrap'>Top Crypto Categories</h1>
           <p className='text-sm sm:text-xl text-muted'>
-            Global cap: <span className="text-white font-bold">{globalData ? formatCurrency(globalData.total_market_cap.usd) : '...'}</span>
+            Global cap: <span className="text-white font-bold">{globalData ? formatPrice(globalData.total_market_cap[currency.code]) : '...'}</span>
             <span className={`ml-1 ${globalData?.market_cap_change_percentage_24h_usd >= 0 ? "text-green-500" : "text-red-500"}`}>
               {globalData?.market_cap_change_percentage_24h_usd?.toFixed(2)}%
             </span>
@@ -390,8 +384,8 @@ const Categories = () => {
                         <td className={`py-3 px-2 text-sm sm:text-base font-bold ${coin.market_cap_change_24h < 0 ? 'text-red-500' : 'text-green-500'}`}>
                           {coin.market_cap_change_24h?.toFixed(1)}%
                         </td>
-                        <td className='py-3 px-2 text-sm sm:text-base font-bold text-gray-300'>₹{coin.market_cap?.toLocaleString(undefined, { notation: 'compact' })}</td>
-                        <td className='py-3 px-2 text-sm sm:text-base font-bold text-gray-300'>₹{coin.volume_24h?.toLocaleString(undefined, { notation: 'compact' })}</td>
+                        <td className='py-3 px-2 text-sm sm:text-base font-bold text-gray-300'>{formatPrice(coin.market_cap, { notation: 'compact' })}</td>
+                        <td className='py-3 px-2 text-sm sm:text-base font-bold text-gray-300'>{formatPrice(coin.volume_24h, { notation: 'compact' })}</td>
                       </tr>
                     ))
                   )}

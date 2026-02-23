@@ -5,15 +5,8 @@ import Pagination from '../../Components/Pagination/Pagination';
 import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
 import TableFilterHeader from '../../Components/common/TableFilterHeader';
+import { useCurrency } from '../../Context/CurrencyContext';
 
-const formatCurrency = (val) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(val);
-};
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -36,6 +29,7 @@ const itemVariants = {
 };
 
 const Derivatives = () => {
+  const { currency, formatPrice } = useCurrency();
   const [derivaties, setDervatiesData] = useState([]);
   const [globalData, setGlobalData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -118,7 +112,7 @@ const Derivatives = () => {
         <div className='flex flex-col gap-0.5'>
           <h1 className='text-2xl sm:text-5xl font-bold whitespace-nowrap'>Derivative Exchanges</h1>
           <p className='text-sm sm:text-xl text-muted'>
-            24h Trading Volume: <span className="text-white font-bold">{globalData ? formatCurrency(globalData.total_volume.usd) : '...'}</span>
+            24h Trading Volume: <span className="text-white font-bold">{globalData ? formatPrice(globalData.total_volume[currency.code]) : '...'}</span>
           </p>
         </div>
       </motion.div>
