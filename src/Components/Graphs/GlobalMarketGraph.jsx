@@ -173,12 +173,7 @@ const GlobalMarketGraph = ({ apiKey }) => {
                     </ResponsiveContainer>
                 )}
 
-                <div className="absolute bottom-4 right-4 opacity-40 pointer-events-none flex items-center gap-2">
-                    <div className="w-6 h-6 bg-[#3b82f6] rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.5)]">
-                        <Zap size={14} className="text-white fill-white" />
-                    </div>
-                    <span className="text-sm font-black tracking-tighter text-white uppercase italic">COIN<span className="text-blue-500">ORBIT</span></span>
-                </div>
+
             </div>
         </div>
     );

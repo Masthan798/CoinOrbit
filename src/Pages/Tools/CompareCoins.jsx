@@ -280,12 +280,7 @@ const CompareCoins = () => {
                     </div>
                   </div>
 
-                  <div className="absolute bottom-2 right-2 opacity-20 pointer-events-none flex items-center gap-1.5 scale-75">
-                    <div className="w-5 h-5 bg-[#3b82f6] rounded-full flex items-center justify-center">
-                      <Zap size={10} className="text-white fill-white" />
-                    </div>
-                    <span className="text-xs font-black tracking-tighter text-white uppercase italic">COIN<span className="text-blue-500">ORBIT</span></span>
-                  </div>
+
                 </div>
               ) : (
                 <div className='flex flex-col gap-6 items-center w-full px-4 py-6 border-gray-800 border rounded-md relative overflow-hidden bg-card/10 animate-pulse h-[250px]'>

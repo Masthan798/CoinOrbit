@@ -258,13 +258,13 @@ const CoinDetailGraph = ({ coinId: propCoinId }) => {
                     <div className="flex bg-white/5 p-1 rounded-xl w-full sm:w-auto">
                         <button
                             onClick={() => setDataType('prices')}
-                            className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${dataType === 'prices' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20' : 'text-gray-400 hover:text-white'}`}
+                            className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${dataType === 'prices' ? 'bg-white text-black shadow-xl scale-102' : 'text-muted-foreground hover:text-white'}`}
                         >
                             Price
                         </button>
                         <button
                             onClick={() => setDataType('market_caps')}
-                            className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${dataType === 'market_caps' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20' : 'text-gray-400 hover:text-white'}`}
+                            className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${dataType === 'market_caps' ? 'bg-white text-black shadow-xl scale-102' : 'text-muted-foreground hover:text-white'}`}
                         >
                             Market Cap
                         </button>
@@ -274,14 +274,14 @@ const CoinDetailGraph = ({ coinId: propCoinId }) => {
                         <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl">
                             <button
                                 onClick={() => setChartType('line')}
-                                className={`p-1.5 rounded-lg transition-all ${chartType === 'line' ? 'bg-white/10 text-blue-400' : 'text-gray-500 hover:text-white'}`}
+                                className={`p-1.5 rounded-lg transition-all ${chartType === 'line' ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-500 hover:text-white'}`}
                                 title="Line Chart"
                             >
                                 <TrendingUp size={14} />
                             </button>
                             <button
                                 onClick={() => setChartType('ohlc')}
-                                className={`p-1.5 rounded-lg transition-all ${chartType === 'ohlc' ? 'bg-white/10 text-blue-400' : 'text-gray-500 hover:text-white'}`}
+                                className={`p-1.5 rounded-lg transition-all ${chartType === 'ohlc' ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-500 hover:text-white'}`}
                                 title="OHLC Chart"
                             >
                                 <BarChart3 size={14} />
@@ -295,7 +295,7 @@ const CoinDetailGraph = ({ coinId: propCoinId }) => {
                                 <button
                                     key={tf.label}
                                     onClick={() => setTimeframe(tf)}
-                                    className={`px-2 py-1.5 rounded-lg text-[9px] sm:text-[10px] font-black transition-all ${timeframe.label === tf.label ? 'bg-blue-500/20 text-blue-400' : 'text-gray-500 hover:text-white'}`}
+                                    className={`px-2 py-1.5 rounded-lg text-[9px] sm:text-[10px] font-black transition-all ${timeframe.label === tf.label ? 'bg-white text-black shadow-xl' : 'text-muted-foreground hover:text-white'}`}
                                 >
                                     {tf.label}
                                 </button>
@@ -431,7 +431,7 @@ const CoinDetailGraph = ({ coinId: propCoinId }) => {
                             <Brush
                                 dataKey="time"
                                 height={30}
-                                stroke="#8884d8"
+                                stroke="#10b981"
                                 fill="#0b0e11"
                                 tickFormatter={() => ''}
                             />
@@ -439,12 +439,7 @@ const CoinDetailGraph = ({ coinId: propCoinId }) => {
                     </ResponsiveContainer>
                 )}
 
-                <div className="absolute bottom-4 right-4 opacity-30 pointer-events-none flex items-center gap-1.5">
-                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-[#3b82f6] rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-                        <Zap size={12} className="text-white fill-white sm:w-3.5 sm:h-3.5" />
-                    </div>
-                    <span className="text-xs sm:text-sm font-black tracking-tighter text-white uppercase italic">COIN<span className="text-blue-500">ORBIT</span></span>
-                </div>
+
             </div>
 
         </div >
