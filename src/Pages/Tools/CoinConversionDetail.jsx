@@ -77,7 +77,7 @@ const CoinConversionDetail = () => {
                         {/* Coin Identity Card Skeleton */}
                         <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col gap-6 h-[500px]">
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 bg-gray-800 rounded-full"></div>
+                                <div className="w-12 h-12 bg-gray-800 rounded-sm"></div>
                                 <div className="flex flex-col gap-2">
                                     <div className="h-6 w-32 bg-gray-800 rounded"></div>
                                     <div className="h-4 w-16 bg-gray-800 rounded"></div>
@@ -150,7 +150,7 @@ const CoinConversionDetail = () => {
                     <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col gap-6 shadow-xl">
 
                         <div className="flex items-center gap-4">
-                            <img src={coinData.image.large} alt={coinData.name} className="w-12 h-12 rounded-full" />
+                            <img src={coinData.image.large} alt={coinData.name} className="w-12 h-12 rounded-sm" />
                             <div>
                                 <h1 className="text-xl font-bold">{coinData.name} <span className="text-muted text-sm font-normal">{coinData.symbol.toUpperCase()} / {currencyCode.toUpperCase()}</span></h1>
                                 <span className="bg-gray-800 text-[10px] px-2 py-0.5 rounded text-gray-300">#{coinData.market_cap_rank}</span>
@@ -174,7 +174,7 @@ const CoinConversionDetail = () => {
                                 <span>24h Range</span>
                                 <span>{formatCurrency(high24h, 'usd')}</span>
                             </div>
-                            <div className="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden relative">
+                            <div className="w-full h-1.5 bg-gray-800 rounded-sm overflow-hidden relative">
                                 <div className="absolute top-0 bottom-0 left-0 bg-white" style={{ width: `${rangePercentage}%` }}></div>
                             </div>
                         </div>

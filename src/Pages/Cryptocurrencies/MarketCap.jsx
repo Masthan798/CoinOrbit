@@ -284,16 +284,17 @@ const MarketCap = () => {
         />
       </div>
 
-      <motion.div variants={itemVariants} className='w-full flex items-center justify-between gap-4'>
+      <motion.div variants={itemVariants} className='w-full flex items-center justify-between gap-2 sm:gap-4'>
 
-        <div className='flex flex-col gap-0.5'>
-          <h1 className='text-2xl sm:text-5xl font-bold whitespace-nowrap'>Cryptocurrency Prices</h1>
-          <p className='text-sm sm:text-xl text-muted'>
-            Global cap: <span className="text-white font-bold">{globalData ? formatCurrency(globalData.total_market_cap.usd) : '...'}</span>
-            <span className={`ml-1 ${globalData?.market_cap_change_percentage_24h_usd >= 0 ? "text-green-500" : "text-red-500"}`}>
-              {globalData?.market_cap_change_percentage_24h_usd?.toFixed(2)}%
+        <div className='flex flex-col gap-0.5 min-w-0'>
+          <h1 className='text-xl sm:text-5xl font-bold truncate tracking-tight'>Cryptocurrency Prices</h1>
+          <div className='flex items-center gap-1 text-[10px] sm:text-lg text-muted whitespace-nowrap'>
+            <span>Global cap:</span>
+            <span className="text-white font-bold">{globalData ? formatCurrency(globalData.total_market_cap.usd) : '...'}</span>
+            <span className={`font-bold ${globalData?.market_cap_change_percentage_24h_usd >= 0 ? "text-green-500" : "text-red-500"}`}>
+              {globalData?.market_cap_change_percentage_24h_usd > 0 ? '+' : ''}{globalData?.market_cap_change_percentage_24h_usd?.toFixed(2)}%
             </span>
-          </p>
+          </div>
         </div>
 
         <div className='flex items-center gap-2 flex-shrink-0'>
@@ -413,7 +414,7 @@ const MarketCap = () => {
                             className="flex items-center justify-between p-2 hover:bg-white/5 transition-colors cursor-pointer rounded-lg px-2 group/item"
                           >
                             <div className="flex items-center gap-3">
-                              <img src={coin.image} alt={coin.name} className="w-6 h-6 rounded-full" />
+                              <img src={coin.image} alt={coin.name} className="w-6 h-6 rounded-sm" />
                               <span className="text-lg font-medium text-gray-300">{coin.symbol.toUpperCase()}</span>
                             </div>
                             <span className="text-sm font-bold text-green-500">
@@ -541,7 +542,7 @@ const MarketCap = () => {
                   </td>
                   <td className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px]'>
                     <div className='flex items-center gap-2'>
-                      <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6' />
+                      <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6 rounded-sm' />
                       <div className='flex flex-col gap-0.5 min-w-0'>
                         <span className='font-bold truncate text-base sm:text-xl'>{coin.name}</span>
                         <span className='text-xs sm:text-sm text-muted uppercase leading-none font-bold'>{coin.symbol}</span>

@@ -197,6 +197,15 @@ html.light {
         -ms-overflow-style: none;
         scrollbar-width: none;
     }
+
+    /* Gradient Typography */
+    .text-gradient-smoke {
+        background-image: linear-gradient(to bottom, #FFFFFF 0%, #A1A1A1 50%, #737373 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        display: inline-block;
+    }
 }
 
 /* ================================

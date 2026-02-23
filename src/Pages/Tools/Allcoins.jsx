@@ -253,7 +253,7 @@ const Allcoins = () => {
                   </td>
                   <td className='py-2 px-0.5 md:px-2 sticky left-[18px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10 w-[55px] min-w-[55px] max-w-[55px] overflow-hidden border-r border-gray-800/50'>
                     <div className='flex items-center gap-0.5 md:gap-2'>
-                      <img src={coin.image} alt={coin.name} className='w-3 h-3 sm:w-6 sm:h-6 rounded-full' />
+                      <img src={coin.image} alt={coin.name} className='w-3 h-3 sm:w-6 sm:h-6 rounded-sm' />
                       <div className='flex flex-col gap-0 min-w-0'>
                         <span className='font-bold truncate text-sm sm:text-lg text-white leading-tight block md:hidden uppercase'>{coin.symbol}</span>
                         <span className='font-bold truncate text-sm sm:text-lg text-white leading-tight hidden md:block'>{coin.name}</span>

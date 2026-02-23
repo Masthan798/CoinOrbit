@@ -283,7 +283,7 @@ const CryptoTreasuries = () => {
                           {images['bitcoin'] && (
                             <img
                               src={images['bitcoin']}
-                              className='w-5 h-5 rounded-full'
+                              className='w-5 h-5 rounded-sm'
                               alt="bitcoin"
                             />
                           )}

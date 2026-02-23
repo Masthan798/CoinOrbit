@@ -246,7 +246,7 @@ const CryptoExchanges = () => {
                   </td>
                   <td className='py-3 px-2 sticky left-[45px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10 w-[120px] min-w-[120px] md:w-[180px] md:min-w-[180px] text-left'>
                     <div className='flex items-center gap-2'>
-                      <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6 rounded-full' />
+                      <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6 rounded-sm' />
                       <div className='flex flex-col gap-0.5 min-w-0'>
                         <span className='font-bold truncate text-base sm:text-lg text-white'>{coin.name}</span>
                         <span className='text-xs sm:text-sm text-muted uppercase leading-none font-bold'>{coin.id}</span>

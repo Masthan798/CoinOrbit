@@ -135,8 +135,15 @@ const Navbar = () => {
             {/* Mobile Top Navbar */}
             <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-card border-b border-soft z-[100] flex items-center justify-between px-4">
                 <div className="flex items-center gap-2" onClick={() => navigate("/")}>
-                    <svg width="140" height="30" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-                        <text x="0" y="40" fontSize="32" fontWeight="700" fill="#FFFFFF">CoinOrbit</text>
+                    <svg width="180" height="40" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" className="cursor-pointer">
+                        <defs>
+                            <linearGradient id="logoGradientMobile" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stopColor="#FFFFFF" />
+                                <stop offset="50%" stopColor="#A1A1A1" />
+                                <stop offset="100%" stopColor="#737373" />
+                            </linearGradient>
+                        </defs>
+                        <text x="0" y="44" fontSize="42" fontWeight="700" fill="url(#logoGradientMobile)">CoinOrbit</text>
                     </svg>
                 </div>
                 <button
@@ -166,8 +173,8 @@ const Navbar = () => {
                             className="lg:hidden fixed top-0 left-0 bottom-0 w-[280px] bg-card border-r border-soft z-[120] flex flex-col pt-4 shadow-2xl"
                         >
                             <div className="px-6 mb-6 flex items-center justify-between">
-                                <span className="text-xl font-bold bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent">Menu</span>
-                                <button onClick={() => setIsMobileMenuOpen(false)} className="text-muted"><PanelLeftClose size={20} /></button>
+                                <span className="text-2xl font-bold uppercase tracking-tight text-gradient-smoke">Menu</span>
+                                <button onClick={() => setIsMobileMenuOpen(false)} className="text-muted"><PanelLeftClose size={24} /></button>
                             </div>
 
                             <nav className="flex-1 px-4 overflow-y-auto no-scrollbar pb-8">
@@ -234,9 +241,16 @@ const Navbar = () => {
                                 className="flex-shrink-0 cursor-pointer"
                                 onClick={() => navigate("/")}
                             >
-                                <svg width="180" height="40" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-                                    <text x="0" y="30" fontSize="28" fontWeight="700" fill="#FFFFFF">CoinOrbit</text>
-                                    <text x="0" y="50" fontSize="10" fontWeight="400" fill="#A1A1A1" letterSpacing="0.05em">Coin Analysis Platform</text>
+                                <svg width="220" height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <linearGradient id="logoGradientDesktop" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%" stopColor="#FFFFFF" />
+                                            <stop offset="50%" stopColor="#A1A1A1" />
+                                            <stop offset="100%" stopColor="#737373" />
+                                        </linearGradient>
+                                    </defs>
+                                    <text x="0" y="32" fontSize="38" fontWeight="700" fill="url(#logoGradientDesktop)">CoinOrbit</text>
+                                    <text x="0" y="52" fontSize="12" fontWeight="400" fill="#A1A1A1" letterSpacing="0.05em">Coin Analysis Platform</text>
                                 </svg>
                             </motion.div>
                         )}

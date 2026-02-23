@@ -25,20 +25,21 @@ const Breadcrumbs = ({ crumbs }) => {
             animate="visible"
             className='flex items-center justify-between w-full mb-4'
         >
-            <div className="flex items-center gap-2 text-xl sm:text-2xl font-bold">
+            <div className="flex items-center gap-1 sm:gap-2 text-sm sm:text-2xl font-bold min-w-0 max-w-[calc(100%-110px)] overflow-hidden">
                 {crumbs.map((crumb, index) => (
                     <React.Fragment key={index}>
                         <span
-                            className={`transition-colors flex items-center gap-2 ${crumb.path
+                            className={`transition-colors flex items-center gap-2 truncate ${crumb.path
                                 ? 'text-muted cursor-pointer hover:text-white'
                                 : 'text-white font-bold cursor-default'
                                 }`}
                             onClick={() => crumb.path && navigate(crumb.path)}
+                            title={crumb.label}
                         >
                             {crumb.label}
                         </span>
                         {index < crumbs.length - 1 && (
-                            <span className='text-muted/50 select-none'>/</span>
+                            <span className='text-muted/50 select-none flex-shrink-0'>/</span>
                         )}
                     </React.Fragment>
                 ))}

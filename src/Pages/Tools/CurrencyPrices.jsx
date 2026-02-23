@@ -254,7 +254,7 @@ const CurrencyPrices = () => {
                                                     className="flex justify-between items-center py-2 hover:bg-white/5 transition-colors rounded-lg px-2 cursor-pointer"
                                                 >
                                                     <div className="flex items-center gap-2 min-w-0">
-                                                        <img src={coin.item.thumb} alt="" className="w-5 h-5" />
+                                                        <img src={coin.item.thumb} alt="" className="w-5 h-5 rounded-sm" />
                                                         <span className="text-sm truncate">{coin.item.name}</span>
                                                     </div>
                                                     <div className="flex items-center gap-3">
@@ -283,7 +283,7 @@ const CurrencyPrices = () => {
                                                     className="flex justify-between items-center py-2 hover:bg-white/5 transition-colors rounded-lg px-2 cursor-pointer"
                                                 >
                                                     <div className="flex items-center gap-2 min-w-0">
-                                                        <img src={coin.image} alt="" className="w-5 h-5 rounded-full" />
+                                                        <img src={coin.image} alt="" className="w-5 h-5 rounded-sm" />
                                                         <span className="text-sm truncate">{coin.name}</span>
                                                     </div>
                                                     <span className="text-sm text-green-500 font-bold">+{coin.price_change_percentage_24h?.toFixed(2)}%</span>
@@ -332,7 +332,7 @@ const CurrencyPrices = () => {
                                     <td className="p-4 text-center text-muted font-medium sticky left-0 bg-[#0b0e11] group-hover:bg-card/50 z-10">{(currentPage - 1) * perPage + idx + 1}</td>
                                     <td className="p-4 sticky left-12 bg-[#0b0e11] group-hover:bg-card/50 z-10 min-w-[150px]">
                                         <div className="flex items-center gap-3">
-                                            <img src={coin.image} alt="" className="w-6 h-6" />
+                                            <img src={coin.image} alt="" className="w-6 h-6 rounded-sm" />
                                             <div className="flex flex-col">
                                                 <span className="font-bold text-white transition-colors">{coin.name}</span>
                                                 <span className="text-xs text-muted uppercase">{coin.symbol}</span>
