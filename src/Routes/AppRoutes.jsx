@@ -1,7 +1,7 @@
 import { Routes, Route, useLocation, Navigate, useParams } from "react-router-dom"
 import { AnimatePresence } from "framer-motion"
 import ProtectedRoute from "../Components/common/ProtectedRoute"
-import { useAuth } from "../context/AuthContext"
+import { useAuth } from "../Context/AuthContext"
 import Categories from "../Pages/Cryptocurrencies/Categories"
 import Chains from "../Pages/Cryptocurrencies/Chains"
 import CryptoTreasuries from "../Pages/Cryptocurrencies/CryptoTreasuries"

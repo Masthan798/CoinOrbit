@@ -2,7 +2,7 @@ import Navbar from './Components/Navbar/Navbar'
 import AppRouter from './Routes/AppRoutes'
 import GlobalBranding from './Components/common/GlobalBranding'
 import { CurrencyProvider } from './Context/CurrencyContext'
-import { useAuth } from './context/AuthContext'
+import { useAuth } from './Context/AuthContext'
 import { Toaster } from 'react-hot-toast'
 import { useLocation } from 'react-router-dom'
 
