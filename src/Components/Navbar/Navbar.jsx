@@ -22,14 +22,19 @@ import {
     Scale,
     PieChart,
     Briefcase,
-    HelpCircle
+    HelpCircle,
+    LogOut,
+    LogIn
 } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [hoveredItem, setHoveredItem] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
+    const { user, signOut } = useAuth();
 
     const isActive = (path) => {
         if (!path) return false;
@@ -177,7 +182,7 @@ const Navbar = () => {
                                 <button onClick={() => setIsMobileMenuOpen(false)} className="text-muted"><PanelLeftClose size={24} /></button>
                             </div>
 
-                            <nav className="flex-1 px-4 overflow-y-auto no-scrollbar pb-8">
+                            <nav className="flex-1 px-4 overflow-y-auto no-scrollbar">
                                 {navItems.map((category, index) => (
                                     <div key={index} className="mb-6">
                                         <p className="px-4 text-sm uppercase tracking-widest text-gray-500 font-bold mb-3">{category.type}</p>
@@ -198,22 +203,39 @@ const Navbar = () => {
                                         </div>
                                     </div>
                                 ))}
-                                <div className="mt-4 pt-4 border-t border-soft space-y-1">
-                                    {bottomNavItems.map((item, idx) => (
-                                        <button
-                                            key={idx}
-                                            onClick={() => {
-                                                item.path && navigate(item.path);
-                                                setIsMobileMenuOpen(false);
-                                            }}
-                                            className="w-full flex items-center gap-3 p-3 rounded-xl text-muted"
-                                        >
-                                            {item.icon}
-                                            <span className="font-medium text-sm">{item.label}</span>
-                                        </button>
-                                    ))}
-                                </div>
                             </nav>
+
+                            <div className="px-4 py-4 border-t border-soft space-y-1 bg-card/50 backdrop-blur-md">
+                                {bottomNavItems.map((item, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => {
+                                            item.path && navigate(item.path);
+                                            setIsMobileMenuOpen(false);
+                                        }}
+                                        className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all hover-soft ${isActive(item.path) ? 'bg-white/10 text-white' : 'text-muted hover:text-white'}`}
+                                    >
+                                        {item.icon}
+                                        <span className="font-bold text-base">{item.label}</span>
+                                    </button>
+                                ))}
+                                <button
+                                    onClick={async () => {
+                                        if (user) {
+                                            await signOut();
+                                            navigate("/login", { replace: true });
+                                            toast.success('Successfully logged out!');
+                                        } else {
+                                            navigate("/login");
+                                        }
+                                        setIsMobileMenuOpen(false);
+                                    }}
+                                    className="w-full flex items-center gap-3 p-3 rounded-xl text-muted hover:text-white transition-all hover-soft"
+                                >
+                                    {user ? <LogOut size={20} /> : <LogIn size={20} />}
+                                    <span className="font-bold text-base">{user ? "Sign Out" : "Sign In"}</span>
+                                </button>
+                            </div>
                         </motion.div>
                     </>
                 )}
@@ -352,28 +374,66 @@ const Navbar = () => {
                             </button>
                         </div>
                     ))}
+                    <div className="relative group">
+                        <button
+                            onClick={async () => {
+                                if (user) {
+                                    await signOut();
+                                    navigate("/login", { replace: true });
+                                    toast.success('Successfully logged out!');
+                                } else {
+                                    navigate("/login");
+                                }
+                            }}
+                            onMouseEnter={(e) => handleMouseEnter(e, user ? "Sign Out" : "Sign In")}
+                            onMouseLeave={handleMouseLeave}
+                            className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all hover-soft text-muted hover:text-white ${isCollapsed ? 'justify-center mx-auto' : ''}`}
+                        >
+                            <motion.span
+                                variants={itemVariants}
+                                className="flex-shrink-0 flex items-center justify-center w-6"
+                            >
+                                {user ? <LogOut size={20} /> : <LogIn size={20} />}
+                            </motion.span>
+                            <AnimatePresence>
+                                {!isCollapsed && (
+                                    <motion.span
+                                        variants={contentVariants}
+                                        initial="collapsed"
+                                        animate="expanded"
+                                        exit="collapsed"
+                                        className="font-bold whitespace-nowrap text-lg"
+                                    >
+                                        {user ? "Sign Out" : "Sign In"}
+                                    </motion.span>
+                                )}
+                            </AnimatePresence>
+                        </button>
+                    </div>
                 </div>
 
                 {/* Floating Tooltip with Portal */}
-                {isCollapsed && hoveredItem && createPortal(
-                    <AnimatePresence>
-                        <motion.div
-                            key="tooltip"
-                            initial={{ opacity: 0, x: -10, y: "-50%" }}
-                            animate={{ opacity: 1, x: 0, y: "-50%" }}
-                            exit={{ opacity: 0, x: -10, y: "-50%" }}
-                            className="fixed px-3 py-2 bg-[#1a1a1a] text-white text-xs font-medium rounded-lg shadow-2xl border border-white/10 z-[99999] pointer-events-none whitespace-nowrap"
-                            style={{
-                                top: hoveredItem.top,
-                                left: hoveredItem.left,
-                            }}
-                        >
-                            {hoveredItem.label}
-                            <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 bg-[#1a1a1a] border-l border-b border-white/10 rotate-45" />
-                        </motion.div>
-                    </AnimatePresence>,
-                    document.body
-                )}
+                {
+                    isCollapsed && hoveredItem && createPortal(
+                        <AnimatePresence>
+                            <motion.div
+                                key="tooltip"
+                                initial={{ opacity: 0, x: -10, y: "-50%" }}
+                                animate={{ opacity: 1, x: 0, y: "-50%" }}
+                                exit={{ opacity: 0, x: -10, y: "-50%" }}
+                                className="fixed px-3 py-2 bg-[#1a1a1a] text-white text-xs font-medium rounded-lg shadow-2xl border border-white/10 z-[99999] pointer-events-none whitespace-nowrap"
+                                style={{
+                                    top: hoveredItem.top,
+                                    left: hoveredItem.left,
+                                }}
+                            >
+                                {hoveredItem.label}
+                                <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 bg-[#1a1a1a] border-l border-b border-white/10 rotate-45" />
+                            </motion.div>
+                        </AnimatePresence>,
+                        document.body
+                    )
+                }
             </motion.div >
         </>
     );

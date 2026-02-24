@@ -214,3 +214,19 @@ html.light {
 html {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+/* Fix Autofill background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #141414 inset !important;
+    -webkit-text-fill-color: white !important;
+    transition: background-color 5000s ease-in-out 0s;
+    caret-color: white !important;
+}
+
+/* Ensure background transparency */
+input {
+    background-color: transparent !important;
+}

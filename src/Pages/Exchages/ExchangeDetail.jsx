@@ -351,14 +351,6 @@ const ExchangeDetail = () => {
                         </div>
                     </div>
 
-                    <TableFilterHeader
-                        activeTab={activeTab}
-                        onTabChange={setActiveTab}
-                        searchQuery={searchQuery}
-                        onSearchChange={setSearchQuery}
-                        tabs={tabs}
-                        placeholder="Search pairs..."
-                    />
 
                 </div>
 
@@ -373,7 +365,7 @@ const ExchangeDetail = () => {
                     <motion.div variants={itemVariants} className='flex flex-col gap-2 h-[210px]'>
                         <div className={`flex items-center justify-between border-gray-800 border-2 rounded-2xl px-6 py-4 flex-1 bg-card/20 backdrop-blur-md transition-all duration-300 ${getVolumeTrendColor()}`}>
                             <div className='flex flex-col items-start justify-center'>
-                                <p className='text-2xl font-bold tracking-tight'>₿{(exchange.trade_volume_24h_btc_normalized || exchange.trade_volume_24h_btc || 0)?.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+                                <p className='text-3xl font-bold tracking-tight'>₿{(exchange.trade_volume_24h_btc_normalized || exchange.trade_volume_24h_btc || 0)?.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
                                 <div className='flex items-center gap-2'>
                                     <span className='text-muted text-sm'>24h Trading Volume (BTC)</span>
                                 </div>
@@ -385,7 +377,7 @@ const ExchangeDetail = () => {
                             </div>
                         </div>
                         <div className='flex flex-col items-start border-gray-800 border-2 rounded-2xl px-6 py-4 flex-1 justify-center bg-card/20 backdrop-blur-md hover:border-gray-700 transition-colors'>
-                            <p className='text-2xl font-bold text-green-500'>{exchange.trust_score || 0}/10</p>
+                            <p className='text-3xl font-bold text-green-500'>{exchange.trust_score || 0}/10</p>
                             <div className='flex items-center gap-2 text-muted'>
                                 <span className='text-sm'>Trust Score</span>
                                 <Info size={14} className='cursor-pointer hover:text-white transition-colors' />
@@ -398,8 +390,8 @@ const ExchangeDetail = () => {
                         <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col h-[210px] transition-all duration-300 group">
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-2">
-                                    <span className='text-yellow-500 text-xl'>✨</span>
-                                    <h3 className="text-lg font-bold text-white">Latest Pairs</h3>
+                                    <span className='text-yellow-500 text-2xl'>✨</span>
+                                    <h3 className="text-xl font-bold text-white">Latest Pairs</h3>
                                 </div>
                             </div>
                             <div className='flex flex-col flex-1 justify-center'>
@@ -412,7 +404,7 @@ const ExchangeDetail = () => {
                                                 <span className='text-sm font-medium text-gray-300 group-hover:text-white transition-colors'>{ticker.base}/{ticker.target}</span>
                                             </div>
                                             <div className='flex items-center gap-3'>
-                                                <span className='text-xs font-bold text-gray-400'>${ticker.converted_last?.usd?.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                                <span className='text-sm font-bold text-gray-400'>${ticker.converted_last?.usd?.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                                                 <div className={`flex items-center gap-0.5 text-[10px] font-medium text-muted`}>
                                                     <span>{new Date(ticker.last_traded_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                                 </div>
@@ -428,8 +420,8 @@ const ExchangeDetail = () => {
                         <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col h-[210px] transition-all duration-300 group">
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-2">
-                                    <span className='text-blue-400 text-xl'>🚀</span>
-                                    <h3 className="text-lg font-bold text-white">Top Volume Pairs</h3>
+                                    <span className='text-blue-400 text-2xl'>🚀</span>
+                                    <h3 className="text-xl font-bold text-white">Top Volume Pairs</h3>
                                 </div>
                             </div>
                             <div className='flex flex-col flex-1 justify-center'>
@@ -443,7 +435,7 @@ const ExchangeDetail = () => {
                                             </div>
                                             <div className='flex items-center gap-3'>
                                                 <div className='flex flex-col items-end'>
-                                                    <span className='text-xs font-bold text-gray-400'>${ticker.converted_volume?.usd?.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+                                                    <span className='text-sm font-bold text-gray-400'>${ticker.converted_volume?.usd?.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                                                     {/* <span className='text-[10px] text-muted'>Vol</span> */}
                                                 </div>
                                             </div>
@@ -454,6 +446,17 @@ const ExchangeDetail = () => {
                     </motion.div>
                 </motion.div>
 
+
+                <div className="flex justify-between items-center px-2">
+                    <TableFilterHeader
+                        activeTab={activeTab}
+                        onTabChange={setActiveTab}
+                        searchQuery={searchQuery}
+                        onSearchChange={setSearchQuery}
+                        tabs={tabs}
+                        placeholder="Search pairs..."
+                    />
+                </div>
 
                 <motion.div variants={itemVariants} className='w-full overflow-x-auto h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative'>
 
