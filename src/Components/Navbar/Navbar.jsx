@@ -27,6 +27,7 @@ import {
     LogIn
 } from "lucide-react";
 import { useAuth } from "../../Context/AuthContext";
+import { useCurrency } from "../../Context/CurrencyContext"; // Added for currency display in mobile menu
 import toast from "react-hot-toast";
 
 const Navbar = () => {
@@ -138,7 +139,7 @@ const Navbar = () => {
     return (
         <>
             {/* Mobile Top Navbar */}
-            <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-card border-b border-soft z-[100] flex items-center justify-between px-4">
+            <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-card border-b border-soft z-[150] flex items-center justify-between px-4 shadow-lg">
                 <div className="flex items-center gap-2" onClick={() => navigate("/")}>
                     <svg width="180" height="40" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" className="cursor-pointer">
                         <defs>
