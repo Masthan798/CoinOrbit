@@ -8,12 +8,14 @@ import GlobalAltcoinsChart from '../../Components/Graphs/GlobalAltcoinsChart';
 import { TrendingUp, Activity, Layers, Coins } from 'lucide-react';
 import { AreaChart, Area, ResponsiveContainer, YAxis } from 'recharts';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
+import { useCurrency } from '../../Context/CurrencyContext';
 
 const GlobalChart = () => {
   const [globalData, setGlobalData] = useState(null);
   const [defiData, setDefiData] = useState(null);
   const [sparklineData, setSparklineData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { currency, formatPrice } = useCurrency();
 
   // User provided API Key
   const API_KEY = 'CG-YuB3NdXKuFv58irhTuLNk2S9';
@@ -37,7 +39,7 @@ const GlobalChart = () => {
         if (defiJson.data) setDefiData(defiJson.data);
 
         // 3. Fetch 7-Day Sparkline Data (BTC Proxy)
-        const sparkRes = await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?days=7&vs_currency=usd', options);
+        const sparkRes = await fetch(`https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?days=7&vs_currency=${currency.code}`, options);
         const sparkJson = await sparkRes.json();
         if (sparkJson.market_caps) {
           setSparklineData({
@@ -54,11 +56,10 @@ const GlobalChart = () => {
     };
 
     fetchData();
-  }, []);
+  }, [currency.code]);
 
-  const formatCurrency = (val) => {
-    if (!val) return 'N/A';
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(val);
+  const formatValue = (val) => {
+    return formatPrice(val);
   };
 
   const StatCard = ({ label, value, subValue, icon: Icon, color, chartData }) => {
@@ -136,7 +137,7 @@ const GlobalChart = () => {
           />
           <h1 className="text-3xl font-bold text-white">Global Cryptocurrency Market Charts</h1>
           <p className="text-muted max-w-3xl">
-            The global cryptocurrency market cap today is <span className="text-white font-bold">{globalData ? formatCurrency(globalData.total_market_cap.usd) : '...'}</span>,
+            The global cryptocurrency market cap today is <span className="text-white font-bold">{globalData ? formatPrice(globalData.total_market_cap[currency.code]) : '...'}</span>,
             a <span className={globalData?.market_cap_change_percentage_24h_usd >= 0 ? "text-green-500" : "text-red-500"}>
               {globalData?.market_cap_change_percentage_24h_usd?.toFixed(2)}%
             </span> change in the last 24 hours.
@@ -163,7 +164,7 @@ const GlobalChart = () => {
             <>
               <StatCard
                 label="Market Cap"
-                value={formatCurrency(globalData?.total_market_cap?.usd)}
+                value={formatPrice(globalData?.total_market_cap?.[currency.code])}
                 subValue={`${globalData?.market_cap_change_percentage_24h_usd?.toFixed(2)}% (24h)`}
                 icon={TrendingUp}
                 color="blue"
@@ -171,7 +172,7 @@ const GlobalChart = () => {
               />
               <StatCard
                 label="24h Volume"
-                value={formatCurrency(globalData?.total_volume?.usd)}
+                value={formatPrice(globalData?.total_volume?.[currency.code])}
                 subValue="Total Trading Volume"
                 icon={Activity}
                 color="purple"
@@ -200,12 +201,12 @@ const GlobalChart = () => {
           <div className="w-full bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-wrap gap-8 items-center justify-between">
             <div>
               <h4 className="text-lg font-bold text-white mb-1">DeFi Market Cap</h4>
-              <p className="text-2xl font-bold text-blue-400">{formatCurrency(Number(defiData.defi_market_cap))}</p>
+              <p className="text-2xl font-bold text-blue-400">{formatPrice(Number(defiData.defi_market_cap))}</p>
               <p className="text-xs text-muted">ratio to global: {Number(defiData.defi_to_eth_ratio || 0).toFixed(2)}% (to ETH)</p>
             </div>
             <div>
               <h4 className="text-lg font-bold text-white mb-1">Trading Volume (24h)</h4>
-              <p className="text-2xl font-bold text-purple-400">{formatCurrency(Number(defiData.trading_volume_24h))}</p>
+              <p className="text-2xl font-bold text-purple-400">{formatPrice(Number(defiData.trading_volume_24h))}</p>
             </div>
             <div>
               <h4 className="text-lg font-bold text-white mb-1">Top Coin</h4>

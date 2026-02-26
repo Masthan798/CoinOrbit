@@ -14,6 +14,7 @@ import TableSkeleton from '../../Components/Loadings/TableSkeleton';
 import CardSkeleton from '../../Components/Loadings/CardSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
 import TableFilterHeader from '../../Components/common/TableFilterHeader';
+import { useCurrency } from '../../Context/CurrencyContext';
 
 
 
@@ -72,6 +73,7 @@ const itemVariants = {
 const ExchangeDetail = () => {
     const { exchangeId } = useParams();
     const navigate = useNavigate();
+    const { currency, formatPrice } = useCurrency();
     const [exchange, setExchange] = useState(null);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('Spot');
@@ -365,7 +367,9 @@ const ExchangeDetail = () => {
                     <motion.div variants={itemVariants} className='flex flex-col gap-2 h-[210px]'>
                         <div className={`flex items-center justify-between border-gray-800 border-2 rounded-2xl px-6 py-4 flex-1 bg-card/20 backdrop-blur-md transition-all duration-300 ${getVolumeTrendColor()}`}>
                             <div className='flex flex-col items-start justify-center'>
-                                <p className='text-3xl font-bold tracking-tight'>₿{(exchange.trade_volume_24h_btc_normalized || exchange.trade_volume_24h_btc || 0)?.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+                                <p className='text-3xl font-bold tracking-tight'>
+                                    {formatPrice(exchange.trade_volume_24h_btc_normalized || exchange.trade_volume_24h_btc || 0, { currency: 'BTC', style: 'decimal' })} ₿
+                                </p>
                                 <div className='flex items-center gap-2'>
                                     <span className='text-muted text-sm'>24h Trading Volume (BTC)</span>
                                 </div>
@@ -404,7 +408,7 @@ const ExchangeDetail = () => {
                                                 <span className='text-sm font-medium text-gray-300 group-hover:text-white transition-colors'>{ticker.base}/{ticker.target}</span>
                                             </div>
                                             <div className='flex items-center gap-3'>
-                                                <span className='text-sm font-bold text-gray-400'>${ticker.converted_last?.usd?.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                                <span className='text-sm font-bold text-gray-400'>{formatPrice(ticker.converted_last?.usd)}</span>
                                                 <div className={`flex items-center gap-0.5 text-[10px] font-medium text-muted`}>
                                                     <span>{new Date(ticker.last_traded_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                                 </div>
@@ -435,7 +439,7 @@ const ExchangeDetail = () => {
                                             </div>
                                             <div className='flex items-center gap-3'>
                                                 <div className='flex flex-col items-end'>
-                                                    <span className='text-sm font-bold text-gray-400'>${ticker.converted_volume?.usd?.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+                                                    <span className='text-sm font-bold text-gray-400'>{formatPrice(ticker.converted_volume?.usd, { notation: 'compact' })}</span>
                                                     {/* <span className='text-[10px] text-muted'>Vol</span> */}
                                                 </div>
                                             </div>
@@ -558,22 +562,22 @@ const ExchangeDetail = () => {
                                                 </span>
                                             )}
                                         </td>
-                                        <td className='py-3 px-2 text-sm sm:text-base font-bold'>${ticker.converted_last?.usd?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</td>
+                                        <td className='py-3 px-2 text-sm sm:text-base font-bold'>{formatPrice(ticker.converted_last?.usd, { maximumFractionDigits: 4 })}</td>
                                         <td className='py-3 px-2 text-muted text-sm font-bold'>{ticker.bid_ask_spread_percentage?.toFixed(2)}%</td>
 
                                         {activeTab === 'Perpetuals' ? (
                                             <>
-                                                <td className='py-3 px-2 text-blue-400 text-sm sm:text-base font-bold'>${(ticker.open_interest_usd || 0).toLocaleString(undefined, { notation: 'compact' })}</td>
+                                                <td className='py-3 px-2 text-blue-400 text-sm sm:text-base font-bold'>{formatPrice(ticker.open_interest_usd || 0, { notation: 'compact' })}</td>
                                                 <td className='py-3 px-2 text-green-400 text-sm sm:text-base font-bold'>{(ticker.funding_rate || 0).toFixed(4)}%</td>
                                             </>
                                         ) : (
                                             <>
-                                                <td className='py-3 px-2 text-green-500/80 text-sm sm:text-base font-bold'>${ticker.cost_to_move_up_usd?.toLocaleString(undefined, { notation: 'compact' })}</td>
-                                                <td className='py-3 px-2 text-red-500/80 text-sm sm:text-base font-bold'>${ticker.cost_to_move_down_usd?.toLocaleString(undefined, { notation: 'compact' })}</td>
+                                                <td className='py-3 px-2 text-green-500/80 text-sm sm:text-base font-bold'>{formatPrice(ticker.cost_to_move_up_usd, { notation: 'compact' })}</td>
+                                                <td className='py-3 px-2 text-red-500/80 text-sm sm:text-base font-bold'>{formatPrice(ticker.cost_to_move_down_usd, { notation: 'compact' })}</td>
                                             </>
                                         )}
 
-                                        <td className='py-3 px-2 text-sm sm:text-base font-bold text-gray-300'>${ticker.converted_volume?.usd?.toLocaleString(undefined, { notation: 'compact' })}</td>
+                                        <td className='py-3 px-2 text-sm sm:text-base font-bold text-gray-300'>{formatPrice(ticker.converted_volume?.usd, { notation: 'compact' })}</td>
                                         <td className='py-3 px-2 text-muted text-sm font-bold'>{((ticker.converted_volume?.usd / (exchange?.trade_volume_24h_btc_normalized || 1)) * 100).toFixed(2)}%</td>
                                         <td className='py-3 px-2 text-xs text-muted font-bold'>{new Date(ticker.last_traded_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
                                     </tr>

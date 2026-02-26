@@ -5,6 +5,7 @@ import {
 } from 'recharts';
 import { Zap } from 'lucide-react';
 import { coingeckoFetch } from '../../api/coingeckoClient';
+import { useCurrency } from '../../Context/CurrencyContext';
 
 const timeframes = [
     { label: '24H', value: '1' },
@@ -21,6 +22,7 @@ const GlobalMarketGraph = ({ apiKey }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const { currency, formatPrice } = useCurrency();
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -39,7 +41,7 @@ const GlobalMarketGraph = ({ apiKey }) => {
                     headers: { 'x-cg-demo-api-key': apiKey || 'CG-YuB3NdXKuFv58irhTuLNk2S9' }
                 };
 
-                const response = await fetch(`https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?days=${timeframe.value}&vs_currency=usd`, options);
+                const response = await fetch(`https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?days=${timeframe.value}&vs_currency=${currency.code}`, options);
 
                 if (!response.ok) throw new Error('Failed to fetch chart data');
 
@@ -61,7 +63,7 @@ const GlobalMarketGraph = ({ apiKey }) => {
         };
 
         fetchChartData();
-    }, [timeframe, apiKey]);
+    }, [timeframe, apiKey, currency.code]);
 
     const formatXAxis = (tickItem) => {
         const date = new Date(tickItem);
@@ -79,7 +81,7 @@ const GlobalMarketGraph = ({ apiKey }) => {
                     </p>
                     <div className="flex items-center gap-2">
                         <span className="text-sm sm:text-lg font-black text-white">
-                            ${(payload[0].value / 1e9).toFixed(2)} Billion
+                            {formatPrice(payload[0].value, { notation: 'compact' })}
                         </span>
                     </div>
                 </div>
@@ -148,7 +150,7 @@ const GlobalMarketGraph = ({ apiKey }) => {
                                 axisLine={false}
                                 tickLine={false}
                                 tick={{ fill: '#6b7280', fontSize: 10 }}
-                                tickFormatter={(val) => `$${(val / 1e9).toFixed(0)}B`}
+                                tickFormatter={(val) => formatPrice(val, { notation: 'compact', maximumFractionDigits: 0 })}
                             />
                             <Tooltip
                                 content={<CustomTooltip />}

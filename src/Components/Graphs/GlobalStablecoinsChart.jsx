@@ -4,6 +4,7 @@ import {
     AreaChart, Area, Legend, Brush
 } from 'recharts';
 import { coingeckoFetch } from '../../api/coingeckoClient';
+import { useCurrency } from '../../Context/CurrencyContext';
 
 const timeframes = [
     { label: '24H', value: '1' },
@@ -20,6 +21,7 @@ const GlobalStablecoinsChart = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const { currency, formatPrice } = useCurrency();
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -34,9 +36,9 @@ const GlobalStablecoinsChart = () => {
             try {
                 // Fetch top 3 stablecoins: Tether, USDC, Dai
                 const [usdtData, usdcData, daiData] = await Promise.all([
-                    coingeckoFetch(`coins/tether/market_chart?days=${timeframe.value}&vs_currency=usd`),
-                    coingeckoFetch(`coins/usd-coin/market_chart?days=${timeframe.value}&vs_currency=usd`),
-                    coingeckoFetch(`coins/dai/market_chart?days=${timeframe.value}&vs_currency=usd`)
+                    coingeckoFetch(`coins/tether/market_chart?days=${timeframe.value}&vs_currency=${currency.code}`),
+                    coingeckoFetch(`coins/usd-coin/market_chart?days=${timeframe.value}&vs_currency=${currency.code}`),
+                    coingeckoFetch(`coins/dai/market_chart?days=${timeframe.value}&vs_currency=${currency.code}`)
                 ]);
 
                 if (usdtData.market_caps && usdcData.market_caps && daiData.market_caps) {
@@ -62,7 +64,7 @@ const GlobalStablecoinsChart = () => {
         };
 
         fetchChartData();
-    }, [timeframe]);
+    }, [timeframe, currency.code]);
 
     const formatXAxis = (tickItem) => {
         const date = new Date(tickItem);
@@ -81,15 +83,15 @@ const GlobalStablecoinsChart = () => {
                     <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                            <span className="text-[11px] sm:text-sm font-bold text-white">USDT: ${(payload[0].value / 1e9).toFixed(1)}B</span>
+                            <span className="text-[11px] sm:text-sm font-bold text-white">USDT: {formatPrice(payload[0].value, { notation: 'compact' })}</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                            <span className="text-[11px] sm:text-sm font-bold text-white">USDC: ${(payload[1].value / 1e9).toFixed(1)}B</span>
+                            <span className="text-[11px] sm:text-sm font-bold text-white">USDC: {formatPrice(payload[1].value, { notation: 'compact' })}</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
-                            <span className="text-[11px] sm:text-sm font-bold text-white">DAI: ${(payload[2].value / 1e9).toFixed(1)}B</span>
+                            <span className="text-[11px] sm:text-sm font-bold text-white">DAI: {formatPrice(payload[2].value, { notation: 'compact' })}</span>
                         </div>
                     </div>
                 </div>
@@ -164,7 +166,7 @@ const GlobalStablecoinsChart = () => {
                                 axisLine={false}
                                 tickLine={false}
                                 tick={{ fill: '#6b7280', fontSize: 10 }}
-                                tickFormatter={(val) => `$${(val / 1e9).toFixed(0)}B`}
+                                tickFormatter={(val) => formatPrice(val, { notation: 'compact', maximumFractionDigits: 0 })}
                             />
                             <Tooltip
                                 content={<CustomTooltip />}

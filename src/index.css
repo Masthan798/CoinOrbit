@@ -206,6 +206,11 @@ html.light {
         color: transparent;
         display: inline-block;
     }
+
+    /* Table Header Height */
+    thead th {
+        @apply py-5 !important;
+    }
 }
 
 /* ================================
