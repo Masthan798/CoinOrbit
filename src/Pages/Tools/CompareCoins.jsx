@@ -7,6 +7,7 @@ import CoinSelector from '../../Components/Inputs/CoinSelector'
 import ComparisonPieChart from '../../Components/Graphs/ComparisonPieChart'
 import PopularComparisons from '../../Components/Coins/PopularComparisons'
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
+import { useCurrency } from '../../Context/CurrencyContext';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -29,6 +30,7 @@ const itemVariants = {
 };
 
 const CompareCoins = () => {
+  const { currency, formatPrice } = useCurrency();
   const [coinsList, setCoinsList] = useState([]);
   const [loadingList, setLoadingList] = useState(true);
 
@@ -49,7 +51,7 @@ const CompareCoins = () => {
     const fetchCoinList = async () => {
       try {
         setLoadingList(true);
-        const data = await coingeckoFetch('coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false');
+        const data = await coingeckoFetch(`coins/markets?vs_currency=${currency.code}&order=market_cap_desc&per_page=100&page=1&sparkline=false`);
         setCoinsList(data);
       } catch (error) {
         console.error("Error fetching coin list:", error);
@@ -58,7 +60,7 @@ const CompareCoins = () => {
       }
     };
     fetchCoinList();
-  }, []);
+  }, [currency.code]);
 
   useEffect(() => {
     const fetchCoinData = async () => {
@@ -100,22 +102,22 @@ const CompareCoins = () => {
     const c1 = coin1Data;
     const c2 = coin2Data;
 
-    const c2FDV = c2.market_data.fully_diluted_valuation.usd || c2.market_data.market_cap.usd;
+    const c2FDV = c2.market_data.fully_diluted_valuation[currency.code] || c2.market_data.market_cap[currency.code];
     // Use Max Supply if available, else Total Supply, else Circulating for divisor
     const c1Supply = c1.market_data.max_supply || c1.market_data.total_supply || c1.market_data.circulating_supply;
 
     const impliedPrice = c2FDV / c1Supply;
-    const currentPrice = c1.market_data.current_price.usd;
+    const currentPrice = c1.market_data.current_price[currency.code];
     const impliedMultiplier = impliedPrice / currentPrice;
 
-    const c1VOl = c1.market_data.total_volume.usd;
-    const c2VOl = c2.market_data.total_volume.usd;
+    const c1VOl = c1.market_data.total_volume[currency.code];
+    const c2VOl = c2.market_data.total_volume[currency.code];
 
-    const c1MC = c1.market_data.market_cap.usd;
-    const c2MC = c2.market_data.market_cap.usd;
+    const c1MC = c1.market_data.market_cap[currency.code];
+    const c2MC = c2.market_data.market_cap[currency.code];
 
-    const c1Price = c1.market_data.current_price.usd;
-    const c2Price = c2.market_data.current_price.usd;
+    const c1Price = c1.market_data.current_price[currency.code];
+    const c2Price = c2.market_data.current_price[currency.code];
 
 
     // determine what to return based on selectTab
@@ -148,8 +150,8 @@ const CompareCoins = () => {
       subValue2 = c2VOl;
       subLabel = 'Volume';
     } else if (selectTab === 'FDV') {
-      mainValue = c1.market_data.fully_diluted_valuation.usd || c1MC;
-      const c2Val = c2.market_data.fully_diluted_valuation.usd || c2MC;
+      mainValue = c1.market_data.fully_diluted_valuation[currency.code] || c1MC;
+      const c2Val = c2.market_data.fully_diluted_valuation[currency.code] || c2MC;
       multiplier = mainValue / c2Val;
       headerText = 'FDV vs';
       subValue1 = mainValue;
@@ -160,8 +162,8 @@ const CompareCoins = () => {
       mainValue = impliedPrice;
       multiplier = impliedMultiplier;
       headerText = 'price with FDV of';
-      subValue1 = c1.market_data.fully_diluted_valuation.usd || c1MC;
-      subValue2 = c2.market_data.fully_diluted_valuation.usd || c2MC; // Fixed to use c2 FDV for the second card
+      subValue1 = c1.market_data.fully_diluted_valuation[currency.code] || c1MC;
+      subValue2 = c2.market_data.fully_diluted_valuation[currency.code] || c2MC; // Fixed to use c2 FDV for the second card
       subLabel = 'FDV';
     }
 
@@ -178,7 +180,20 @@ const CompareCoins = () => {
   };
 
   const metrics = getComparisonMetrics();
-  const formatCurrency = (val) => val ? `$${val.toLocaleString()}` : 'N/A';
+
+  const formatMetricValue = (val, type) => {
+    if (!val) return 'N/A';
+    if (type === 'Price' || type === 'Implied Price') {
+      return formatPrice(val, { minimumFractionDigits: 2, maximumFractionDigits: 6 });
+    }
+    // Compact for MC, Volume, FDV
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: currency.code.toUpperCase(),
+      notation: 'compact',
+      maximumFractionDigits: 2
+    }).format(val);
+  };
 
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="hidden" className='w-full flex flex-col justify-start items-start bg-main min-h-full p-2 sm:p-4 pb-8 rounded-xl gap-8'>
@@ -197,13 +212,15 @@ const CompareCoins = () => {
           <p className='text-muted'>Compare price, market cap, trading volume, and more</p>
         </div>
 
-        <div className='w-full md:w-auto overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]'>
-          <div className='flex flex-nowrap md:flex-wrap items-center gap-2 bg-card p-1 rounded-lg border border-gray-800 min-w-max'>
+        <div className='w-full md:w-auto overflow-x-auto no-scrollbar'>
+          <div className='flex flex-nowrap md:flex-wrap items-center gap-1 bg-main p-1 rounded-xl border border-white/5 min-w-max'>
             {TabsData.map((tab, index) => (
               <button
                 key={index}
                 onClick={() => setSelectTab(tab)}
-                className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all whitespace-nowrap flex-shrink-0 ${selectTab === tab ? 'bg-card text-white shadow-lg' : 'text-muted hover:text-white hover:bg-white/5'}`}
+                className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm sm:text-base font-black uppercase tracking-tight transition-all duration-300 border ${selectTab === tab
+                  ? 'bg-card text-white border-white/10 shadow-lg'
+                  : 'text-gray-500 border-transparent hover:text-white hover:bg-white/5'}`}
               >
                 {tab}
               </button>
@@ -256,8 +273,10 @@ const CompareCoins = () => {
                     </span>
                   </div>
 
-                  <div className='flex flex-col items-center gap-1'>
-                    <span className='text-4xl sm:text-6xl font-black text-white'>{formatCurrency(metrics.mainValue)}</span>
+                  <div className='flex flex-col items-center gap-1 w-full'>
+                    <span className={`text-4xl sm:text-5xl md:text-6xl font-black text-white text-center break-all leading-tight ${metrics.mainValue?.toString().length > 12 ? 'text-4xl sm:text-4xl' : ''}`}>
+                      {formatMetricValue(metrics.mainValue, selectTab)}
+                    </span>
                     <span className={`text-xl sm:text-2xl font-bold ${metrics.multiplier >= 1 ? 'text-green-500' : 'text-red-500'}`}>
                       ({metrics.multiplier.toFixed(2)}x)
                     </span>
@@ -265,18 +284,18 @@ const CompareCoins = () => {
 
                   <div className='flex flex-col w-full gap-2 border-t border-gray-800 pt-4 mt-2'>
                     <div className='flex justify-between items-center px-4 py-3 border border-gray-800 rounded-xl hover:bg-card/30 transition-colors'>
-                      <div className='flex items-center gap-2'>
-                        <span className='text-base text-muted font-bold'>{coin1Data.symbol.toUpperCase()} {metrics.subLabel}</span>
-                        <span className='px-1.5 py-0.5 text-xs bg-white/10 rounded text-gray-300 font-bold'>#{coin1Data.market_cap_rank}</span>
+                      <div className='flex items-center gap-1.5 sm:gap-2 mr-2 overflow-hidden'>
+                        <span className='text-xs sm:text-base text-muted font-bold truncate'>{coin1Data.symbol.toUpperCase()} {metrics.subLabel}</span>
+                        <span className='px-1.5 py-0.5 text-xs bg-white/10 rounded text-gray-300 font-bold flex-shrink-0'>#{coin1Data.market_cap_rank}</span>
                       </div>
-                      <span className='text-white font-mono text-base sm:text-lg font-bold'>{formatCurrency(metrics.subValue1)}</span>
+                      <span className='text-white font-mono text-base sm:text-lg font-bold whitespace-nowrap'>{formatMetricValue(metrics.subValue1, selectTab)}</span>
                     </div>
                     <div className='flex justify-between items-center px-4 py-3 border border-gray-800 rounded-xl hover:bg-card/30 transition-colors'>
-                      <div className='flex items-center gap-2'>
-                        <span className='text-base text-muted font-bold'>{coin2Data.symbol.toUpperCase()} {metrics.subLabel}</span>
-                        <span className='px-1.5 py-0.5 text-xs bg-white/10 rounded text-gray-300 font-bold'>#{coin2Data.market_cap_rank}</span>
+                      <div className='flex items-center gap-1.5 sm:gap-2 mr-2 overflow-hidden'>
+                        <span className='text-xs sm:text-base text-muted font-bold truncate'>{coin2Data.symbol.toUpperCase()} {metrics.subLabel}</span>
+                        <span className='px-1.5 py-0.5 text-xs bg-white/10 rounded text-gray-300 font-bold flex-shrink-0'>#{coin2Data.market_cap_rank}</span>
                       </div>
-                      <span className='text-white font-mono text-base sm:text-lg font-bold'>{formatCurrency(metrics.subValue2)}</span>
+                      <span className='text-white font-mono text-base sm:text-lg font-bold whitespace-nowrap'>{formatMetricValue(metrics.subValue2, selectTab)}</span>
                     </div>
                   </div>
 

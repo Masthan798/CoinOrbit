@@ -3,20 +3,18 @@ import { AnimatePresence } from "framer-motion"
 import ProtectedRoute from "../Components/common/ProtectedRoute"
 import { useAuth } from "../Context/AuthContext"
 import Categories from "../Pages/Cryptocurrencies/Categories"
-import Chains from "../Pages/Cryptocurrencies/Chains"
+
 import CryptoTreasuries from "../Pages/Cryptocurrencies/CryptoTreasuries"
 import MarketCap from "../Pages/Cryptocurrencies/MarketCap"
 import CoinDetail from "../Pages/Cryptocurrencies/CoinDetail"
 import HighlightsDetail from "../Pages/Cryptocurrencies/HighlightsDetail"
 import CryptoExchanges from "../Pages/Exchages/CryptoExchanges"
-import DxE from "../Pages/Exchages/DxE"
+
 import Derivatives from "../Pages/Exchages/Derivatives"
 import ExchangeDetail from "../Pages/Exchages/ExchangeDetail"
 import PerpDEXs from "../Pages/Exchages/PerpDEXs"
 import NFTFloorPrice from "../Pages/Nft/NFTFloorPrice"
-import NFTRelatedCoins from "../Pages/Nft/NFTRelatedCoins"
 import NFTWatchlist from "../Pages/Nft/NFTWatchlist"
-import NFTGlobalChart from "../Pages/Nft/NFTGlobalChart"
 import Portfolio from "../Pages/Portfolio/Portfolio"
 import Support from "../Pages/Support/Support"
 import Allcoins from "../Pages/Tools/Allcoins"
@@ -67,7 +65,7 @@ const AppRouter = () => {
 
                             {/* Cryptocurrencies-nav-list-route */}
                             <Route path="/categories" element={<Categories />} />
-                            <Route path="/chains" element={<Chains />} />
+
                             <Route path="/cryptotreasuries" element={<CryptoTreasuries />} />
                             <Route path="/marketcap/:coinId" element={<CoinDetail />} />
                             <Route path="/marketcap" element={<Navigate to="/" replace />} />
@@ -78,7 +76,7 @@ const AppRouter = () => {
                             {/* Exchanges legacy redirects */}
                             <Route path="/exchanges/cryptoexchanges/:exchangeId" element={<RedirectWithParam to="/exchange" paramName="exchangeId" />} />
                             <Route path="/exchanges/cryptoexchanges" element={<Navigate to="/exchanges" replace />} />
-                            <Route path="/exchanges/dex" element={<Navigate to="/dex" replace />} />
+
                             <Route path="/exchanges/derivatives" element={<Navigate to="/derivatives" replace />} />
                             <Route path="/exchanges/perpdexs" element={<Navigate to="/perpdexs" replace />} />
                             <Route path="/exchanges/exchange-detail/:exchangeId" element={<RedirectWithParam to="/exchange" paramName="exchangeId" />} />
@@ -87,22 +85,18 @@ const AppRouter = () => {
                             <Route path="/exchange/:exchangeId" element={<ExchangeDetail />} />
                             <Route path="/exchange" element={<Navigate to="/exchanges" replace />} />
                             <Route path="/exchanges" element={<CryptoExchanges />} />
-                            <Route path="/dex" element={<DxE />} />
+
                             <Route path="/derivatives" element={<Derivatives />} />
                             <Route path="/perpdexs" element={<PerpDEXs />} />
 
                             {/* NFT legacy redirects */}
                             <Route path="/nft/nftfloorprice" element={<Navigate to="/nft-floor" replace />} />
-                            <Route path="/nft/nftrelatedcoins" element={<Navigate to="/nft-coins" replace />} />
                             <Route path="/nft/nftwatchlist" element={<Navigate to="/nft-watchlist" replace />} />
-                            <Route path="/nft/nftglobalchart" element={<Navigate to="/nft-charts" replace />} />
                             <Route path="/nft" element={<Navigate to="/nft-floor" replace />} />
 
                             {/* NFT-nav-list-route */}
                             <Route path="/nft-floor" element={<NFTFloorPrice />} />
-                            <Route path="/nft-coins" element={<NFTRelatedCoins />} />
                             <Route path="/nft-watchlist" element={<NFTWatchlist />} />
-                            <Route path="/nft-charts" element={<NFTGlobalChart />} />
                             <Route path="/nft-detail/:contractAddress" element={<NFTDetail />} />
 
                             {/* Tools legacy redirects */}
