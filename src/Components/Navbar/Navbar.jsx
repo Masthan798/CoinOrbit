@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -126,6 +126,18 @@ const Navbar = () => {
     ];
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    
+    // Lock body scroll when mobile menu is open
+    useEffect(() => {
+        if (isMobileMenuOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "unset";
+        }
+        return () => {
+            document.body.style.overflow = "unset";
+        };
+    }, [isMobileMenuOpen]);
 
     const mobileMenuVariants = {
         closed: { x: "-100%", transition: { type: "spring", stiffness: 300, damping: 30 } },
@@ -172,7 +184,7 @@ const Navbar = () => {
                             animate="open"
                             exit="closed"
                             variants={mobileMenuVariants}
-                            className="lg:hidden fixed top-0 left-0 bottom-0 w-[280px] bg-card border-r border-soft z-[120] flex flex-col pt-4 shadow-2xl"
+                            className="lg:hidden fixed inset-y-0 left-0 w-[280px] bg-card border-r border-soft z-[160] flex flex-col pt-4 shadow-2xl h-[100dvh]"
                         >
                             <div className="px-6 mb-6 flex items-center justify-between">
                                 <span className="text-2xl font-bold uppercase tracking-tight text-gradient-smoke">Menu</span>
