@@ -5,6 +5,7 @@ import {
 } from 'recharts';
 import { CoinMarketChartData } from '../../services/AllcoinsData';
 import { TrendingUp, Download, Maximize2, Zap } from 'lucide-react';
+import { useCurrency } from '../../Context/CurrencyContext';
 
 const timeframes = [
     { label: '24H', value: '1', interval: 'hourly' },
@@ -16,6 +17,7 @@ const timeframes = [
 ];
 
 const CompareGraph = ({ coin1Id, coin2Id, coin1Name, coin2Name, coin1Color = "#ef4444", coin2Color = "#3b82f6", dataType = 'prices' }) => {
+    const { currency, formatPrice } = useCurrency();
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
     useEffect(() => {
@@ -25,7 +27,7 @@ const CompareGraph = ({ coin1Id, coin2Id, coin1Name, coin2Name, coin1Color = "#e
     }, []);
 
     const chartHeight = isMobile ? "h-[300px]" : "h-[450px] lg:h-[500px]";
-    const [timeframe, setTimeframe] = useState(timeframes[1]); // Default 7D
+    const [timeframe, setTimeframe] = useState(timeframes[0]); // Default 24H
     const [chartData, setChartData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -38,8 +40,8 @@ const CompareGraph = ({ coin1Id, coin2Id, coin1Name, coin2Name, coin1Color = "#e
             setError(null);
             try {
                 const [data1, data2] = await Promise.all([
-                    CoinMarketChartData(coin1Id, timeframe.value, timeframe.interval === 'daily' ? 'daily' : undefined),
-                    CoinMarketChartData(coin2Id, timeframe.value, timeframe.interval === 'daily' ? 'daily' : undefined)
+                    CoinMarketChartData(coin1Id, timeframe.value, currency.code, timeframe.interval === 'daily' ? 'daily' : undefined),
+                    CoinMarketChartData(coin2Id, timeframe.value, currency.code, timeframe.interval === 'daily' ? 'daily' : undefined)
                 ]);
 
                 if (!data1?.[dataType] || !data2?.[dataType]) {
@@ -101,7 +103,7 @@ const CompareGraph = ({ coin1Id, coin2Id, coin1Name, coin2Name, coin1Color = "#e
         };
 
         fetchData();
-    }, [coin1Id, coin2Id, timeframe, dataType]);
+    }, [coin1Id, coin2Id, timeframe, dataType, currency.code]);
 
     const formatXAxis = (tickItem) => {
         const date = new Date(tickItem);
@@ -114,16 +116,15 @@ const CompareGraph = ({ coin1Id, coin2Id, coin1Name, coin2Name, coin1Color = "#e
     const formatValue = (val) => {
         if (val === null || val === undefined) return 'N/A';
         if (dataType === 'prices') {
-            return `$${val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            return formatPrice(val, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
         // For Market Cap and Volume, use compact notation if large
-        if (val >= 1000000000) {
-            return `$${(val / 1000000000).toFixed(2)}B`;
-        }
-        if (val >= 1000000) {
-            return `$${(val / 1000000).toFixed(2)}M`;
-        }
-        return `$${val.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: currency.code.toUpperCase(),
+            notation: 'compact',
+            maximumFractionDigits: 2
+        }).format(val);
     };
 
     const CustomTooltip = ({ active, payload, label }) => {
@@ -162,13 +163,15 @@ const CompareGraph = ({ coin1Id, coin2Id, coin1Name, coin2Name, coin1Color = "#e
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl w-full sm:w-auto overflow-x-auto no-scrollbar">
+                    <div className="flex items-center gap-1 bg-main p-1 rounded-xl border border-white/5 w-full sm:w-auto overflow-x-auto no-scrollbar">
                         <div className="flex items-center gap-1 min-w-max">
                             {timeframes.map((tf) => (
                                 <button
                                     key={tf.label}
                                     onClick={() => setTimeframe(tf)}
-                                    className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-[9px] sm:text-[10px] font-black transition-all ${timeframe.label === tf.label ? 'bg-blue-500/20 text-blue-400' : 'text-gray-500 hover:text-white'}`}
+                                    className={`whitespace-nowrap px-3 py-1.5 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-tight transition-all duration-300 border ${timeframe.label === tf.label
+                                        ? 'bg-card text-white border-white/10 shadow-lg'
+                                        : 'text-gray-500 border-transparent hover:text-white hover:bg-white/5'}`}
                                 >
                                     {tf.label}
                                 </button>

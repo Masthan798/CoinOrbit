@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Share2, Bell, MoreHorizontal, Globe, DollarSign, ChevronRight, ChevronLeft, Check } from 'lucide-react';
+import { Share2, Bell, MoreHorizontal, Globe, DollarSign, ChevronRight, ChevronLeft, Check, User } from 'lucide-react';
 import { useCurrency } from '../../Context/CurrencyContext';
+import UserProfileDropdown from './UserProfileDropdown';
+import { useAuth } from '../../Context/AuthContext';
 
 const itemVariants = {
     hidden: { opacity: 0, y: 10 },
@@ -16,9 +18,12 @@ const itemVariants = {
 const Breadcrumbs = ({ crumbs }) => {
     const navigate = useNavigate();
     const { currency, setCurrency, currencies } = useCurrency();
+    const { user } = useAuth();
     const [isMoreOpen, setIsMoreOpen] = useState(false);
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [showCurrencySub, setShowCurrencySub] = useState(false);
     const dropdownRef = useRef(null);
+    const profileRef = useRef(null);
 
     // Close dropdown on outside click
     useEffect(() => {
@@ -26,6 +31,9 @@ const Breadcrumbs = ({ crumbs }) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setIsMoreOpen(false);
                 setShowCurrencySub(false);
+            }
+            if (profileRef.current && !profileRef.current.contains(event.target)) {
+                setIsProfileOpen(false);
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
@@ -62,6 +70,25 @@ const Breadcrumbs = ({ crumbs }) => {
             </div>
 
             <div className="flex items-center gap-1 sm:gap-4">
+                {/* Profile Icon: Always visible */}
+                <div className="relative" ref={profileRef}>
+                    <button
+                        onClick={() => {
+                            setIsProfileOpen(!isProfileOpen);
+                            setIsMoreOpen(false);
+                        }}
+                        className={`flex p-2 hover:bg-white/5 rounded-lg transition-colors group ${isProfileOpen ? 'bg-white/10 text-white' : 'text-muted-foreground hover:text-white'}`}
+                    >
+                        <User size={18} className="group-hover:scale-110 transition-transform" />
+                    </button>
+
+                    <AnimatePresence>
+                        {isProfileOpen && (
+                            <UserProfileDropdown onClose={() => setIsProfileOpen(false)} />
+                        )}
+                    </AnimatePresence>
+                </div>
+
                 {/* Fixed Icons: Desktop only */}
                 <button className="hidden sm:flex p-2 hover:bg-white/5 rounded-lg transition-colors text-muted-foreground hover:text-white group">
                     <Share2 size={18} className="group-hover:scale-110 transition-transform" />

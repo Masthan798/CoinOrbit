@@ -86,7 +86,6 @@ const Navbar = () => {
             items: [
                 { icon: <Coins size={20} />, label: "By Market Cap", path: "/" },
                 { icon: <Layers size={20} />, label: "Categories", path: "/categories" },
-                { icon: <Link size={20} />, label: "Chains", path: "/chains" },
                 { icon: <Landmark size={20} />, label: "Crypto Treasuries", path: "/cryptotreasuries" },
             ]
 
@@ -95,7 +94,6 @@ const Navbar = () => {
             type: "Exchanges",
             items: [
                 { icon: <ArrowLeftRight size={20} />, label: "Crypto Exchanges", path: "/exchanges" },
-                { icon: <Cpu size={20} />, label: "Decentralized Exchanges", path: "/dex" },
                 { icon: <Percent size={20} />, label: "Derivatives", path: "/derivatives" },
                 { icon: <LineChart size={20} />, label: "Perp DEXs", path: "/perpdexs" },
             ]
@@ -105,9 +103,7 @@ const Navbar = () => {
             type: "NFT",
             items: [
                 { icon: <Tag size={20} />, label: "NFT Floor Price", path: "/nft-floor" },
-                { icon: <Image size={20} />, label: "NFT Related Coins", path: "/nft-coins" },
                 { icon: <Eye size={20} />, label: "NFT Watchlist", path: "/nft-watchlist" },
-                { icon: <Globe size={20} />, label: "NFT Global Chart", path: "/nft-charts" },
             ]
 
         },
@@ -195,7 +191,9 @@ const Navbar = () => {
                                                         item.path && navigate(item.path);
                                                         setIsMobileMenuOpen(false);
                                                     }}
-                                                    className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all ${isActive(item.path) ? 'bg-white/10 text-white' : 'text-muted'}`}
+                                                    className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 border ${isActive(item.path) 
+                                                        ? 'bg-card text-white border-white/10 shadow-lg' 
+                                                        : 'text-muted border-transparent hover:bg-white/5 hover:text-white'}`}
                                                 >
                                                     {item.icon}
                                                     <span className="font-bold text-base">{item.label}</span>
@@ -214,7 +212,9 @@ const Navbar = () => {
                                             item.path && navigate(item.path);
                                             setIsMobileMenuOpen(false);
                                         }}
-                                        className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all hover-soft ${isActive(item.path) ? 'bg-white/10 text-white' : 'text-muted hover:text-white'}`}
+                                        className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 border ${isActive(item.path) 
+                                            ? 'bg-card text-white border-white/10 shadow-lg' 
+                                            : 'text-muted border-transparent hover:bg-white/5 hover:text-white'}`}
                                     >
                                         {item.icon}
                                         <span className="font-bold text-base">{item.label}</span>
@@ -314,7 +314,9 @@ const Navbar = () => {
                                             onClick={() => item.path && navigate(item.path)}
                                             onMouseEnter={(e) => handleMouseEnter(e, item.label)}
                                             onMouseLeave={handleMouseLeave}
-                                            className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all hover-soft ${isActive(item.path) ? 'text-white bg-white/10' : 'text-muted hover:text-white'} ${isCollapsed ? 'justify-center mx-auto' : ''}`}
+                                            className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 border ${isActive(item.path) 
+                                                ? 'bg-card text-white border-white/10 shadow-lg' 
+                                                : 'text-muted border-transparent hover:bg-white/5 hover:text-white'} ${isCollapsed ? 'justify-center mx-auto' : ''}`}
                                         >
                                             <motion.span
                                                 variants={itemVariants}
@@ -351,7 +353,9 @@ const Navbar = () => {
                                 onClick={() => item.path && navigate(item.path)}
                                 onMouseEnter={(e) => handleMouseEnter(e, item.label)}
                                 onMouseLeave={handleMouseLeave}
-                                className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all hover-soft ${isActive(item.path) ? 'text-white bg-white/10' : 'text-muted hover:text-white'} ${isCollapsed ? 'justify-center mx-auto' : ''}`}
+                                className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 border ${isActive(item.path) 
+                                    ? 'bg-card text-white border-white/10 shadow-lg' 
+                                    : 'text-muted border-transparent hover:bg-white/5 hover:text-white'} ${isCollapsed ? 'justify-center mx-auto' : ''}`}
                             >
                                 <motion.span
                                     variants={itemVariants}

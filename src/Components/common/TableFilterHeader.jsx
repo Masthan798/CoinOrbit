@@ -37,9 +37,9 @@ const TableFilterHeader = ({
                             <button
                                 key={tab}
                                 onClick={() => onTabChange && onTabChange(tab)}
-                                className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm sm:text-base font-black uppercase tracking-tight transition-all duration-300 ${activeTab === tab
-                                    ? 'bg-card text-white border border-white/10 shadow-lg'
-                                    : 'text-gray-500 hover:text-white hover:bg-white/5'}`}
+                                className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm sm:text-base font-black uppercase tracking-tight transition-all duration-300 border ${activeTab === tab
+                                    ? 'bg-card text-white border-white/10 shadow-lg'
+                                    : 'text-gray-500 border-transparent hover:text-white hover:bg-white/5'}`}
                             >
                                 {tab}
                             </button>
