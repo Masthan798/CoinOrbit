@@ -13,6 +13,7 @@ import {
     Maximize,
     Info,
     BarChart3,
+    TrendingUp,
     Settings,
     Layout,
     Type
@@ -28,16 +29,25 @@ const timeframes = [
     { label: 'Max', value: 'max', interval: 'daily' },
 ];
 
-const NFTDetailGraph = ({ address: propAddress, dataType = 'price' }) => {
+const NFTDetailGraph = ({ address: propAddress }) => {
     const { contractAddress: paramAddress } = useParams();
     const address = propAddress || paramAddress;
 
+    const [dataType, setDataType] = useState('prices'); // 'prices' | 'market_caps'
+    const [chartType, setChartType] = useState('line'); // 'line' | 'ohlc'
     const [timeframe, setTimeframe] = useState(timeframes[0]);
     const [chartData, setChartData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [isLogScale, setIsLogScale] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const generateSimulatedData = (currentPrice, currentMarketCap, currentVol, timeframeLabel, nftInfo) => {
         const points = timeframeLabel === '24H' ? 24 : timeframeLabel === '7D' ? 14 : 30;
@@ -152,30 +162,31 @@ const NFTDetailGraph = ({ address: propAddress, dataType = 'price' }) => {
     const CustomTooltip = ({ active, payload }) => {
         if (active && payload && payload.length) {
             const data = payload[0].payload;
-            const value = dataType === 'price' ? data.price : data.market_cap;
+            const value = dataType === 'prices' ? data.price : data.market_cap;
             return (
-                <div className="bg-[#1a1c22]/95 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shadow-2xl min-w-[180px] space-y-3 z-50">
-                    <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest opacity-60">
-                        {new Date(data.time).toLocaleString([], {
+                <div className="bg-[#1a1c23]/95 backdrop-blur-xl border border-white/10 p-2 sm:p-4 rounded-xl sm:rounded-2xl shadow-2xl min-w-[140px] sm:min-w-[200px] z-50">
+                    <p className="text-[9px] sm:text-[10px] text-gray-400 font-bold uppercase mb-2 opacity-60 tracking-wider">
+                        {new Date(data.time).toLocaleString(undefined, {
                             month: 'short', day: 'numeric', year: 'numeric',
                             hour: '2-digit', minute: '2-digit'
                         })}
                     </p>
-                    <div className="space-y-2">
-                        <div className="flex items-center justify-between gap-6">
-                            <span className="text-[11px] text-muted-foreground font-black uppercase tracking-tight">{dataType === 'price' ? 'Floor Price' : 'Market Cap'}</span>
-                            <span className="text-sm font-black text-white">
-                                ${value?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                    <div className="flex flex-col gap-1 sm:gap-2">
+                        <div className="flex items-center justify-between gap-4">
+                            <span className="text-[9px] sm:text-[11px] text-gray-400 font-bold uppercase tracking-tight">{dataType === 'prices' ? 'Price' : 'Cap'}</span>
+                            <span className="text-xs sm:text-sm font-black text-white">
+                                ${value?.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })}
                             </span>
                         </div>
-                        {data.vol > 0 && (
-                            <div className="flex items-center justify-between gap-6">
-                                <span className="text-[11px] text-muted-foreground font-black uppercase tracking-tight">24h Vol</span>
-                                <span className="text-sm font-black text-white/50">
-                                    {data.vol?.toLocaleString(undefined, { notation: 'compact' })}
-                                </span>
-                            </div>
-                        )}
+                        <div className="flex items-center justify-between gap-4">
+                            <span className="text-[9px] sm:text-[11px] text-gray-400 font-bold uppercase tracking-tight">Vol</span>
+                            <span className="text-xs sm:text-sm font-black text-white/70">
+                                ${data.vol?.toLocaleString(undefined, { notation: 'compact' })}
+                            </span>
+                        </div>
                     </div>
                 </div>
             );
@@ -184,90 +195,117 @@ const NFTDetailGraph = ({ address: propAddress, dataType = 'price' }) => {
     };
 
     return (
-        <div className="w-full space-y-6">
-            {/* Professional Sub-Header: Timeframes & Tools */}
-            <div className="flex flex-wrap items-center justify-between gap-4 py-1">
-                <div className="flex items-center gap-1.5 p-1 bg-white/[0.03] rounded-2xl border border-white/5 shadow-inner">
-                    {timeframes.map((tf) => (
-                        <button
-                            key={tf.label}
-                            onClick={() => setTimeframe(tf)}
-                            className={`px-4 py-2 rounded-xl text-[10px] font-black tracking-[0.15em] transition-all duration-300 ${timeframe.label === tf.label ? 'bg-white text-black shadow-xl scale-102' : 'text-muted-foreground hover:text-white'}`}
-                        >
-                            {tf.label}
-                        </button>
-                    ))}
+        <div className="w-full h-auto flex flex-col gap-4 sm:gap-6 p-2 sm:p-6 bg-[#0d0e12] rounded-2xl sm:rounded-3xl border border-white/5">
+            <div className="flex flex-col gap-4 border-b border-white/5 pb-4">
+                <div className="flex flex-col gap-1">
+                    <h3 className="text-base sm:text-lg font-bold text-white px-2">Price & Market Cap Chart</h3>
+                    <p className='text-[10px] sm:text-xs text-gray-400 px-2'>Historical performance and market capitalization trend.</p>
                 </div>
 
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={() => setIsLogScale(!isLogScale)}
-                        className={`flex items-center gap-2 px-4 py-2 bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all group shadow-sm ${isLogScale ? 'text-emerald-400 bg-emerald-500/5 border-emerald-500/10' : 'text-white/60'}`}
-                    >
-                        <Activity size={14} className={isLogScale ? 'text-emerald-400' : 'text-muted-foreground'} />
-                        <span>LOG</span>
-                    </button>
-                    <button className="p-2.5 bg-white/[0.03] hover:bg-white/[0.06] text-muted-foreground hover:text-white rounded-xl transition-all border border-white/5">
-                        <Calendar size={16} />
-                    </button>
-                    <button className="p-2.5 bg-white/[0.03] hover:bg-white/[0.06] text-muted-foreground hover:text-white rounded-xl transition-all border border-white/5">
-                        <Download size={16} />
-                    </button>
-                    <button
-                        onClick={() => setIsFullScreen(!isFullScreen)}
-                        className="p-2.5 bg-white/[0.03] hover:bg-white/[0.06] text-muted-foreground hover:text-white rounded-xl transition-all border border-white/5"
-                    >
-                        {isFullScreen ? <Maximize size={16} /> : <Maximize2 size={16} />}
-                    </button>
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
+                    <div className="flex bg-white/5 p-1 rounded-xl w-full sm:w-auto">
+                        <button
+                            onClick={() => setDataType('prices')}
+                            className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${dataType === 'prices' ? 'bg-white text-black shadow-xl scale-102' : 'text-muted-foreground hover:text-white'}`}
+                        >
+                            Price
+                        </button>
+                        <button
+                            onClick={() => setDataType('market_caps')}
+                            className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${dataType === 'market_caps' ? 'bg-white text-black shadow-xl scale-102' : 'text-muted-foreground hover:text-white'}`}
+                        >
+                            Market Cap
+                        </button>
+                    </div>
+
+                    <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                        <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl">
+                            <button
+                                onClick={() => setChartType('line')}
+                                className={`p-1.5 rounded-lg transition-all ${chartType === 'line' ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-500 hover:text-white'}`}
+                                title="Line Chart"
+                            >
+                                <TrendingUp size={14} />
+                            </button>
+                            <button
+                                onClick={() => setChartType('ohlc')}
+                                className={`p-1.5 rounded-lg transition-all ${chartType === 'ohlc' ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-500 hover:text-white'}`}
+                                title="OHLC Chart"
+                            >
+                                <BarChart3 size={14} />
+                            </button>
+                        </div>
+
+                        <div className="w-[1px] h-4 bg-white/10 mx-1 hidden sm:block" />
+
+                        <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl overflow-x-auto no-scrollbar max-w-[200px] sm:max-w-none">
+                            {timeframes.map((tf) => (
+                                <button
+                                    key={tf.label}
+                                    onClick={() => setTimeframe(tf)}
+                                    className={`px-2 py-1.5 rounded-lg text-[9px] sm:text-[10px] font-black transition-all ${timeframe.label === tf.label ? 'bg-white text-black shadow-xl' : 'text-muted-foreground hover:text-white'}`}
+                                >
+                                    {tf.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {/* Main Interactive Chart Area */}
-            <div className="h-[500px] w-full relative bg-white/[0.015] border border-white/5 rounded-[2.5rem] overflow-hidden group shadow-2xl">
+            <div className={`w-full ${isMobile ? 'h-[300px]' : 'h-[500px]'} relative bg-[#07080a] rounded-3xl border border-white/5 overflow-hidden group shadow-2xl`}>
                 {loading && (
-                    <div className="absolute inset-0 z-[100] flex items-center justify-center bg-[#0b0e11]/60 backdrop-blur-xl">
-                        <div className="w-12 h-12 border-[3px] border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin shadow-[0_0_30px_rgba(16,185,129,0.2)]"></div>
+                    <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-2xl">
+                        <div className="w-10 h-10 border-2 border-white/10 border-t-white rounded-full animate-spin"></div>
                     </div>
                 )}
 
                 {error ? (
-                    <div className="h-full flex flex-col items-center justify-center gap-6 text-center animate-in fade-in duration-500">
-                        <div className="p-6 bg-rose-500/5 rounded-full border border-rose-500/10 shadow-[0_0_40px_rgba(244,63,94,0.05)]">
-                            <Info size={40} className="text-rose-500 opacity-60" />
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-[#0d0e12] rounded-2xl border border-white/5 p-8 text-center">
+                        <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center">
+                            <BarChart3 size={32} className="text-red-500 opacity-50" />
                         </div>
-                        <div className="space-y-2">
-                            <h3 className="text-lg font-black text-white uppercase tracking-tighter italic">Feed Interrupted</h3>
-                            <p className="text-xs text-muted-foreground font-bold uppercase tracking-[0.2em] max-w-xs leading-loose">{error}</p>
+                        <div>
+                            <h3 className="text-lg font-bold text-white mb-2 italic tracking-tight">DATA FEED OFFLINE</h3>
+                            <p className="text-sm text-gray-500 max-w-[300px] leading-relaxed">
+                                {error}
+                            </p>
                         </div>
+                        <button
+                            onClick={() => window.location.reload()}
+                            className="mt-2 px-6 py-2 bg-white/5 hover:bg-white/10 text-white text-xs font-black uppercase tracking-widest rounded-full transition-all border border-white/5"
+                        >
+                            Retry Connection
+                        </button>
                     </div>
                 ) : chartData.length === 0 && !loading ? (
-                    <div className="h-full flex flex-col items-center justify-center gap-4 text-center opacity-30">
-                        <BarChart3 size={48} className="text-muted-foreground" />
-                        <p className="text-xs font-black uppercase tracking-[0.3em] text-white">History Cleared</p>
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-[#0d0e12] rounded-2xl border border-white/5 p-8 text-center">
+                        <BarChart3 size={32} className="text-gray-600 opacity-50" />
+                        <p className="text-sm text-gray-500 italic">No historical data available for this collection.</p>
                     </div>
                 ) : (
                     <ResponsiveContainer width="100%" height="100%">
                         <ComposedChart
                             data={chartData}
-                            margin={{ top: 25, right: 20, left: 10, bottom: 0 }}
+                            margin={{ top: 10, right: isMobile ? 10 : 30, left: isMobile ? 10 : 0, bottom: 0 }}
                         >
                             <defs>
-                                <linearGradient id="colorEmeraldPremium" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.15} />
-                                    <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                                <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.2} />
+                                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
                                 </linearGradient>
-                                <linearGradient id="volGradientPremium" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stopColor="#ffffff" stopOpacity={0.05} />
-                                    <stop offset="100%" stopColor="#ffffff" stopOpacity={0} />
+                                <linearGradient id="volGradient" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stopColor="#ffffff20" stopOpacity={0.1} />
+                                    <stop offset="100%" stopColor="#ffffff05" stopOpacity={0} />
                                 </linearGradient>
                             </defs>
-                            <CartesianGrid strokeDasharray="5 5" stroke="#ffffff03" vertical={false} />
+                            <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
                             <XAxis
                                 dataKey="time"
                                 tickFormatter={formatXAxis}
                                 axisLine={false}
                                 tickLine={false}
-                                tick={{ fill: '#4b5563', fontSize: 10, fontWeight: 900, letterSpacing: '0.05em' }}
+                                tick={{ fill: '#4b5563', fontSize: 10, fontWeight: 700 }}
                                 minTickGap={60}
                                 padding={{ left: 20, right: 20 }}
                             />
@@ -278,9 +316,9 @@ const NFTDetailGraph = ({ address: propAddress, dataType = 'price' }) => {
                                 tickLine={false}
                                 scale={isLogScale ? 'log' : 'auto'}
                                 domain={['auto', 'auto']}
-                                tick={{ fill: '#4b5563', fontSize: 10, fontWeight: 900 }}
+                                tick={{ fill: '#4b5563', fontSize: 10, fontWeight: 700 }}
                                 tickFormatter={(val) => `$${val?.toLocaleString(undefined, { notation: 'compact' })}`}
-                                width={65}
+                                width={isMobile ? 0 : 60}
                             />
                             <YAxis
                                 yAxisId="vol"
@@ -289,48 +327,34 @@ const NFTDetailGraph = ({ address: propAddress, dataType = 'price' }) => {
                             />
                             <Tooltip
                                 content={<CustomTooltip />}
-                                cursor={{ stroke: '#10b981', strokeWidth: 1.5, strokeDasharray: '4 4' }}
+                                cursor={{ stroke: '#ffffff10', strokeWidth: 1 }}
                                 animationDuration={200}
                             />
                             <Bar
                                 yAxisId="vol"
                                 dataKey="vol"
-                                fill="url(#volGradientPremium)"
-                                barSize={8}
-                                radius={[4, 4, 0, 0]}
+                                fill="url(#volGradient)"
+                                barSize={6}
                             />
-                            <Area
-                                yAxisId="val"
-                                type="monotone"
-                                dataKey={dataType === 'price' ? 'price' : 'market_cap'}
-                                stroke="#10b981"
-                                strokeWidth={3}
+                                <Area
+                                    yAxisId="val"
+                                    type="monotone"
+                                    dataKey={dataType === 'prices' ? 'price' : 'market_cap'}
+                                stroke="#ef4444"
+                                strokeWidth={2.5}
                                 fillOpacity={1}
-                                fill="url(#colorEmeraldPremium)"
-                                animationDuration={1200}
+                                fill="url(#colorValue)"
+                                animationDuration={1000}
+                                isAnimationActive={true}
                                 connectNulls
                             />
                             <Brush
                                 dataKey="time"
-                                height={40}
+                                height={30}
                                 stroke="#10b981"
                                 fill="#0b0e11"
-                                tickFormatter={formatXAxis}
-                                travellerWidth={10}
-                                gap={10}
-                                startIndex={Math.floor(chartData.length * 0.2)}
-                                endIndex={chartData.length - 1}
-                            >
-                                <ComposedChart>
-                                    <Area
-                                        type="monotone"
-                                        dataKey={dataType === 'price' ? 'price' : 'market_cap'}
-                                        stroke="#10b981"
-                                        fill="#10b981"
-                                        fillOpacity={0.1}
-                                    />
-                                </ComposedChart>
-                            </Brush>
+                                tickFormatter={() => ''}
+                            />
                         </ComposedChart>
                     </ResponsiveContainer>
                 )}
