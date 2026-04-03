@@ -6,6 +6,7 @@ const AuthContext = createContext({});
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     useEffect(() => {
         // Check active sessions and sets the user
@@ -30,7 +31,10 @@ export const AuthProvider = ({ children }) => {
 
     // Log in
     const signIn = async (email, password) => {
-        return await supabase.auth.signInWithPassword({ email, password });
+        setIsRefreshing(true);
+        const result = await supabase.auth.signInWithPassword({ email, password });
+        setTimeout(() => setIsRefreshing(false), 2800);
+        return result;
     };
 
     // Sign up
@@ -40,7 +44,10 @@ export const AuthProvider = ({ children }) => {
 
     // Sign out
     const signOut = async () => {
-        return await supabase.auth.signOut();
+        setIsRefreshing(true);
+        const result = await supabase.auth.signOut();
+        setTimeout(() => setIsRefreshing(false), 2800);
+        return result;
     };
 
     // Forgot Password
@@ -72,7 +79,8 @@ export const AuthProvider = ({ children }) => {
         updatePassword,
         verifyResetOtp,
         user,
-        loading
+        loading,
+        isRefreshing
     };
 
     return (
