@@ -224,25 +224,25 @@ const CryptoTreasuries = () => {
         <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
           <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
             <tr>
-              <th className='py-4 px-2 sticky left-0 bg-main z-30 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px]'>#</th>
-              <th className='py-4 px-2 sticky left-[60px] md:left-[80px] bg-main z-30 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('name')}>
+              <th className='py-4 pl-10 pr-1 sticky left-0 bg-main z-30 w-[90px] min-w-[90px] md:w-[120px] md:min-w-[120px] text-[10px] md:text-sm uppercase tracking-wider'>#</th>
+              <th className='py-4 px-2 sticky left-[90px] md:left-[120px] bg-main z-30 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px] transition-colors hover:text-white cursor-pointer select-none text-[10px] md:text-sm uppercase tracking-wider' onClick={() => handleSort('name')}>
                 <div className="flex items-center gap-1">Entity <SortIcon columnKey="name" /></div>
               </th>
-              <th className='py-4 px-2 w-[10%]'>Type</th>
-              <th className='py-4 px-2 w-[15%]'>Top Holdings</th>
-              <th className='py-4 px-2 w-[10%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('country')}>
+              <th className='py-4 px-2 w-[10%] text-[10px] md:text-sm uppercase tracking-wider'>Type</th>
+              <th className='py-4 px-2 w-[15%] text-[10px] md:text-sm uppercase tracking-wider'>Top Holdings</th>
+              <th className='py-4 px-2 w-[10%] transition-colors hover:text-white cursor-pointer select-none text-[10px] md:text-sm uppercase tracking-wider' onClick={() => handleSort('country')}>
                 <div className="flex items-center gap-1">Country <SortIcon columnKey="country" /></div>
               </th>
-              <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('total_holdings')}>
+              <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none text-[10px] md:text-sm uppercase tracking-wider' onClick={() => handleSort('total_holdings')}>
                 <div className="flex items-center gap-1">Total Holdings <SortIcon columnKey="total_holdings" /></div>
               </th>
-              <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('total_entry_value_usd')}>
+              <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none text-[10px] md:text-sm uppercase tracking-wider' onClick={() => handleSort('total_entry_value_usd')}>
                 <div className="flex items-center gap-1">Total Value <SortIcon columnKey="total_entry_value_usd" /></div>
               </th>
-              <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('total_current_value_usd')}>
+              <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none text-[10px] md:text-sm uppercase tracking-wider' onClick={() => handleSort('total_current_value_usd')}>
                 <div className="flex items-center gap-1">Total Current Value <SortIcon columnKey="total_current_value_usd" /></div>
               </th>
-              <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('percentage_of_total_supply')}>
+              <th className='py-4 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none text-[10px] md:text-sm uppercase tracking-wider' onClick={() => handleSort('percentage_of_total_supply')}>
                 <div className="flex items-center gap-1">Total Supply% <SortIcon columnKey="percentage_of_total_supply" /></div>
               </th>
             </tr>
@@ -265,10 +265,10 @@ const CryptoTreasuries = () => {
 
                 return (
                   <tr key={entity.id || index} className='border-b border-gray-800 hover:bg-card transition-colors group'>
-                    <td className='py-5 px-2 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[60px] min-w-[60px] md:w-[80px] md:min-w-[80px] text-sm md:text-base font-bold text-muted'>
+                    <td className='py-5 pl-10 pr-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[90px] min-w-[90px] md:w-[120px] md:min-w-[120px] text-sm md:text-base font-bold text-muted'>
                       {indexOfFirstItem + index + 1}
                     </td>
-                    <td className='py-4 px-2 sticky left-[60px] md:left-[80px] bg-main group-hover:bg-card transition-colors z-10 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px]'>
+                    <td className='py-4 px-2 sticky left-[90px] md:left-[120px] bg-main group-hover:bg-card transition-colors z-10 w-[160px] min-w-[160px] md:w-[250px] md:min-w-[250px]'>
                       <div className='flex flex-col'>
                         <span className='font-bold text-base md:text-xl text-white'>{entity.name || "Unknown"}</span>
                         <span className='text-xs md:text-sm text-muted uppercase font-bold'>{entity.symbol || "N/A"}</span>
@@ -301,7 +301,7 @@ const CryptoTreasuries = () => {
                     <td className='py-5 px-2 font-bold text-sm md:text-base text-gray-300'>
                       ${Number(entity.total_current_value_usd || 0).toLocaleString()}
                     </td>
-                    <td className='py-5 px-2 text-green-500 font-bold text-sm md:text-base'>
+                    <td className='py-5 pl-2 pr-10 text-green-500 font-bold text-sm md:text-base'>
                       {percentage}%
                     </td>
                   </tr>

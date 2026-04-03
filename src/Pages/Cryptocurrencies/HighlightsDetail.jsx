@@ -199,30 +199,30 @@ const HighlightsDetail = () => {
                 <table className='w-full min-w-[1000px] text-left text-sm'>
                     <thead className='border-b border-gray-800 text-muted bg-[#0b0e11] sticky top-0 z-20'>
                         <tr>
-                            <th className='py-2 px-1 sticky left-0 bg-[#0b0e11] z-30 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] font-medium transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('market_cap_rank')}>
-                                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider"># <SortIcon columnKey="market_cap_rank" /></div>
+                            <th className='py-2 pl-10 pr-1 sticky left-0 bg-[#0b0e11] z-30 w-[70px] min-w-[70px] md:w-[90px] md:min-w-[90px] font-medium transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('market_cap_rank')}>
+                                <div className="text-[10px] md:text-sm uppercase tracking-wider"># <SortIcon columnKey="market_cap_rank" /></div>
                             </th>
-                            <th className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-[#0b0e11] z-30 w-[120px] min-w-[120px] md:w-[180px] md:min-w-[180px] font-medium transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('name')}>
-                                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">Coin <SortIcon columnKey="name" /></div>
+                            <th className='py-2 px-2 sticky left-[70px] md:left-[90px] bg-[#0b0e11] z-30 w-[120px] min-w-[120px] md:w-[220px] md:min-w-[220px] font-medium transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('name')}>
+                                <div className="flex items-center gap-1 text-[10px] md:text-sm uppercase tracking-wider">Coin <SortIcon columnKey="name" /></div>
                             </th>
                             <th className='py-2 px-2 font-medium text-right transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('current_price')}>
-                                <div className="flex items-center justify-end gap-1 text-[10px] md:text-xs uppercase tracking-wider">Price <SortIcon columnKey="current_price" /></div>
+                                <div className="flex items-center justify-end gap-1 text-[10px] md:text-sm uppercase tracking-wider">Price <SortIcon columnKey="current_price" /></div>
                             </th>
                             <th className='py-2 px-2 font-medium text-right transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_24h')}>
-                                <div className="flex items-center justify-end gap-1 text-[10px] md:text-xs uppercase tracking-wider">24h <SortIcon columnKey="price_change_percentage_24h" /></div>
+                                <div className="flex items-center justify-end gap-1 text-[10px] md:text-sm uppercase tracking-wider">24h <SortIcon columnKey="price_change_percentage_24h" /></div>
                             </th>
                             {type !== 'trending' && (
                                 <th className='py-2 px-2 font-medium text-right transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_7d_in_currency')}>
-                                    <div className="flex items-center justify-end gap-1 text-[10px] md:text-xs uppercase tracking-wider">7d <SortIcon columnKey="price_change_percentage_7d_in_currency" /></div>
+                                    <div className="flex items-center justify-end gap-1 text-[10px] md:text-sm uppercase tracking-wider">7d <SortIcon columnKey="price_change_percentage_7d_in_currency" /></div>
                                 </th>
                             )}
                             <th className='py-2 px-2 font-medium text-right transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('total_volume')}>
-                                <div className="flex items-center justify-end gap-1 text-[10px] md:text-xs uppercase tracking-wider">24h Vol <SortIcon columnKey="total_volume" /></div>
+                                <div className="flex items-center justify-end gap-1 text-[10px] md:text-sm uppercase tracking-wider">24h Vol <SortIcon columnKey="total_volume" /></div>
                             </th>
                             <th className='py-2 px-2 font-medium text-right transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('market_cap')}>
-                                <div className="flex items-center justify-end gap-1 text-[10px] md:text-xs uppercase tracking-wider">Cap <SortIcon columnKey="market_cap" /></div>
+                                <div className="flex items-center justify-end gap-1 text-[10px] md:text-sm uppercase tracking-wider">Cap <SortIcon columnKey="market_cap" /></div>
                             </th>
-                            <th className='py-2 px-2 font-medium text-right text-[10px] md:text-xs uppercase tracking-wider'>Last 7 Days</th>
+                            <th className='py-2 pl-2 pr-10 font-medium text-right text-[10px] md:text-sm uppercase tracking-wider whitespace-nowrap'>Last 7 Days</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-800/50">
@@ -237,12 +237,12 @@ const HighlightsDetail = () => {
                                     onClick={() => navigate(`/cryptocurrencies/marketcap/${coin.id}`)}
                                     className='hover:bg-white/5 transition-colors cursor-pointer group'
                                 >
-                                    <td className='py-3 px-1 sticky left-0 bg-black group-hover:bg-card transition-colors z-10 w-[45px] text-muted text-sm font-bold'>{coin.market_cap_rank || index + 1}</td>
-                                    <td className='py-3 px-2 sticky left-[45px] md:left-[60px] bg-black group-hover:bg-card transition-colors z-10 w-[120px]'>
+                                    <td className='py-3 pl-10 pr-1 sticky left-0 bg-black group-hover:bg-card transition-colors z-10 w-[70px] md:w-[90px] text-muted text-sm font-bold'>{coin.market_cap_rank || index + 1}</td>
+                                    <td className='py-3 px-2 sticky left-[70px] md:left-[90px] bg-black group-hover:bg-card transition-colors z-10 w-[120px]'>
                                         <div className='flex items-center gap-2'>
                                             <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6 rounded-sm' />
                                             <div className="flex flex-col min-w-0">
-                                                <span className='font-bold text-white group-hover:text-blue-400 transition-colors truncate text-base sm:text-lg'>{coin.name}</span>
+                                                <span className='font-bold text-white group-hover:text-blue-400 transition-colors truncate text-base sm:text-xl'>{coin.name}</span>
                                                 <span className='text-xs sm:text-sm text-muted uppercase leading-none font-bold'>{coin.symbol}</span>
                                             </div>
                                         </div>
@@ -267,19 +267,19 @@ const HighlightsDetail = () => {
                                             : formatPrice(coin.total_volume || 0, { notation: 'compact' })
                                         }
                                     </td>
-                                    <td className='py-3 px-2 text-right text-sm sm:text-base text-gray-300 font-bold'>
+                                    <td className='py-3 pl-2 pr-4 text-right text-sm sm:text-base text-gray-300 font-bold'>
                                         {typeof coin.market_cap === 'string'
                                             ? coin.market_cap
                                             : formatPrice(coin.market_cap || 0, { notation: 'compact' })
                                         }
                                     </td>
-                                    <td className='py-2 px-2 flex justify-end'>
+                                    <td className='py-2 pl-2 pr-4 flex justify-end'>
                                         {coin.sparkline_in_7d?.price ? (
                                             <Sparkline
                                                 data={coin.sparkline_in_7d.price}
                                                 color={(coin.price_change_percentage_24h || 0) >= 0 ? '#22c55e' : '#ef4444'}
-                                                width={80}
-                                                height={30}
+                                                width={110}
+                                                height={45}
                                             />
                                         ) : (
                                             <span className="text-muted text-[10px]">N/A</span>

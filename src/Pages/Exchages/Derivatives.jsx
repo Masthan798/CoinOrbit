@@ -134,18 +134,18 @@ const Derivatives = () => {
         <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
           <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
             <tr>
-              <th className='py-2 px-1 sticky left-0 bg-main z-30 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-left'>
-                <div className="text-[10px] md:text-xs uppercase tracking-wider">#</div>
+              <th className='py-2 pl-10 pr-1 sticky left-0 bg-main z-30 w-[70px] min-w-[70px] md:w-[90px] md:min-w-[90px] text-left transition-colors hover:text-white cursor-pointer select-none'>
+                <div className="text-[10px] md:text-sm uppercase tracking-wider">#</div>
               </th>
-              <th className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-main z-30 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] text-left'>
-                <div className="text-[10px] md:text-xs uppercase tracking-wider">Exchange</div>
+              <th className='py-2 px-2 sticky left-[70px] md:left-[90px] bg-main z-30 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] text-left transition-colors hover:text-white cursor-pointer select-none'>
+                <div className="text-[10px] md:text-sm uppercase tracking-wider">Exchange</div>
               </th>
-              <th className='py-2 px-2 w-[15%]'><div className="text-[10px] md:text-xs uppercase tracking-wider">Open Interest</div></th>
-              <th className='py-2 px-2 w-[15%]'><div className="text-[10px] md:text-xs uppercase tracking-wider">24h Vol</div></th>
-              <th className='py-2 px-2 w-[10%] text-center'><div className="text-[10px] md:text-xs uppercase tracking-wider">Perp</div></th>
-              <th className='py-2 px-2 w-[10%] text-center'><div className="text-[10px] md:text-xs uppercase tracking-wider">Fut</div></th>
-              <th className='py-2 px-2 w-[10%] text-center'><div className="text-[10px] md:text-xs uppercase tracking-wider">Est.</div></th>
-              <th className='py-2 px-2 w-[15%]'><div className="text-[10px] md:text-xs uppercase tracking-wider">Country</div></th>
+              <th className='py-2 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none'><div className="text-[10px] md:text-sm uppercase tracking-wider">Open Interest</div></th>
+              <th className='py-2 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none'><div className="text-[10px] md:text-sm uppercase tracking-wider">24h Vol</div></th>
+              <th className='py-2 px-2 w-[10%] text-center transition-colors hover:text-white cursor-pointer select-none'><div className="text-[10px] md:text-sm uppercase tracking-wider">Perp</div></th>
+              <th className='py-2 px-2 w-[10%] text-center transition-colors hover:text-white cursor-pointer select-none'><div className="text-[10px] md:text-sm uppercase tracking-wider">Fut</div></th>
+              <th className='py-2 px-2 w-[10%] text-center transition-colors hover:text-white cursor-pointer select-none'><div className="text-[10px] md:text-sm uppercase tracking-wider">Est.</div></th>
+              <th className='py-2 pl-2 pr-10 w-[15%] transition-colors hover:text-white cursor-pointer select-none'><div className="text-[10px] md:text-sm uppercase tracking-wider">Country</div></th>
             </tr>
           </thead>
           <tbody>
@@ -168,14 +168,14 @@ const Derivatives = () => {
             ) : (
               paginatedData.map((coin, index) => (
                 <tr key={coin.id || index} className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer group'>
-                  <td className='py-3 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-left text-sm text-muted font-bold'>
+                  <td className='py-3 pl-10 pr-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[70px] min-w-[70px] md:w-[90px] md:min-w-[90px] text-left text-sm md:text-base text-muted font-bold'>
                     <span>{(currentPage - 1) * perPage + index + 1}</span>
                   </td>
-                  <td className='py-3 px-2 sticky left-[45px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] text-left'>
+                  <td className='py-3 px-2 sticky left-[70px] md:left-[90px] bg-main group-hover:bg-card transition-colors z-10 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] text-left'>
                     <div className='flex items-center gap-2'>
                       <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6 rounded-sm' />
                       <div className='flex flex-col gap-0.5 min-w-0'>
-                        <span className='font-bold truncate text-base sm:text-lg text-white'>{coin.name}</span>
+                        <span className='font-bold truncate text-base sm:text-xl text-white'>{coin.name}</span>
                         <span className='text-xs sm:text-sm text-muted uppercase leading-none font-bold'>{coin.id}</span>
                       </div>
                     </div>
@@ -190,7 +190,7 @@ const Derivatives = () => {
                   <td className='py-3 px-2 text-center text-sm sm:text-base font-bold text-gray-200'>{coin.number_of_perpetual_pairs || 0}</td>
                   <td className='py-3 px-2 text-center text-sm sm:text-base font-bold text-gray-200'>{coin.number_of_futures_pairs || 0}</td>
                   <td className='py-3 px-2 text-center text-gray-300 text-sm sm:text-base font-bold'>{coin.year_established || "-"}</td>
-                  <td className='py-3 px-2 truncate max-w-[100px] text-sm sm:text-base text-gray-300 font-bold'>{coin.country || "-"}</td>
+                  <td className='py-3 pl-2 pr-10 truncate max-w-[150px] text-sm sm:text-base text-gray-300 font-bold'>{coin.country || "-"}</td>
                 </tr>
               ))
             )}

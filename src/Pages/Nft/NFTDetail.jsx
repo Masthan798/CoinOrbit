@@ -51,7 +51,6 @@ const NFTDetail = () => {
     const [activeTab, setActiveTab] = useState('Overview');
     const [copied, setCopied] = useState(false);
     const [showExplorers, setShowExplorers] = useState(false);
-    const [dataType, setDataType] = useState('price'); // 'price' or 'market_cap'
 
     useEffect(() => {
         const fetchData = async () => {
@@ -294,24 +293,10 @@ const NFTDetail = () => {
                     {activeTab === 'Overview' && (
                         <div className="space-y-6 animate-in fade-in slide-in-from-top-2 duration-500">
 
-                            {/* Chart Controls Row */}
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                <div className="flex p-0.5 bg-gray-800/20 border border-gray-800 rounded-lg w-fit">
-                                    {['price', 'market_cap'].map(type => (
-                                        <button
-                                            key={type}
-                                            onClick={() => setDataType(type)}
-                                            className={`px-4 py-1.5 rounded-md text-[10px] font-bold uppercase transition-all ${dataType === type ? 'bg-card text-white shadow-lg scale-[1.02] border border-white/10' : 'text-muted-foreground hover:text-white'}`}
-                                        >
-                                            {type.replace('_', ' ')}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
 
                             {/* Main Chart Area */}
                             <div className="p-2 border-gray-800 border-2 rounded-3xl bg-card/5 overflow-hidden">
-                                <NFTDetailGraph address={contractAddress} dataType={dataType} />
+                                <NFTDetailGraph address={contractAddress} />
                             </div>
 
                             <div className="flex items-center justify-between p-2 flex-wrap gap-4">

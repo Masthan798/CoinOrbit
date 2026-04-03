@@ -170,24 +170,24 @@ const CryptoExchanges = () => {
         <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
           <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
             <tr>
-              <th className='py-2 px-1 sticky left-0 bg-main z-30 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-left transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('trust_score_rank')}>
-                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider"># <SortIcon columnKey="trust_score_rank" /></div>
+              <th className='py-2 pl-10 pr-1 sticky left-0 bg-main z-30 w-[70px] min-w-[70px] md:w-[90px] md:min-w-[90px] text-left transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('trust_score_rank')}>
+                <div className="flex items-center gap-1 text-[10px] md:text-sm uppercase tracking-wider"># <SortIcon columnKey="trust_score_rank" /></div>
               </th>
-              <th className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-main z-30 w-[120px] min-w-[120px] md:w-[180px] md:min-w-[180px] text-left transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('name')}>
-                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">Exchange <SortIcon columnKey="name" /></div>
+              <th className='py-2 px-2 sticky left-[70px] md:left-[90px] bg-main z-30 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] text-left transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('name')}>
+                <div className="flex items-center gap-1 text-[10px] md:text-sm uppercase tracking-wider">Exchange <SortIcon columnKey="name" /></div>
               </th>
               <th className='py-2 px-2 w-[100px] text-center transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('trust_score')}>
-                <div className="flex items-center justify-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">Trust <SortIcon columnKey="trust_score" /></div>
+                <div className="flex items-center justify-center gap-1 text-[10px] md:text-sm uppercase tracking-wider">Trust <SortIcon columnKey="trust_score" /></div>
               </th>
               <th className='py-2 px-2 w-[120px] text-center transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('year_established')}>
-                <div className="flex items-center justify-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">Est. <SortIcon columnKey="year_established" /></div>
+                <div className="flex items-center justify-center gap-1 text-[10px] md:text-sm uppercase tracking-wider">Est. <SortIcon columnKey="year_established" /></div>
               </th>
               <th className='py-2 px-2 w-[120px] text-left transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('country')}>
-                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">Country <SortIcon columnKey="country" /></div>
+                <div className="flex items-center gap-1 text-[10px] md:text-sm uppercase tracking-wider">Country <SortIcon columnKey="country" /></div>
               </th>
-              <th className='py-2 px-2 w-[120px] text-left text-[10px] md:text-xs uppercase tracking-wider'>Incentives</th>
-              <th className='py-2 px-2 w-[150px] text-right transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('trade_volume_24h_btc')}>
-                <div className="flex items-center justify-end gap-1 text-[10px] md:text-xs uppercase tracking-wider">24h Vol <SortIcon columnKey="trade_volume_24h_btc" /></div>
+              <th className='py-2 px-2 w-[120px] text-left text-[10px] md:text-sm uppercase tracking-wider'>Incentives</th>
+              <th className='py-2 pl-2 pr-10 w-[150px] text-right transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('trade_volume_24h_btc')}>
+                <div className="flex items-center justify-end gap-1 text-[10px] md:text-sm uppercase tracking-wider">24h Vol <SortIcon columnKey="trade_volume_24h_btc" /></div>
               </th>
             </tr>
           </thead>
@@ -235,15 +235,15 @@ const CryptoExchanges = () => {
                   onClick={() => navigate(`/exchanges/cryptoexchanges/${coin.id}`)}
                   className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer group'
                 >
-                  <td className='py-3 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-left text-sm text-muted font-bold'>
+                  <td className='py-3 pl-10 pr-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[70px] min-w-[70px] md:w-[90px] md:min-w-[90px] text-left text-sm md:text-base text-muted font-bold'>
                     <span>{coin.trust_score_rank}</span>
                   </td>
-                  <td className='py-3 px-2 sticky left-[45px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10 w-[120px] min-w-[120px] md:w-[180px] md:min-w-[180px] text-left'>
+                  <td className='py-3 px-2 sticky left-[70px] md:left-[90px] bg-main group-hover:bg-card transition-colors z-10 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] text-left'>
                     <div className='flex items-center gap-2'>
                       <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6 rounded-sm' />
                       <div className='flex flex-col gap-0.5 min-w-0'>
-                        <span className='font-bold truncate text-base sm:text-lg text-white'>{coin.name}</span>
-                        <span className='text-xs sm:text-sm text-muted uppercase leading-none font-bold'>{coin.id}</span>
+                        <span className='font-bold truncate text-base sm:text-xl text-white'>{coin.name}</span>
+                        <span className='text-xs sm:text-sm md:text-base text-muted uppercase leading-none font-bold'>{coin.id}</span>
                       </div>
                     </div>
                   </td>
@@ -252,19 +252,19 @@ const CryptoExchanges = () => {
                       {coin.trust_score || "0"}/10
                     </span>
                   </td>
-                  <td className='py-2 px-2 text-center text-muted text-[11px] md:text-xs'>
+                  <td className='py-3 px-2 text-center text-muted text-sm md:text-base font-bold'>
                     {coin.year_established || "-"}
                   </td>
-                  <td className='py-2 px-2 text-left truncate max-w-[100px] text-[11px] md:text-xs text-muted'>
+                  <td className='py-3 px-2 text-left truncate max-w-[150px] text-sm md:text-base text-muted font-bold'>
                     {coin.country || "-"}
                   </td>
-                  <td className='py-2 px-2 text-left text-[11px] md:text-xs'>
+                  <td className='py-3 px-2 text-left text-sm md:text-base font-bold'>
                     {coin.has_trading_incentive ?
-                      <span className="text-green-500 font-medium">Yes</span> :
+                      <span className="text-green-500 font-bold">Yes</span> :
                       <span className="text-muted">No</span>
                     }
                   </td>
-                  <td className='py-2 px-2 text-right font-medium text-[11px] md:text-xs tabular-nums text-muted'>
+                  <td className='py-3 pl-2 pr-10 text-right font-bold text-sm md:text-base tabular-nums text-muted'>
                     {coin.trade_volume_24h_btc?.toLocaleString(undefined, { maximumFractionDigits: 0, notation: 'compact' }) || "0"} BTC
                   </td>
                 </tr>
