@@ -136,11 +136,11 @@ const PerpDEXs = () => {
         <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
           <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
             <tr>
-              <th className='py-2 px-1 sticky left-0 bg-main z-30 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-left transition-colors hover:text-white'>
-                <div className="text-[10px] md:text-xs uppercase tracking-wider">#</div>
+              <th className='py-2 pl-10 pr-1 sticky left-0 bg-main z-30 w-[70px] min-w-[70px] md:w-[90px] md:min-w-[90px] text-left transition-colors hover:text-white'>
+                <div className="text-[10px] md:text-sm uppercase tracking-wider">#</div>
               </th>
-              <th className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-main z-30 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] text-left transition-colors hover:text-white'>
-                <div className="text-[10px] md:text-xs uppercase tracking-wider">Market</div>
+              <th className='py-2 px-2 sticky left-[70px] md:left-[90px] bg-main z-30 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] text-left transition-colors hover:text-white'>
+                <div className="text-[10px] md:text-sm uppercase tracking-wider">Market</div>
               </th>
               <th className='py-2 px-2 w-[120px] text-center transition-colors hover:text-white'><div className="text-[10px] md:text-xs uppercase tracking-wider">Type</div></th>
               <th className='py-2 px-2 w-[120px] text-center transition-colors hover:text-white'><div className="text-[10px] md:text-xs uppercase tracking-wider">Price</div></th>
@@ -148,7 +148,7 @@ const PerpDEXs = () => {
               <th className='py-2 px-2 w-[100px] text-right transition-colors hover:text-white'><div className="text-[10px] md:text-xs uppercase tracking-wider">Spread</div></th>
               <th className='py-2 px-2 w-[130px] text-right transition-colors hover:text-white'><div className="text-[10px] md:text-xs uppercase tracking-wider">Open Int</div></th>
               <th className='py-2 px-2 w-[130px] text-right transition-colors hover:text-white'><div className="text-[10px] md:text-xs uppercase tracking-wider">24h Vol</div></th>
-              <th className='py-2 px-2 w-[150px] text-right transition-colors hover:text-white'><div className="text-[10px] md:text-xs uppercase tracking-wider">Updated</div></th>
+              <th className='py-2 pl-2 pr-10 w-[150px] text-right transition-colors hover:text-white'><div className="text-[10px] md:text-xs uppercase tracking-wider">Updated</div></th>
             </tr>
           </thead>
           <tbody>
@@ -171,12 +171,12 @@ const PerpDEXs = () => {
             ) : (
               paginatedData.map((coin, index) => (
                 <tr key={`${coin.market}-${coin.symbol}-${index}`} className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer group'>
-                  <td className='py-3 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-left text-sm text-muted font-bold'>
+                  <td className='py-3 pl-10 pr-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[70px] min-w-[70px] md:w-[90px] md:min-w-[90px] text-left text-sm text-muted font-bold'>
                     <span>{(currentPage - 1) * perPage + index + 1}</span>
                   </td>
-                  <td className='py-3 px-2 sticky left-[45px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] text-left'>
+                  <td className='py-3 px-2 sticky left-[70px] md:left-[90px] bg-main group-hover:bg-card transition-colors z-10 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] text-left'>
                     <div className='flex flex-col gap-0.5 min-w-0'>
-                      <span className='font-bold truncate text-base sm:text-lg text-white'>{coin.market}</span>
+                      <span className='font-bold truncate text-base sm:text-xl text-white'>{coin.market}</span>
                       <span className='text-xs sm:text-sm text-muted uppercase leading-none font-bold'>{coin.symbol}</span>
                     </div>
                   </td>
@@ -200,7 +200,7 @@ const PerpDEXs = () => {
                   <td className='py-3 px-2 text-right font-bold text-sm sm:text-base text-gray-300'>
                     {formatPrice(Number(coin.volume_24h), { notation: 'compact' })}
                   </td>
-                  <td className='py-2 px-2 text-right text-muted text-[10px] sm:text-[11px]'>
+                  <td className='py-2 pl-2 pr-10 text-right text-muted text-[10px] sm:text-[11px]'>
                     {coin.last_traded_at ? new Date(coin.last_traded_at * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "-"}
                   </td>
                 </tr>

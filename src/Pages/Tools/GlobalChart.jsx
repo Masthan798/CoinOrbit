@@ -122,9 +122,9 @@ const GlobalChart = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full min-h-screen p-4 pb-20 flex flex-col items-center gap-8 bg-main"
+      className="w-full min-h-screen p-4 sm:p-8 pb-20 flex flex-col gap-8 bg-main"
     >
-      <div className="w-full max-w-7xl flex flex-col gap-8">
+      <div className="w-full flex flex-col gap-10">
 
         {/* Breadcrumb / Header */}
         <div className="flex flex-col gap-2">

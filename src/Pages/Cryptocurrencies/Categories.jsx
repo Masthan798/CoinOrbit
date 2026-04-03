@@ -330,18 +330,18 @@ const Categories = () => {
               <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
                 <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
                   <tr>
-                    <th className='py-2 px-1 sticky left-0 bg-main z-30 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-[10px] md:text-xs uppercase tracking-wider'>#</th>
-                    <th className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-main z-30 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] transition-colors hover:text-white cursor-pointer select-none text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('name')}>
+                    <th className='py-2 pl-10 pr-1 sticky left-0 bg-main z-30 w-[70px] min-w-[70px] md:w-[90px] md:min-w-[90px] text-[10px] md:text-sm uppercase tracking-wider'>#</th>
+                    <th className='py-2 px-2 sticky left-[70px] md:left-[90px] bg-main z-30 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] transition-colors hover:text-white cursor-pointer select-none text-[10px] md:text-sm uppercase tracking-wider' onClick={() => handleSort('name')}>
                       <div className="flex items-center gap-1">Category <SortIcon columnKey="name" /></div>
                     </th>
-                    <th className='py-2 px-2 text-[10px] md:text-xs uppercase tracking-wider'>Top Coins</th>
-                    <th className='py-2 px-2 transition-colors hover:text-white cursor-pointer select-none text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('market_cap_change_24h')}>
+                    <th className='py-2 px-2 text-[10px] md:text-sm uppercase tracking-wider'>Top Coins</th>
+                    <th className='py-2 px-2 transition-colors hover:text-white cursor-pointer select-none text-[10px] md:text-sm uppercase tracking-wider' onClick={() => handleSort('market_cap_change_24h')}>
                       <div className="flex items-center gap-1 whitespace-nowrap">24h Change <SortIcon columnKey="market_cap_change_24h" /></div>
                     </th>
-                    <th className='py-2 px-2 transition-colors hover:text-white cursor-pointer select-none text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('market_cap')}>
+                    <th className='py-2 px-2 transition-colors hover:text-white cursor-pointer select-none text-[10px] md:text-sm uppercase tracking-wider' onClick={() => handleSort('market_cap')}>
                       <div className="flex items-center gap-1 whitespace-nowrap">Market Cap <SortIcon columnKey="market_cap" /></div>
                     </th>
-                    <th className='py-2 px-2 transition-colors hover:text-white cursor-pointer select-none text-[10px] md:text-xs uppercase tracking-wider' onClick={() => handleSort('volume_24h')}>
+                    <th className='py-2 pl-2 pr-10 transition-colors hover:text-white cursor-pointer select-none text-[10px] md:text-sm uppercase tracking-wider' onClick={() => handleSort('volume_24h')}>
                       <div className="flex items-center gap-1 whitespace-nowrap">24h Vol <SortIcon columnKey="volume_24h" /></div>
                     </th>
                   </tr>
@@ -356,7 +356,7 @@ const Categories = () => {
                   ) : (
                     paginatedCategories.map((coin, index) => (
                       <tr key={coin.id || index} className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer group'>
-                        <td className='py-3 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 text-sm text-muted'>
+                        <td className='py-3 pl-10 pr-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[70px] min-w-[70px] md:w-[90px] md:min-w-[90px] text-sm text-muted font-bold'>
                           <div className='flex items-center gap-1'>
                             <Star
                               onClick={(e) => {
@@ -371,8 +371,8 @@ const Categories = () => {
                             <span>{(currentPage - 1) * perPage + index + 1}</span>
                           </div>
                         </td>
-                        <td className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10'>
-                          <span className='font-bold truncate block max-w-[110px] sm:max-w-[180px] text-sm sm:text-lg'>{coin.name}</span>
+                        <td className='py-2 px-2 sticky left-[70px] md:left-[90px] bg-main group-hover:bg-card transition-colors z-10 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px]'>
+                          <span className='font-bold truncate block max-w-[110px] sm:max-w-[250px] text-base sm:text-xl'>{coin.name}</span>
                         </td>
                         <td className='py-2 px-2'>
                           <div className='flex items-center -space-x-1 sm:-space-x-2'>
@@ -385,7 +385,7 @@ const Categories = () => {
                           {coin.market_cap_change_24h?.toFixed(1)}%
                         </td>
                         <td className='py-3 px-2 text-sm sm:text-base font-bold text-gray-300'>{formatPrice(coin.market_cap, { notation: 'compact' })}</td>
-                        <td className='py-3 px-2 text-sm sm:text-base font-bold text-gray-300'>{formatPrice(coin.volume_24h, { notation: 'compact' })}</td>
+                        <td className='py-3 pl-2 pr-10 text-sm sm:text-base font-bold text-gray-300'>{formatPrice(coin.volume_24h, { notation: 'compact' })}</td>
                       </tr>
                     ))
                   )}

@@ -279,7 +279,7 @@ const MarketCap = () => {
       <motion.div variants={itemVariants} className='w-full flex items-center justify-between gap-2 sm:gap-4'>
 
         <div className='flex flex-col gap-0.5 min-w-0'>
-          <h1 className='text-xl sm:text-5xl font-bold truncate tracking-tight'>Cryptocurrency Prices</h1>
+          <h1 className='text-2xl sm:text-5xl font-bold truncate tracking-tight'>Cryptocurrency Prices</h1>
           <div className='flex items-center gap-1 text-[10px] sm:text-lg text-muted whitespace-nowrap'>
             <span>Global cap:</span>
             <span className="text-white font-bold">{globalData ? formatPrice(globalData.total_market_cap[currency.code]) : '...'}</span>
@@ -448,31 +448,31 @@ const MarketCap = () => {
         <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
           <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
             <tr>
-              <th className='py-2 px-1 sticky left-0 bg-main z-30 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('market_cap_rank')}>
-                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider"># <SortIcon columnKey="market_cap_rank" /></div>
+              <th className='py-2 pl-10 pr-1 sticky left-0 bg-main z-30 w-[70px] min-w-[70px] md:w-[90px] md:min-w-[90px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('market_cap_rank')}>
+                <div className="flex items-center gap-1 text-[10px] md:text-sm uppercase tracking-wider"># <SortIcon columnKey="market_cap_rank" /></div>
               </th>
-              <th className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-main z-30 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('name')}>
-                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">Coin <SortIcon columnKey="name" /></div>
+              <th className='py-2 px-2 sticky left-[70px] md:left-[90px] bg-main z-30 w-[120px] min-w-[120px] md:w-[220px] md:min-w-[220px] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('name')}>
+                <div className="flex items-center gap-1 text-[10px] md:text-sm uppercase tracking-wider">Coin <SortIcon columnKey="name" /></div>
               </th>
               <th className='py-2 px-2 w-[10%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('current_price')}>
-                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">Price <SortIcon columnKey="current_price" /></div>
+                <div className="flex items-center gap-1 text-[10px] md:text-sm uppercase tracking-wider">Price <SortIcon columnKey="current_price" /></div>
               </th>
               <th className='py-2 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_1h_in_currency')}>
-                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">1h <SortIcon columnKey="price_change_percentage_1h_in_currency" /></div>
+                <div className="flex items-center gap-1 text-[10px] md:text-sm uppercase tracking-wider">1h <SortIcon columnKey="price_change_percentage_1h_in_currency" /></div>
               </th>
               <th className='py-2 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_24h')}>
-                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">24h <SortIcon columnKey="price_change_percentage_24h" /></div>
+                <div className="flex items-center gap-1 text-[10px] md:text-sm uppercase tracking-wider">24h <SortIcon columnKey="price_change_percentage_24h" /></div>
               </th>
               <th className='py-2 px-2 w-[8%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('price_change_percentage_7d_in_currency')}>
-                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">7d <SortIcon columnKey="price_change_percentage_7d_in_currency" /></div>
+                <div className="flex items-center gap-1 text-[10px] md:text-sm uppercase tracking-wider">7d <SortIcon columnKey="price_change_percentage_7d_in_currency" /></div>
               </th>
               <th className='py-2 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('total_volume')}>
-                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">24h Volume <SortIcon columnKey="total_volume" /></div>
+                <div className="flex items-center gap-1 text-[10px] md:text-sm uppercase tracking-wider">24h Volume <SortIcon columnKey="total_volume" /></div>
               </th>
               <th className='py-2 px-2 w-[15%] transition-colors hover:text-white cursor-pointer select-none' onClick={() => handleSort('market_cap')}>
-                <div className="flex items-center gap-1 text-[10px] md:text-xs uppercase tracking-wider">Market Cap <SortIcon columnKey="market_cap" /></div>
+                <div className="flex items-center gap-1 text-[10px] md:text-sm uppercase tracking-wider">Market Cap <SortIcon columnKey="market_cap" /></div>
               </th>
-              <th className='py-2 px-2 w-[15%] text-[10px] md:text-xs uppercase tracking-wider'>Last 7 Days</th>
+              <th className='py-2 pl-2 pr-10 w-[15%] text-[10px] md:text-sm uppercase tracking-wider'>Last 7 Days</th>
             </tr>
           </thead>
           <tbody>
@@ -517,7 +517,7 @@ const MarketCap = () => {
                   onClick={() => navigate(`/marketcap/${coin.id}`)}
                   className='border-b border-gray-800 hover:bg-card hover-soft transition-colors cursor-pointer group'
                 >
-                  <td className='py-3 px-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[45px] min-w-[45px] md:w-[60px] md:min-w-[60px] text-sm text-muted'>
+                  <td className='py-3 pl-10 pr-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[70px] min-w-[70px] md:w-[90px] md:min-w-[90px] text-sm text-muted'>
                     <div className='flex items-center gap-1'>
                       <Star
                         onClick={(e) => {
@@ -532,7 +532,7 @@ const MarketCap = () => {
                       <span>{coin.market_cap_rank}</span>
                     </div>
                   </td>
-                  <td className='py-2 px-2 sticky left-[45px] md:left-[60px] bg-main group-hover:bg-card transition-colors z-10 w-[120px] min-w-[120px] md:w-[200px] md:min-w-[200px]'>
+                  <td className='py-2 px-2 sticky left-[70px] md:left-[90px] bg-main group-hover:bg-card transition-colors z-10 w-[120px] min-w-[120px] md:w-[220px] md:min-w-[220px]'>
                     <div className='flex items-center gap-2'>
                       <img src={coin.image} alt={coin.name} className='w-5 h-5 sm:w-6 sm:h-6 rounded-sm' />
                       <div className='flex flex-col gap-0.5 min-w-0'>
@@ -553,7 +553,7 @@ const MarketCap = () => {
                   </td>
                   <td className='py-3 px-2 text-sm sm:text-base text-muted font-bold'>{formatPrice(coin.total_volume, { notation: 'compact' })}</td>
                   <td className='py-3 px-2 text-sm sm:text-base text-muted font-bold'>{formatPrice(coin.market_cap, { notation: 'compact' })}</td>
-                  <td className='py-2 px-2'>
+                  <td className='py-2 pl-2 pr-10'>
                     <div className='w-20 sm:w-28 h-8 sm:h-10'>
                       <ResponsiveContainer width="100%" height="100%">
                         <LineChart data={coin.sparkline_in_7d?.price?.map(p => ({ value: p })) || []}>
