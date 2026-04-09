@@ -9,6 +9,7 @@ const Categories = lazy(() => import("../Pages/Cryptocurrencies/Categories"));
 const CryptoTreasuries = lazy(() => import("../Pages/Cryptocurrencies/CryptoTreasuries"));
 const MarketCap = lazy(() => import("../Pages/Cryptocurrencies/MarketCap"));
 const CoinDetail = lazy(() => import("../Pages/Cryptocurrencies/CoinDetail"));
+const CoinWatchlist = lazy(() => import("../Pages/Cryptocurrencies/CoinWatchlist"));
 const HighlightsDetail = lazy(() => import("../Pages/Cryptocurrencies/HighlightsDetail"));
 const CryptoExchanges = lazy(() => import("../Pages/Exchages/CryptoExchanges"));
 const Derivatives = lazy(() => import("../Pages/Exchages/Derivatives"));
@@ -77,6 +78,7 @@ const AppRouter = () => {
 
                                 <Route path="/cryptotreasuries" element={<CryptoTreasuries />} />
                                 <Route path="/marketcap/:coinId" element={<CoinDetail />} />
+                                <Route path="/coin-watchlist" element={<CoinWatchlist />} />
                                 <Route path="/marketcap" element={<Navigate to="/" replace />} />
                                 <Route path="/highlights/:type" element={<HighlightsDetail />} />
                                 <Route path="/highlights" element={<Navigate to="/categories" replace />} />

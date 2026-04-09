@@ -23,6 +23,10 @@ const UserProfileDropdown = ({ onClose }) => {
         if (data) setProfileData(data);
     };
 
+    // const { data: { user } } = await supabase.auth.getUser();
+
+    console.log("USER ID:", user.id);
+
     useEffect(() => {
         fetchProfile();
     }, [user]);

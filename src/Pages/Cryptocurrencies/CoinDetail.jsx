@@ -9,6 +9,8 @@ import CoinInfoBlock from '../../Components/Coins/CoinInfoBlock';
 import CoinPerformanceBlock from '../../Components/Coins/CoinPerformanceBlock';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
 import { useCurrency } from '../../Context/CurrencyContext';
+import { useWishlist } from '../../Context/WishlistContext';
+import { toast } from 'react-hot-toast';
 
 
 const containerVariants = {
@@ -35,6 +37,7 @@ const CoinDetail = () => {
     const { coinId } = useParams();
     const navigate = useNavigate();
     const { currency, formatPrice } = useCurrency();
+    const { coinWishlist, toggleCoinWishlist } = useWishlist();
     const [coin, setCoin] = useState(null);
     const [loading, setLoading] = useState(true);
     const [coincardsData, setCoinsCardData] = useState(null);
@@ -257,9 +260,18 @@ const CoinDetail = () => {
                             </div>
 
                             <div className='pt-1 sm:pt-2 flex gap-3'>
-                                <button className='flex-1 flex items-center justify-center gap-2 p-3 sm:p-4 bg-card hover:bg-white/5 text-white text-xs sm:text-sm font-extrabold rounded-xl sm:rounded-2xl border border-white/10 transition-all active:scale-[0.98] shadow-lg shadow-black/20'>
-                                    <StarIcon size={16} fill="currentColor" className="sm:w-[18px] sm:h-[18px]" />
-                                    Add to Portfolio
+                                <button
+                                    onClick={async () => {
+                                        await toggleCoinWishlist(coin.id, coin.name);
+                                    }}
+                                    className={`flex-1 flex items-center justify-center gap-2 p-3 sm:p-4 bg-card hover:bg-white/5 text-white text-xs sm:text-sm font-extrabold rounded-xl sm:rounded-2xl border border-white/10 transition-all active:scale-[0.98] shadow-lg shadow-black/20 group`}
+                                >
+                                    <StarIcon
+                                        size={16}
+                                        fill={coinWishlist.includes(coin.id) ? "currentColor" : "none"}
+                                        className={`${coinWishlist.includes(coin.id) ? 'text-yellow-400' : 'text-white'} transition-colors sm:w-[18px] sm:h-[18px]`}
+                                    />
+                                    <span>{coinWishlist.includes(coin.id) ? 'In Watchlist' : 'Add to Watchlist'}</span>
                                 </button>
                             </div>
                         </div>
