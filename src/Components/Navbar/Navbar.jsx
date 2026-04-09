@@ -126,7 +126,7 @@ const Navbar = () => {
     ];
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    
+
     // Lock body scroll when mobile menu is open
     useEffect(() => {
         if (isMobileMenuOpen) {
@@ -203,8 +203,8 @@ const Navbar = () => {
                                                         item.path && navigate(item.path);
                                                         setIsMobileMenuOpen(false);
                                                     }}
-                                                    className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 border ${isActive(item.path) 
-                                                        ? 'bg-card text-white border-white/10 shadow-lg' 
+                                                    className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 border ${isActive(item.path)
+                                                        ? 'bg-card text-white border-white/10 shadow-lg'
                                                         : 'text-muted border-transparent hover:bg-white/5 hover:text-white'}`}
                                                 >
                                                     {item.icon}
@@ -224,8 +224,8 @@ const Navbar = () => {
                                             item.path && navigate(item.path);
                                             setIsMobileMenuOpen(false);
                                         }}
-                                        className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 border ${isActive(item.path) 
-                                            ? 'bg-card text-white border-white/10 shadow-lg' 
+                                        className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 border ${isActive(item.path)
+                                            ? 'bg-card text-white border-white/10 shadow-lg'
                                             : 'text-muted border-transparent hover:bg-white/5 hover:text-white'}`}
                                     >
                                         {item.icon}
@@ -326,8 +326,8 @@ const Navbar = () => {
                                             onClick={() => item.path && navigate(item.path)}
                                             onMouseEnter={(e) => handleMouseEnter(e, item.label)}
                                             onMouseLeave={handleMouseLeave}
-                                            className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 border ${isActive(item.path) 
-                                                ? 'bg-card text-white border-white/10 shadow-lg' 
+                                            className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 border ${isActive(item.path)
+                                                ? 'bg-card text-white border-white/10 shadow-lg'
                                                 : 'text-muted border-transparent hover:bg-white/5 hover:text-white'} ${isCollapsed ? 'justify-center mx-auto' : ''}`}
                                         >
                                             <motion.span
@@ -365,8 +365,8 @@ const Navbar = () => {
                                 onClick={() => item.path && navigate(item.path)}
                                 onMouseEnter={(e) => handleMouseEnter(e, item.label)}
                                 onMouseLeave={handleMouseLeave}
-                                className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 border ${isActive(item.path) 
-                                    ? 'bg-card text-white border-white/10 shadow-lg' 
+                                className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 border ${isActive(item.path)
+                                    ? 'bg-card text-white border-white/10 shadow-lg'
                                     : 'text-muted border-transparent hover:bg-white/5 hover:text-white'} ${isCollapsed ? 'justify-center mx-auto' : ''}`}
                             >
                                 <motion.span

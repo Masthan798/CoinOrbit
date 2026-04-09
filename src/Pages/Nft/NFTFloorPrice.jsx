@@ -7,6 +7,8 @@ import { coingeckoFetch } from '../../api/coingeckoClient';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
 import TableFilterHeader from '../../Components/common/TableFilterHeader';
 import { useCurrency } from '../../Context/CurrencyContext';
+import { useWishlist } from '../../Context/WishlistContext';
+import { toast } from 'react-hot-toast';
 
 
 
@@ -33,8 +35,9 @@ const itemVariants = {
   }
 };
 
-const NFTCard = ({ nft }) => {
+export const NFTCard = ({ nft }) => {
   const { currency, formatPrice } = useCurrency();
+  const { nftWishlist, toggleNftWishlist } = useWishlist();
   const [details, setDetails] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -152,9 +155,14 @@ const NFTCard = ({ nft }) => {
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="p-2.5 bg-white/5 rounded-xl border border-white/5 text-[var(--text-muted)] hover:text-white hover:bg-white/10 transition-all"
+              onClick={async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                await toggleNftWishlist(data.id || data.contract_address, nftTitle);
+              }}
+              className={`p-2.5 rounded-xl border border-white/5 transition-all ${nftWishlist.includes(data.id || data.contract_address) ? 'bg-yellow-400/10 text-yellow-400' : 'bg-white/5 text-[var(--text-muted)]'}`}
             >
-              <Star size={16} />
+              <Star size={16} fill={nftWishlist.includes(data.id || data.contract_address) ? "currentColor" : "none"} />
             </motion.button>
           </div>
         </div>

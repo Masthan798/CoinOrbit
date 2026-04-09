@@ -11,6 +11,8 @@ import CardSkeleton from '../../Components/Loadings/CardSkeleton';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
 import TableFilterHeader from '../../Components/common/TableFilterHeader';
 import { useCurrency } from '../../Context/CurrencyContext';
+import { useWishlist } from '../../Context/WishlistContext';
+import { toast } from 'react-hot-toast';
 
 
 const data = [
@@ -26,8 +28,8 @@ const data = [
 const MarketCap = () => {
   const navigate = useNavigate();
   const { currency, formatPrice } = useCurrency();
+  const { coinWishlist, toggleCoinWishlist } = useWishlist();
   const TOTAL_COINS = 14000;
-  const [favorites, setFavorites] = useState([]);
   const [Allcoins, SetallCoins] = useState([]);
   const [highlights, setHighlights] = useState([]); // Kept for now if other logic uses it, but main cards use new state
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,10 +53,12 @@ const MarketCap = () => {
 
   const totalPages = Math.ceil(TOTAL_COINS / perPage);
 
-  const toggleFavorite = (rank) => {
-    setFavorites(prev =>
-      prev.includes(rank) ? prev.filter(r => r !== rank) : [...prev, rank]
-    );
+  const handleToggleFavorite = async (e, coinId, name) => {
+    e.stopPropagation();
+    const result = await toggleCoinWishlist(coinId, name);
+    if (result.error) {
+      // Error handled by context toast usually, but keep this for extra safety
+    }
   };
 
   useEffect(() => {
@@ -520,11 +524,8 @@ const MarketCap = () => {
                   <td className='py-3 pl-10 pr-1 sticky left-0 bg-main group-hover:bg-card transition-colors z-10 w-[70px] min-w-[70px] md:w-[90px] md:min-w-[90px] text-sm text-muted'>
                     <div className='flex items-center gap-1'>
                       <Star
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleFavorite(coin.market_cap_rank);
-                        }}
-                        className={`w-3 h-3 cursor-pointer transition-colors ${favorites.includes(coin.market_cap_rank)
+                        onClick={(e) => handleToggleFavorite(e, coin.id, coin.name)}
+                        className={`w-3 h-3 cursor-pointer transition-colors ${coinWishlist.includes(coin.id)
                           ? 'text-yellow-400 fill-yellow-400'
                           : 'text-gray-500 hover:text-yellow-400'
                           }`}

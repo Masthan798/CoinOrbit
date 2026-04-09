@@ -22,6 +22,8 @@ import { coingeckoFetch } from '../../api/coingeckoClient';
 import NFTDetailGraph from '../../Components/Graphs/NFTDetailGraph';
 import Breadcrumbs from '../../Components/common/Breadcrumbs';
 import { useCurrency } from '../../Context/CurrencyContext';
+import { useWishlist } from '../../Context/WishlistContext';
+import { toast } from 'react-hot-toast';
 
 const StatRow = ({ label, value, change, isPositive, tooltip }) => (
     <div className="flex items-center justify-between py-2 sm:py-3 border-b border-gray-800/20 last:border-0 hover:bg-white/[0.03] px-2 sm:px-3 rounded-lg sm:rounded-xl transition-all duration-300 group">
@@ -45,6 +47,7 @@ const StatRow = ({ label, value, change, isPositive, tooltip }) => (
 const NFTDetail = () => {
     const { contractAddress } = useParams();
     const { currency, formatPrice } = useCurrency();
+    const { nftWishlist, toggleNftWishlist } = useWishlist();
     const [nftData, setNftData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -156,9 +159,18 @@ const NFTDetail = () => {
                         </div>
 
                         <div className='pt-1 sm:pt-2 flex gap-3'>
-                            <button className="flex-1 flex items-center justify-center gap-2 p-3 sm:p-4 bg-card hover:bg-white/5 text-white text-xs sm:text-sm font-extrabold rounded-xl sm:rounded-2xl border border-white/10 transition-all active:scale-[0.98] shadow-lg shadow-black/20 group">
-                                <Star size={16} fill="currentColor" className="group-hover:scale-110 transition-transform sm:w-[18px] sm:h-[18px]" />
-                                <span>Add to Watchlist</span>
+                            <button
+                                onClick={async () => {
+                                    await toggleNftWishlist(nftData.id || contractAddress, nftData.name);
+                                }}
+                                className="flex-1 flex items-center justify-center gap-2 p-3 sm:p-4 bg-card hover:bg-white/5 text-white text-xs sm:text-sm font-extrabold rounded-xl sm:rounded-2xl border border-white/10 transition-all active:scale-[0.98] shadow-lg shadow-black/20 group"
+                            >
+                                <Star
+                                    size={16}
+                                    fill={nftWishlist.includes(nftData.id || contractAddress) ? "currentColor" : "none"}
+                                    className={`${nftWishlist.includes(nftData.id || contractAddress) ? 'text-yellow-400' : 'text-white'} group-hover:scale-110 transition-all sm:w-[18px] sm:h-[18px]`}
+                                />
+                                <span>{nftWishlist.includes(nftData.id || contractAddress) ? 'In Watchlist' : 'Add to Watchlist'}</span>
                             </button>
                         </div>
                     </div>
