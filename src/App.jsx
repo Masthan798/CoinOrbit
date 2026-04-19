@@ -29,26 +29,34 @@ function App() {
 
   return (
     <CurrencyProvider>
-      <AnimatePresence mode="wait">
-        {showSplash ? (
-          <SplashScreen key="splash" />
-        ) : (
-          <div key="app-content" className="flex flex-col lg:flex-row min-h-screen bg-black text-white relative">
-            <Toaster position="top-right" toastOptions={{
-              style: {
-                background: '#141414',
-                color: '#fff',
-                border: '1px solid #1F1F1F',
-              },
-            }} />
-            {user && !isAuthPage && <Navbar />}
-            <div className="flex-1 lg:h-screen lg:overflow-y-auto p-2 pt-20 sm:p-5 sm:pt-20 lg:pt-5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-              <AppRouter />
+      <div className="relative min-h-screen bg-black text-white overflow-hidden">
+        <Toaster position="top-right" toastOptions={{
+          style: {
+            background: '#141414',
+            color: '#fff',
+            border: '1px solid #1F1F1F',
+          },
+        }} />
+
+        <AnimatePresence mode="wait">
+          {showSplash && (
+            <div className="fixed inset-0 z-[9999]">
+              <SplashScreen key="splash" />
             </div>
-            <GlobalBranding />
+          )}
+        </AnimatePresence>
+
+        <div 
+          key="app-content" 
+          className={`flex flex-col lg:flex-row min-h-screen bg-black text-white relative ${showSplash && isInitialLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-500`}
+        >
+          {user && !isAuthPage && <Navbar />}
+          <div className="flex-1 lg:h-screen lg:overflow-y-auto p-2 pt-20 sm:p-5 sm:pt-20 lg:pt-5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <AppRouter />
           </div>
-        )}
-      </AnimatePresence>
+          <GlobalBranding />
+        </div>
+      </div>
     </CurrencyProvider>
   )
 }

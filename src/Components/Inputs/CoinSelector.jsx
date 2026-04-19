@@ -27,7 +27,7 @@ const CoinSelector = ({ selectedCoinId, onSelect, coinsList, loading }) => {
             {/* Trigger Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full h-[45px] flex items-center justify-between px-3 rounded-xl bg-card border border-gray-700 text-white hover:border-gray-500 focus:outline-none focus:border-primary transition-all"
+                className="w-full h-[45px] flex items-center justify-between px-3 rounded-md bg-card border border-gray-700 text-white hover:border-gray-500 focus:outline-none focus:border-white/50 transition-all"
                 type="button"
             >
                 {selectedCoin ? (
@@ -49,7 +49,7 @@ const CoinSelector = ({ selectedCoinId, onSelect, coinsList, loading }) => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute z-50 w-full mt-2 bg-main border border-gray-800 rounded-xl shadow-xl overflow-hidden"
+                        className="absolute z-50 w-full mt-2 bg-main border border-gray-800 rounded-md shadow-xl overflow-hidden"
                     >
                         <div className="max-h-[400px] overflow-y-auto no-scrollbar py-2">
                             {loading ? (

@@ -99,7 +99,7 @@ const ResetPassword = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="max-w-md w-full"
             >
-                <div className="bg-card backdrop-blur-xl border border-soft rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+                <div className="bg-card backdrop-blur-xl border border-soft rounded-md p-6 sm:p-8 shadow-2xl relative overflow-hidden">
                     <AnimatePresence mode="wait">
                         {step === 1 ? (
                             <motion.div
@@ -128,7 +128,7 @@ const ResetPassword = () => {
                                                     onChange={(e) => handleOtpChange(e.target, index)}
                                                     onKeyDown={(e) => handleKeyDown(e, index)}
                                                     onFocus={(e) => e.target.select()}
-                                                    className="w-8 h-10 sm:w-10 sm:h-12 bg-transparent border border-soft rounded-lg text-center text-white text-base sm:text-lg font-bold focus:outline-none focus:border-white/40 focus:ring-1 focus:ring-white/20 transition-all"
+                                                    className="w-8 h-10 sm:w-10 sm:h-12 bg-transparent border border-soft rounded-md text-center text-white text-base sm:text-lg font-bold focus:outline-none focus:border-white/40 focus:ring-1 focus:ring-white/20 transition-all"
                                                 />
                                             ))}
                                         </div>
@@ -137,7 +137,7 @@ const ResetPassword = () => {
                                     <button
                                         type="submit"
                                         disabled={loading}
-                                        className="w-full bg-card border border-soft text-white font-bold py-3 sm:py-3.5 rounded-xl hover:bg-hover-soft hover:border-white/20 transition-all shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base"
+                                        className="w-full bg-card border border-soft text-white font-bold py-3 sm:py-3.5 rounded-md hover:bg-hover-soft hover:border-white/20 transition-all shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base"
                                     >
                                         {loading ? (
                                             <div className="w-4 h-4 sm:w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -174,7 +174,7 @@ const ResetPassword = () => {
                                                 type={showPassword ? "text" : "password"}
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
-                                                className="w-full bg-transparent border border-soft rounded-xl py-2.5 sm:py-3 pl-10 sm:pl-12 pr-10 sm:pr-12 text-white text-sm sm:text-base focus:outline-none focus:border-white/20 transition-all font-sans"
+                                                className="w-full bg-transparent border border-soft rounded-md py-2.5 sm:py-3 pl-10 sm:pl-12 pr-10 sm:pr-12 text-white text-sm sm:text-base focus:outline-none focus:border-white/20 transition-all font-sans"
                                                 placeholder="••••••••"
                                                 required
                                             />
@@ -196,7 +196,7 @@ const ResetPassword = () => {
                                                 type={showConfirmPassword ? "text" : "password"}
                                                 value={confirmPassword}
                                                 onChange={(e) => setConfirmPassword(e.target.value)}
-                                                className="w-full bg-transparent border border-soft rounded-xl py-2.5 sm:py-3 pl-10 sm:pl-12 pr-10 sm:pr-12 text-white text-sm sm:text-base focus:outline-none focus:border-white/20 transition-all font-sans"
+                                                className="w-full bg-transparent border border-soft rounded-md py-2.5 sm:py-3 pl-10 sm:pl-12 pr-10 sm:pr-12 text-white text-sm sm:text-base focus:outline-none focus:border-white/20 transition-all font-sans"
                                                 placeholder="••••••••"
                                                 required
                                             />
@@ -213,7 +213,7 @@ const ResetPassword = () => {
                                     <button
                                         type="submit"
                                         disabled={loading}
-                                        className="w-full bg-card border border-soft text-white font-bold py-3 sm:py-3.5 rounded-xl hover:bg-hover-soft hover:border-white/20 transition-all shadow-lg flex items-center justify-center gap-2 mt-2 text-sm sm:text-base"
+                                        className="w-full bg-card border border-soft text-white font-bold py-3 sm:py-3.5 rounded-md hover:bg-hover-soft hover:border-white/20 transition-all shadow-lg flex items-center justify-center gap-2 mt-2 text-sm sm:text-base"
                                     >
                                         {loading ? (
                                             <div className="w-4 h-4 sm:w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>

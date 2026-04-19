@@ -182,7 +182,7 @@ const Converter = () => {
         </div>
 
         {/* Converter Box */}
-        <div className="w-full bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 md:p-10 flex flex-col gap-8 shadow-2xl">
+        <div className="w-full bg-[#0b0e11] border border-gray-800 rounded-md p-6 md:p-10 flex flex-col gap-8 shadow-2xl">
 
           <div className="flex flex-col md:flex-row items-center md:items-end gap-4">
 
@@ -193,7 +193,7 @@ const Converter = () => {
                 type="number"
                 value={amount}
                 onChange={(e) => setAmount(parseFloat(e.target.value) || '')}
-                className="w-full h-[45px] bg-card border border-gray-700 rounded-xl px-4 text-white focus:outline-none focus:border-primary transition-all font-mono"
+                className="w-full h-[45px] bg-card border border-gray-700 rounded-md px-4 text-white focus:outline-none focus:border-primary transition-all font-mono"
                 placeholder="1.00"
               />
             </div>
@@ -227,7 +227,7 @@ const Converter = () => {
           </div>
 
           {/* Result Display */}
-          <div className="flex flex-col gap-1 items-start bg-card/30 p-6 rounded-2xl border border-white/5">
+          <div className="flex flex-col gap-1 items-start bg-card/30 p-6 rounded-md border border-white/5">
             {loadingRate && !coinPriceBTC ? (
               <div className="h-10 w-1/2 bg-white/5 animate-pulse rounded"></div>
             ) : (
@@ -249,7 +249,7 @@ const Converter = () => {
         </div>
 
         {/* Popular Crypto Pairs */}
-        <div className="w-full bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 md:p-8 flex flex-col gap-6">
+        <div className="w-full bg-[#0b0e11] border border-gray-800 rounded-md p-6 md:p-8 flex flex-col gap-6">
           <h3 className="text-xl font-bold text-white">Popular Cryptocurrency Pairs</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {popularPairs.map((pair, idx) => (
@@ -267,7 +267,7 @@ const Converter = () => {
         </div>
 
         {/* Popular Currencies */}
-        <div className="w-full bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 md:p-8 flex flex-col gap-6">
+        <div className="w-full bg-[#0b0e11] border border-gray-800 rounded-md p-6 md:p-8 flex flex-col gap-6">
           <h3 className="text-xl font-bold text-white">Crypto Prices in Popular Currencies</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {popularCurrencies.map((curr, idx) => (

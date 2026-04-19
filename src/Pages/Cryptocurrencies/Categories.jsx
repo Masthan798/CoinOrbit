@@ -173,7 +173,7 @@ const Categories = () => {
   const HighlightCard = ({ title, icon, data, type = 'price', moreLink }) => {
     const navigate = useNavigate();
     return (
-      <div className="bg-[#0d0e12] border border-gray-800 rounded-xl p-5 flex flex-col h-full hover:border-gray-700 transition-all duration-300">
+      <div className="bg-[#0d0e12] border border-gray-800 rounded-md p-5 flex flex-col h-full hover:border-gray-700 transition-all duration-300">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             {icon}
@@ -224,7 +224,7 @@ const Categories = () => {
   };
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible" className='w-full flex flex-col justify-start items-center bg-main min-h-full p-2 sm:p-4 pb-8 rounded-xl gap-4 sm:gap-8'>
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" className='w-full flex flex-col justify-start items-center bg-main min-h-full p-2 sm:p-4 pb-8 rounded-md gap-4 sm:gap-8'>
 
       <div className='w-full'>
         <Breadcrumbs
@@ -326,7 +326,7 @@ const Categories = () => {
             exit="hidden"
             className='w-full'
           >
-            <div className='w-full overflow-x-auto min-h-[400px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative rounded-xl border border-white/5'>
+            <div className='w-full overflow-x-auto min-h-[400px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative rounded-md border border-white/5'>
               <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
                 <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
                   <tr>

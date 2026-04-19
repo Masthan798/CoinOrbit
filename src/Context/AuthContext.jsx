@@ -33,13 +33,20 @@ export const AuthProvider = ({ children }) => {
     const signIn = async (email, password) => {
         setIsRefreshing(true);
         const result = await supabase.auth.signInWithPassword({ email, password });
+        if (result.data?.user) {
+            setUser(result.data.user);
+        }
         setTimeout(() => setIsRefreshing(false), 2800);
         return result;
     };
 
     // Sign up
     const signUp = async (email, password) => {
-        return await supabase.auth.signUp({ email, password });
+        const result = await supabase.auth.signUp({ email, password });
+        if (result.data?.user && result.data?.session) {
+            setUser(result.data.user);
+        }
+        return result;
     };
 
     // Sign out

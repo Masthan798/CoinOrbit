@@ -21,7 +21,7 @@ const ComparisonsPieChart = ({ data, title }) => {
         if (active && payload && payload.length) {
             const percent = total > 0 ? (payload[0].value / total) * 100 : 0;
             return (
-                <div className="bg-[#1e222d] border border-gray-700 p-3 rounded-lg shadow-xl">
+                <div className="bg-[#1e222d] border border-gray-700 p-3 rounded-md shadow-xl">
                     <p className="text-white font-bold">{payload[0].name}</p>
                     <p className="text-gray-300">
                         {title}: <span className="text-white font-mono">{payload[0].value.toLocaleString()}</span>
@@ -62,7 +62,7 @@ const ComparisonsPieChart = ({ data, title }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="w-full bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col items-center justify-center"
+            className="w-full bg-[#0b0e11] border border-gray-800 rounded-md p-6 flex flex-col items-center justify-center"
         >
             <h3 className="text-lg font-bold text-white mb-4 self-start">{title}</h3>
             <div className={`w-full ${isMobile ? 'h-[350px]' : 'h-[300px]'} relative flex items-center justify-center`}>

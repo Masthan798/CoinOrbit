@@ -37,7 +37,7 @@ const FilterDropdown = ({ label, options, selectedValue, onSelect, activeFilter,
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="absolute left-0 mt-2 w-64 bg-[#1a1c23] border border-gray-700 rounded-xl shadow-2xl z-50 overflow-hidden"
+                        className="absolute left-0 mt-2 w-64 bg-[#1a1c23] border border-gray-700 rounded-md shadow-2xl z-50 overflow-hidden"
                     >
                         <div className="p-3 border-b border-gray-800">
                             <div className="relative">
@@ -47,7 +47,7 @@ const FilterDropdown = ({ label, options, selectedValue, onSelect, activeFilter,
                                     placeholder="Search"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="w-full bg-[#0b0e11] border border-gray-700 rounded-lg py-1.5 pl-10 pr-4 text-sm focus:outline-none focus:border-blue-500 text-white"
+                                    className="w-full bg-[#0b0e11] border border-gray-700 rounded-md py-1.5 pl-10 pr-4 text-sm focus:outline-none focus:border-blue-500 text-white"
                                 />
                             </div>
                         </div>
@@ -157,7 +157,7 @@ const FilterBar = ({
                     placeholder="Search coins..."
                     value={globalSearch}
                     onChange={(e) => setGlobalSearch(e.target.value)}
-                    className="w-full bg-[#1a1c23] border border-gray-800 rounded-lg py-1.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+                    className="w-full bg-[#1a1c23] border border-gray-800 rounded-md py-1.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
                 />
                 {globalSearch && (
                     <button

@@ -127,7 +127,7 @@ const Allcoins = () => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className='w-full flex flex-col gap-4 sm:gap-6 p-2 sm:p-6 bg-main min-h-screen rounded-xl'
+      className='w-full flex flex-col gap-4 sm:gap-6 p-2 sm:p-6 bg-main min-h-screen rounded-md'
     >
       <Breadcrumbs
         crumbs={[
@@ -160,7 +160,7 @@ const Allcoins = () => {
         placeholder="Search coins..."
       />
 
-      <div className='w-full overflow-x-auto rounded-xl border border-gray-800/50 relative'>
+      <div className='w-full overflow-x-auto rounded-md border border-gray-800/50 relative'>
         <table className='w-full min-w-[750px] md:min-w-[1100px] text-left text-sm'>
           <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
             <tr>

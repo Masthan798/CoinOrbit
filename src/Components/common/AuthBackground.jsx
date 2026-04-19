@@ -35,7 +35,7 @@ const AuthBackground = () => {
                             delay: Math.random() * 10,
                             ease: "easeInOut"
                         }}
-                        className="w-16 h-16 border border-white/10 rounded-xl"
+                        className="w-16 h-16 border border-white/10 rounded-md"
                         style={{
                             marginLeft: `${Math.random() * 20}%`,
                             marginTop: `${Math.random() * 20}%`

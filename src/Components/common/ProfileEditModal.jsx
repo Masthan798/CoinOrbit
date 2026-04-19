@@ -70,14 +70,14 @@ const ProfileEditModal = ({ user, onClose, onUpdate }) => {
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                className="w-full max-w-md bg-[#0d0e12] border border-gray-800 rounded-2xl shadow-2xl overflow-hidden"
+                className="w-full max-w-md bg-[#0d0e12] border border-gray-800 rounded-md shadow-2xl overflow-hidden"
             >
                 <div className="flex items-center justify-between p-4 border-b border-gray-800">
                     <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                        <User size={20} className="text-emerald-500" />
+                        <User size={20} className="text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]" />
                         Edit Profile
                     </h2>
-                    <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-lg text-muted-foreground hover:text-white transition-colors">
+                    <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-md text-muted-foreground hover:text-white transition-colors">
                         <X size={20} />
                     </button>
                 </div>
@@ -85,18 +85,18 @@ const ProfileEditModal = ({ user, onClose, onUpdate }) => {
                 <form onSubmit={handleSave} className="p-6 space-y-4">
                     {loading ? (
                         <div className="flex flex-col items-center justify-center py-12 gap-3">
-                            <Loader2 className="animate-spin text-emerald-500" size={32} />
+                            <Loader2 className="animate-spin text-white" size={32} />
                             <span className="text-sm text-muted-foreground animate-pulse">Fetching profile data...</span>
                         </div>
                     ) : (
                         <>
                             <div className="flex flex-col items-center gap-4 mb-6">
                                 <div className="relative group">
-                                    <div className="w-24 h-24 bg-gray-800 rounded-full flex items-center justify-center border-2 border-dashed border-gray-700 group-hover:border-emerald-500 transition-colors overflow-hidden">
+                                    <div className="w-24 h-24 bg-white/[0.03] rounded-full flex items-center justify-center border-2 border-dashed border-gray-700 group-hover:border-white transition-colors overflow-hidden">
                                         {profile.avatar_url ? (
                                             <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
                                         ) : (
-                                            <Camera size={32} className="text-gray-600 group-hover:text-emerald-500 transition-colors" />
+                                            <Camera size={32} className="text-gray-600 group-hover:text-white transition-colors" />
                                         )}
                                     </div>
                                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 cursor-pointer rounded-full">
@@ -113,7 +113,7 @@ const ProfileEditModal = ({ user, onClose, onUpdate }) => {
                                         type="text"
                                         value={profile.first_name}
                                         onChange={(e) => setProfile({ ...profile, first_name: e.target.value })}
-                                        className="w-full bg-white/[0.03] border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                                        className="w-full bg-white/[0.03] border border-gray-800 rounded-md px-4 py-3 text-sm text-white focus:outline-none focus:border-white/50 focus:ring-1 focus:ring-white/20 transition-all shadow-inner"
                                         placeholder="John"
                                     />
                                 </div>
@@ -123,7 +123,7 @@ const ProfileEditModal = ({ user, onClose, onUpdate }) => {
                                         type="text"
                                         value={profile.last_name}
                                         onChange={(e) => setProfile({ ...profile, last_name: e.target.value })}
-                                        className="w-full bg-white/[0.03] border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                                        className="w-full bg-white/[0.03] border border-gray-800 rounded-md px-4 py-3 text-sm text-white focus:outline-none focus:border-white/50 focus:ring-1 focus:ring-white/20 transition-all shadow-inner"
                                         placeholder="Doe"
                                     />
                                 </div>
@@ -133,7 +133,7 @@ const ProfileEditModal = ({ user, onClose, onUpdate }) => {
                                         type="text"
                                         value={profile.avatar_url}
                                         onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })}
-                                        className="w-full bg-white/[0.03] border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                                        className="w-full bg-white/[0.03] border border-gray-800 rounded-md px-4 py-3 text-sm text-white focus:outline-none focus:border-white/50 focus:ring-1 focus:ring-white/20 transition-all shadow-inner"
                                         placeholder="https://example.com/photo.jpg"
                                     />
                                 </div>
@@ -143,14 +143,14 @@ const ProfileEditModal = ({ user, onClose, onUpdate }) => {
                                 <button
                                     type="button"
                                     onClick={onClose}
-                                    className="flex-1 px-6 py-3 bg-white/5 hover:bg-white/10 text-white font-bold rounded-xl transition-all uppercase tracking-widest text-xs"
+                                    className="flex-1 px-6 py-3 bg-white/5 hover:bg-white/10 text-white font-bold rounded-md transition-all uppercase tracking-widest text-xs"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={saving}
-                                    className="flex-1 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-extrabold rounded-xl transition-all uppercase tracking-widest text-xs flex items-center justify-center gap-2"
+                                    className="flex-1 px-6 py-3 bg-white hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed text-black font-extrabold rounded-md transition-all uppercase tracking-widest text-xs flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(255,255,255,0.2)]"
                                 >
                                     {saving ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} />}
                                     {saving ? 'Saving...' : 'Save Changes'}

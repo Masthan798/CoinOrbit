@@ -75,7 +75,7 @@ const CoinConversionDetail = () => {
                     {/* LEFT COLUMN Skeleton */}
                     <div className="col-span-1 flex flex-col gap-6">
                         {/* Coin Identity Card Skeleton */}
-                        <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col gap-6 h-[500px]">
+                        <div className="bg-[#0b0e11] border border-gray-800 rounded-md p-6 flex flex-col gap-6 h-[500px]">
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 bg-gray-800 rounded-sm"></div>
                                 <div className="flex flex-col gap-2">
@@ -99,9 +99,9 @@ const CoinConversionDetail = () => {
                     {/* RIGHT COLUMN Skeleton */}
                     <div className="lg:col-span-2 flex flex-col gap-6">
                         {/* Converter Box Skeleton */}
-                        <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 md:p-10 h-64"></div>
+                        <div className="bg-[#0b0e11] border border-gray-800 rounded-md p-6 md:p-10 h-64"></div>
                         {/* Chart Section Skeleton */}
-                        <div className="h-[500px] w-full bg-[#0b0e11] rounded-3xl border border-gray-800 p-2"></div>
+                        <div className="h-[500px] w-full bg-[#0b0e11] rounded-md border border-gray-800 p-2"></div>
                     </div>
                 </div>
             </div>
@@ -112,7 +112,7 @@ const CoinConversionDetail = () => {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] text-white gap-4">
                 <h2 className="text-2xl font-bold text-red-500">Data Not Found</h2>
-                <button onClick={() => navigate('/tools/converter')} className="px-4 py-2 bg-blue-600 rounded-lg">Back</button>
+                <button onClick={() => navigate('/tools/converter')} className="px-4 py-2 bg-blue-600 rounded-md">Back</button>
             </div>
         );
     }
@@ -147,7 +147,7 @@ const CoinConversionDetail = () => {
                 <div className="col-span-1 flex flex-col gap-6">
 
                     {/* Coin Identity Card */}
-                    <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col gap-6 shadow-xl">
+                    <div className="bg-[#0b0e11] border border-gray-800 rounded-md p-6 flex flex-col gap-6 shadow-xl">
 
                         <div className="flex items-center gap-4">
                             <img src={coinData.image.large} alt={coinData.name} className="w-12 h-12 rounded-sm" />
@@ -181,10 +181,10 @@ const CoinConversionDetail = () => {
 
                         {/* Actions */}
                         <div className="flex gap-3">
-                            <button className="flex-1 py-2.5 bg-card border border-gray-700 rounded-xl hover:bg-gray-700 transition flex items-center justify-center gap-2 text-sm font-bold">
+                            <button className="flex-1 py-2.5 bg-card border border-gray-700 rounded-md hover:bg-gray-700 transition flex items-center justify-center gap-2 text-sm font-bold">
                                 <Star size={16} /> Add to Portfolio
                             </button>
-                            <button className="p-2.5 bg-card border border-gray-700 rounded-xl hover:bg-gray-700 transition">
+                            <button className="p-2.5 bg-card border border-gray-700 rounded-md hover:bg-gray-700 transition">
                                 <Bell size={18} />
                             </button>
                         </div>
@@ -216,7 +216,7 @@ const CoinConversionDetail = () => {
                             href={coinData.links?.homepage?.[0]}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="w-full py-3 bg-card border border-gray-700 rounded-xl text-sm font-bold hover:bg-gray-700 transition flex items-center justify-center"
+                            className="w-full py-3 bg-card border border-gray-700 rounded-md text-sm font-bold hover:bg-gray-700 transition flex items-center justify-center"
                         >
                             Find out more info
                         </a>
@@ -229,13 +229,13 @@ const CoinConversionDetail = () => {
                 <div className="lg:col-span-2 flex flex-col gap-6">
 
                     {/* Converter Section */}
-                    <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 md:p-8 shadow-xl">
+                    <div className="bg-[#0b0e11] border border-gray-800 rounded-md p-6 md:p-8 shadow-xl">
                         <h2 className="text-xl font-bold mb-2">Convert {coinData.name} to {currencyCode.toUpperCase()} ({coinData.symbol.toUpperCase()} to {currencyCode.toUpperCase()})</h2>
                         <p className="text-sm text-muted mb-6">
                             The price of converting 1 {coinData.name} ({coinData.symbol.toUpperCase()}) to {currencyCode.toUpperCase()} is {formatCurrency(exchangeRate, currencyCode)} today.
                         </p>
 
-                        <div className="flex flex-col md:flex-row items-center gap-0 md:gap-4 bg-[#0d0f14] p-1 rounded-2xl border border-gray-800">
+                        <div className="flex flex-col md:flex-row items-center gap-0 md:gap-4 bg-[#0d0f14] p-1 rounded-md border border-gray-800">
 
                             <div className="flex-1 w-full bg-transparent flex items-center px-4 h-14 border-b md:border-b-0 md:border-r border-gray-800 relative">
                                 <span className="text-white text-lg font-mono w-full">
@@ -276,12 +276,12 @@ const CoinConversionDetail = () => {
                             </p>
                         </div>
 
-                        <div className="h-[500px] w-full bg-[#0b0e11] rounded-3xl border border-gray-800 p-2 overflow-hidden relative">
+                        <div className="h-[500px] w-full bg-[#0b0e11] rounded-md border border-gray-800 p-2 overflow-hidden relative">
                             <CoinDetailGraph coinId={coinId} chartHeight="h-full" />
                         </div>
 
                         {/* Price Performance Table */}
-                        <div className="mt-6 bg-[#0b0e11] border border-gray-800 rounded-3xl p-6">
+                        <div className="mt-6 bg-[#0b0e11] border border-gray-800 rounded-md p-6">
                             <h3 className="text-lg font-bold mb-4">{coinData.name} Price Performance ({currencyCode.toUpperCase()})</h3>
                             <div className="overflow-x-auto no-scrollbar">
                                 <table className="w-full min-w-[500px]">

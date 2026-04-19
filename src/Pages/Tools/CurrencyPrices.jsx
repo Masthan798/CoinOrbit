@@ -221,7 +221,7 @@ const CurrencyPrices = () => {
                             ) : (
                                 <>
                                     <div className="flex flex-col gap-3 min-h-[210px]">
-                                        <div className="bg-[#0b0e11] border border-gray-800 rounded-2xl p-4 flex flex-1 items-center justify-between hover:border-green-500 transition-all group">
+                                        <div className="bg-[#0b0e11] border border-gray-800 rounded-md p-4 flex flex-1 items-center justify-between hover:border-green-500 transition-all group">
                                             <div className="flex flex-col">
                                                 <span className="text-xl font-bold text-white">{formatCurrency(globalData?.total_market_cap?.[currency])}</span>
                                                 <span className="text-sm text-muted">Market Cap</span>
@@ -230,7 +230,7 @@ const CurrencyPrices = () => {
                                                 {sparklineData?.market_caps && <SparklineChart data={sparklineData.market_caps} color="#22c55e" />}
                                             </div>
                                         </div>
-                                        <div className="bg-[#0b0e11] border border-gray-800 rounded-2xl p-4 flex flex-1 items-center justify-between hover:border-red-500 transition-all group">
+                                        <div className="bg-[#0b0e11] border border-gray-800 rounded-md p-4 flex flex-1 items-center justify-between hover:border-red-500 transition-all group">
                                             <div className="flex flex-col">
                                                 <span className="text-xl font-bold text-white">{formatCurrency(globalData?.total_volume?.[currency])}</span>
                                                 <span className="text-sm text-muted">24h Trading Volume</span>
@@ -241,7 +241,7 @@ const CurrencyPrices = () => {
                                         </div>
                                     </div>
 
-                                    <div className="bg-[#0b0e11] border border-gray-800 rounded-2xl p-6 flex flex-col gap-4 h-[210px]">
+                                    <div className="bg-[#0b0e11] border border-gray-800 rounded-md p-6 flex flex-col gap-4 h-[210px]">
                                         <div className="flex justify-between items-center">
                                             <div className="flex items-center gap-2"><Flame size={18} className="text-orange-500" /><h3 className="font-bold">Trending</h3></div>
                                             <Link to="/highlights/trending" className="text-xs text-muted hover:text-white flex items-center gap-1">View more <ArrowRight size={12} /></Link>
@@ -251,7 +251,7 @@ const CurrencyPrices = () => {
                                                 <div
                                                     key={coin.item.id}
                                                     onClick={() => navigate(`/marketcap/${coin.item.id}`)}
-                                                    className="flex justify-between items-center py-2 hover:bg-white/5 transition-colors rounded-lg px-2 cursor-pointer"
+                                                    className="flex justify-between items-center py-2 hover:bg-white/5 transition-colors rounded-md px-2 cursor-pointer"
                                                 >
                                                     <div className="flex items-center gap-2 min-w-0">
                                                         <img src={coin.item.thumb} alt="" className="w-5 h-5 rounded-sm" />
@@ -270,7 +270,7 @@ const CurrencyPrices = () => {
                                         </div>
                                     </div>
 
-                                    <div className="bg-[#0b0e11] border border-gray-800 rounded-2xl p-6 flex flex-col gap-4 h-[210px]">
+                                    <div className="bg-[#0b0e11] border border-gray-800 rounded-md p-6 flex flex-col gap-4 h-[210px]">
                                         <div className="flex justify-between items-center">
                                             <div className="flex items-center gap-2"><Rocket size={18} className="text-green-500" /><h3 className="font-bold">Top Gainers</h3></div>
                                             <Link to="/highlights/gainers-losers" className="text-xs text-muted hover:text-white flex items-center gap-1">View more <ArrowRight size={12} /></Link>
@@ -280,7 +280,7 @@ const CurrencyPrices = () => {
                                                 <div
                                                     key={coin.id}
                                                     onClick={() => navigate(`/marketcap/${coin.id}`)}
-                                                    className="flex justify-between items-center py-2 hover:bg-white/5 transition-colors rounded-lg px-2 cursor-pointer"
+                                                    className="flex justify-between items-center py-2 hover:bg-white/5 transition-colors rounded-md px-2 cursor-pointer"
                                                 >
                                                     <div className="flex items-center gap-2 min-w-0">
                                                         <img src={coin.image} alt="" className="w-5 h-5 rounded-sm" />
@@ -298,7 +298,7 @@ const CurrencyPrices = () => {
                 )}
             </AnimatePresence>
 
-            <div className="w-full overflow-x-auto h-[600px] overflow-y-auto no-scrollbar relative rounded-3xl border border-gray-800 bg-[#0b0e11]">
+            <div className="w-full overflow-x-auto h-[600px] overflow-y-auto no-scrollbar relative rounded-md border border-gray-800 bg-[#0b0e11]">
                 <table className="w-full text-left text-sm border-collapse min-w-[1000px]">
                     <thead className="text-muted border-b border-gray-800 sticky top-0 bg-[#0b0e11] z-20">
                         <tr>

@@ -58,7 +58,7 @@ const CoinPerformanceBlock = ({ coin }) => {
                     <a href="#" className="text-xs text-gray-400 underline hover:text-white transition-colors hidden sm:block">Need more data? Explore our API</a>
                 </div>
 
-                <div className="flex sm:grid sm:grid-cols-6 gap-0 bg-[#0d0e12] border border-white/5 rounded-2xl overflow-x-auto sm:overflow-hidden no-scrollbar">
+                <div className="flex sm:grid sm:grid-cols-6 gap-0 bg-[#0d0e12] border border-white/5 rounded-md overflow-x-auto sm:overflow-hidden no-scrollbar">
                     {returns.map((item, i) => (
                         <div key={i} className="flex-none sm:flex-1 w-[80px] sm:w-auto flex flex-col items-center justify-center py-4 border-r border-white/5 last:border-0 hover:bg-white/5 transition-colors">
                             <span className="text-xs text-gray-500 font-bold mb-1">{item.label}</span>
@@ -84,7 +84,7 @@ const CoinPerformanceBlock = ({ coin }) => {
                     {loadingNews ? (
                         <div className="flex flex-col gap-4 pl-4">
                             {[1, 2, 3].map(j => (
-                                <div key={j} className="h-20 bg-white/5 rounded-xl animate-pulse" />
+                                <div key={j} className="h-20 bg-white/5 rounded-md animate-pulse" />
                             ))}
                         </div>
                     ) : news.length > 0 ? (

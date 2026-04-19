@@ -237,8 +237,8 @@ const MarketCap = () => {
   const SortIcon = ({ columnKey }) => {
     if (sortConfig.key !== columnKey) return <ArrowUpRight size={14} className="opacity-20 flex-shrink-0" />;
     return sortConfig.direction === 'asc'
-      ? <ChevronUp size={14} className="text-blue-500 flex-shrink-0" />
-      : <ChevronDown size={14} className="text-blue-500 flex-shrink-0" />;
+      ? <ChevronUp size={14} className="text-white flex-shrink-0" />
+      : <ChevronDown size={14} className="text-white flex-shrink-0" />;
   };
 
   // Improved Sparkline Logic for Mini Charts (Internal Component)
@@ -269,7 +269,7 @@ const MarketCap = () => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className='w-full flex flex-col justify-start items-center bg-main min-h-full p-2 sm:p-4 pb-8 rounded-xl gap-8'
+      className='w-full flex flex-col justify-start items-center bg-main min-h-full p-2 sm:p-4 pb-8 rounded-md gap-8'
     >
       <div className='w-full'>
         <Breadcrumbs
@@ -323,7 +323,7 @@ const MarketCap = () => {
                   <>
                     {/* Column 1: Stats */}
                     <div className='flex flex-col gap-2 min-h-[180px] sm:min-h-[210px]'>
-                      <div className='flex items-center justify-between gap-4 p-3 border-gray-800 border-2 rounded-xl w-full flex-1 hover:border-green-500 transition-all duration-300 bg-[#0b0e11] min-w-0'>
+                      <div className='flex items-center justify-between gap-4 p-3 border-gray-800 border-2 rounded-md w-full flex-1 hover:border-white/20 transition-all duration-300 bg-[#0b0e11] min-w-0'>
 
                         <div className='flex flex-col min-w-0'>
                           <span className='text-xl truncate block font-bold text-white'>
@@ -338,7 +338,7 @@ const MarketCap = () => {
                         </div>
                       </div>
 
-                      <div className='flex items-center justify-between gap-4 p-3 border-gray-800 border-2 rounded-xl w-full flex-1 hover:border-red-500 transition-all duration-300 bg-[#0b0e11] min-w-0'>
+                       <div className='flex items-center justify-between gap-4 p-3 border-gray-800 border-2 rounded-md w-full flex-1 hover:border-white/20 transition-all duration-300 bg-[#0b0e11] min-w-0'>
 
                         <div className='flex flex-col min-w-0'>
                           <span className='text-xl truncate block font-bold text-white'>
@@ -355,7 +355,7 @@ const MarketCap = () => {
                     </div>
 
                     {/* Card 2: Trending Coins */}
-                    <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col h-[210px] transition-all duration-300 group">
+                    <div className="bg-[#0b0e11] border border-gray-800 rounded-md p-6 flex flex-col h-[210px] transition-all duration-300 group">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                           <Flame className="text-orange-500" size={24} />
@@ -371,7 +371,7 @@ const MarketCap = () => {
                           <div
                             key={coin.item.id}
                             onClick={() => navigate(`/marketcap/${coin.item.id}`)}
-                            className="flex items-center justify-between p-2 hover:bg-white/5 transition-colors cursor-pointer rounded-lg px-2 group/item"
+                            className="flex items-center justify-between p-2 hover:bg-white/5 transition-colors cursor-pointer rounded-md px-2 group/item"
                           >
                             <div className="flex items-center gap-3">
                               <img src={coin.item.thumb} alt={coin.item.name} className="w-6 h-6" />
@@ -391,10 +391,10 @@ const MarketCap = () => {
                     </div>
 
                     {/* Card 3: Top Gainers */}
-                    <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col h-[210px]  transition-all duration-300 group">
+                    <div className="bg-[#0b0e11] border border-gray-800 rounded-md p-6 flex flex-col h-[210px]  transition-all duration-300 group">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
-                          <Rocket className="text-green-500" size={24} />
+                          <Rocket className="text-white opacity-60" size={24} />
                           <h3 className="text-2xl font-bold text-white">Top Gainers</h3>
                         </div>
                         <Link to="/highlights/gainers-losers" className="text-sm text-gray-400 hover:text-white flex items-center gap-1 transition-colors">
@@ -407,7 +407,7 @@ const MarketCap = () => {
                           <div
                             key={coin.id}
                             onClick={() => navigate(`/marketcap/${coin.id}`)}
-                            className="flex items-center justify-between p-2 hover:bg-white/5 transition-colors cursor-pointer rounded-lg px-2 group/item"
+                            className="flex items-center justify-between p-2 hover:bg-white/5 transition-colors cursor-pointer rounded-md px-2 group/item"
                           >
                             <div className="flex items-center gap-3">
                               <img src={coin.image} alt={coin.name} className="w-6 h-6 rounded-sm" />
@@ -448,7 +448,7 @@ const MarketCap = () => {
 
 
 
-      <motion.div variants={itemVariants} className='w-full overflow-x-auto h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative rounded-xl border border-gray-800/50'>
+      <motion.div variants={itemVariants} className='w-full overflow-x-auto h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative rounded-md border border-gray-800/50'>
         <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
           <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
             <tr>
@@ -503,7 +503,7 @@ const MarketCap = () => {
                     </div>
                     <button
                       onClick={() => window.location.reload()}
-                      className="px-8 py-2.5 bg-white/5 hover:bg-white/10 text-white text-xs font-black uppercase tracking-widest rounded-full transition-all border border-white/10 shadow-xl"
+                      className="px-8 py-2.5 bg-white/5 hover:bg-white/10 text-white text-xs font-black uppercase tracking-widest rounded-md transition-all border border-white/10 shadow-xl"
                     >
                       Retry Connection
                     </button>

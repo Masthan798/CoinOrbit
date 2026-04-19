@@ -15,7 +15,7 @@ const ExchangeInfo = ({ exchange }) => {
     return (
         <div className="flex flex-col lg:flex-row gap-6 w-full mb-8">
             {/* Left: General Info */}
-            <div className="flex-1 bg-[#0d0e12] border border-white/5 rounded-2xl p-6 flex flex-col gap-4">
+            <div className="flex-1 bg-[#0d0e12] border border-white/5 rounded-md p-6 flex flex-col gap-4">
                 <div className="flex items-center gap-3 mb-2">
                     <img src={exchange.image} alt={exchange.name} className="w-10 h-10 rounded-sm" />
                     <div>
@@ -38,7 +38,7 @@ const ExchangeInfo = ({ exchange }) => {
                             href={link.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-3 py-1.5 bg-white/5 hover:bg-white/10 rounded-lg text-xs font-medium text-gray-300 transition-colors border border-white/5 hover:border-white/10"
+                            className="flex items-center gap-2 px-3 py-1.5 bg-white/5 hover:bg-white/10 rounded-md text-xs font-medium text-gray-300 transition-colors border border-white/5 hover:border-white/10"
                         >
                             {link.icon}
                             {link.name}
@@ -48,13 +48,13 @@ const ExchangeInfo = ({ exchange }) => {
             </div>
 
             {/* Right: Fees & Stats */}
-            <div className="w-full lg:w-[400px] bg-[#0d0e12] border border-white/5 rounded-2xl p-6 flex flex-col gap-4">
+            <div className="w-full lg:w-[400px] bg-[#0d0e12] border border-white/5 rounded-md p-6 flex flex-col gap-4">
                 <h3 className="text-white font-bold text-lg mb-2">Exchange Stats</h3>
 
                 <div className="flex flex-col gap-3">
                     <div className="flex justify-between items-center py-2 border-b border-white/5">
                         <span className="text-sm text-gray-400">Trust Score</span>
-                        <div className="flex items-center gap-1.5 px-2 py-0.5 bg-green-500/10 text-green-500 rounded text-sm font-bold border border-green-500/20">
+                        <div className="flex items-center gap-1.5 px-2 py-0.5 bg-green-500/10 text-green-500 rounded-md text-sm font-bold border border-green-500/20">
                             <ShieldCheck size={14} />
                             {exchange.trust_score || 0}/10
                         </div>
@@ -88,7 +88,7 @@ const ExchangeInfo = ({ exchange }) => {
                     href={exchange.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-auto w-full py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold text-center rounded-xl transition-colors shadow-lg shadow-blue-900/20"
+                    className="mt-auto w-full py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold text-center rounded-md transition-colors shadow-lg shadow-blue-900/20"
                 >
                     Visit Exchange
                 </a>

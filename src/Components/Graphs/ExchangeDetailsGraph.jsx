@@ -109,7 +109,7 @@ const ExchageDeatilesGraph = () => {
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-[#1a1c23]/95 backdrop-blur-xl border border-white/10 p-2 sm:p-4 rounded-xl sm:rounded-2xl shadow-2xl min-w-[140px] sm:min-w-[200px]">
+                <div className="bg-[#1a1c23]/95 backdrop-blur-xl border border-white/10 p-2 sm:p-4 rounded-md shadow-2xl min-w-[140px] sm:min-w-[200px]">
                     <p className="text-[8px] sm:text-[10px] text-gray-400 font-bold uppercase mb-1 sm:mb-3 opacity-60 tracking-wider">
                         {new Date(label).toLocaleString(undefined, {
                             month: 'short', day: 'numeric', year: 'numeric',
@@ -130,7 +130,7 @@ const ExchageDeatilesGraph = () => {
 
     if (loading && chartData.length === 0) {
         return (
-            <div className="w-full h-[300px] sm:h-[550px] flex items-center justify-center bg-[#0d0e12] rounded-3xl border border-white/5">
+            <div className="w-full h-[300px] sm:h-[550px] flex items-center justify-center bg-[#0d0e12] rounded-md border border-white/5">
                 <div className="w-10 h-10 border-2 border-white/10 border-t-white rounded-full animate-spin"></div>
             </div>
         );
@@ -138,7 +138,7 @@ const ExchageDeatilesGraph = () => {
 
     if (error) {
         return (
-            <div className="w-full h-[300px] sm:h-[550px] flex flex-col items-center justify-center gap-4 bg-[#0d0e12] rounded-3xl border border-white/5 p-8 text-center">
+            <div className="w-full h-[300px] sm:h-[550px] flex flex-col items-center justify-center gap-4 bg-[#0d0e12] rounded-md border border-white/5 p-8 text-center">
                 <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center">
                     <Zap size={32} className="text-red-500 opacity-50" />
                 </div>
@@ -154,17 +154,17 @@ const ExchageDeatilesGraph = () => {
     }
 
     return (
-        <div className="w-full flex flex-col gap-6 p-4 bg-[#0d0e12] rounded-3xl border border-white/5">
+        <div className="w-full flex flex-col gap-6 p-4 pb-2 bg-[#0d0e12] rounded-md border border-white/5">
             <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center justify-between gap-4 border-b border-white/5 pb-4">
                 <h3 className="text-lg font-bold text-white px-2">Exchange Trade Volume</h3>
 
-                <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl w-full sm:w-auto overflow-x-auto no-scrollbar">
+                <div className="flex items-center gap-1 bg-white/5 p-1 rounded-md w-full sm:w-auto overflow-x-auto no-scrollbar">
                     <div className="flex items-center gap-1 min-w-max">
                         {timeframes.map((tf) => (
                             <button
                                 key={tf.label}
                                 onClick={() => setTimeframe(tf)}
-                                className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-[9px] sm:text-[10px] font-black transition-all ${timeframe.label === tf.label ? 'bg-blue-500/20 text-blue-400' : 'text-gray-500 hover:text-white'}`}
+                                className={`px-2.5 sm:px-3 py-1.5 rounded-md text-[9px] sm:text-[10px] font-black transition-all ${timeframe.label === tf.label ? 'bg-blue-500/20 text-blue-400' : 'text-gray-500 hover:text-white'}`}
                             >
                                 {tf.label}
                             </button>
