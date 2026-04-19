@@ -83,7 +83,8 @@ export const NFTCard = ({ nft }) => {
       initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
       whileHover={{ y: -6, transition: { duration: 0.4 } }}
-      className="group relative bg-[var(--bg-card)] border border-[var(--border-soft)] rounded-[1.5rem] overflow-hidden flex flex-col h-full hover:border-[var(--text-muted)] transition-all duration-500 shadow-2xl"
+      onClick={() => window.location.href = `/nft-detail/${data.id || data.contract_address}`}
+      className="group relative bg-[var(--bg-card)] border border-[var(--border-soft)] rounded-md overflow-hidden flex flex-col h-full hover:border-[var(--text-muted)] transition-all duration-500 shadow-2xl cursor-pointer"
     >
       {/* Glossy Overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none z-10" />
@@ -104,7 +105,7 @@ export const NFTCard = ({ nft }) => {
 
         {/* Collection Name Tag */}
         <div className="absolute top-4 left-4 z-20">
-          <span className="text-[var(--text-heading)] text-[9px] font-black uppercase tracking-widest bg-black/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/5 shadow-2xl">
+          <span className="text-[var(--text-heading)] text-[9px] font-black uppercase tracking-widest bg-black/80 backdrop-blur-md px-3 py-1.5 rounded-md border border-white/5 shadow-2xl">
             {collectionName}
           </span>
         </div>
@@ -115,7 +116,7 @@ export const NFTCard = ({ nft }) => {
       <div className="px-5 sm:px-8 pb-6 sm:pb-8 flex flex-col flex-1 gap-4 sm:gap-6 relative">
         {/* Profile/Logo Image Overlay (Cleaned borders) */}
         <div className="relative -mt-8 sm:-mt-12 mb-1 z-20">
-          <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-sm overflow-hidden border-4 border-[var(--bg-card)] shadow-2xl bg-[#1A1A1A]">
+          <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-md overflow-hidden border-4 border-[var(--bg-card)] shadow-2xl bg-[#1A1A1A]">
             {logoUrl ? (
               <img
                 src={logoUrl}
@@ -146,7 +147,7 @@ export const NFTCard = ({ nft }) => {
 
           <div className="flex items-center gap-2">
             {data.floor_price_in_usd_24h_percentage_change !== undefined && (
-              <div className={`px-2 py-1 rounded-lg flex items-center gap-1 ${data.floor_price_in_usd_24h_percentage_change >= 0 ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'}`}>
+              <div className={`px-2 py-1 rounded-md flex items-center gap-1 ${data.floor_price_in_usd_24h_percentage_change >= 0 ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'}`}>
                 {data.floor_price_in_usd_24h_percentage_change >= 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
                 <span className="text-xs font-black tracking-tighter">{Math.abs(data.floor_price_in_usd_24h_percentage_change || 0).toFixed(1)}%</span>
               </div>
@@ -160,7 +161,7 @@ export const NFTCard = ({ nft }) => {
                 e.stopPropagation();
                 await toggleNftWishlist(data.id || data.contract_address, nftTitle);
               }}
-              className={`p-2.5 rounded-xl border border-white/5 transition-all ${nftWishlist.includes(data.id || data.contract_address) ? 'bg-yellow-400/10 text-yellow-400' : 'bg-white/5 text-[var(--text-muted)]'}`}
+              className={`p-2.5 rounded-md border border-white/5 transition-all ${nftWishlist.includes(data.id || data.contract_address) ? 'bg-yellow-400/10 text-yellow-400' : 'bg-white/5 text-[var(--text-muted)]'}`}
             >
               <Star size={16} fill={nftWishlist.includes(data.id || data.contract_address) ? "currentColor" : "none"} />
             </motion.button>
@@ -182,7 +183,7 @@ export const NFTCard = ({ nft }) => {
             <motion.button
               whileHover={{ scale: 1.1, rotate: 45 }}
               whileTap={{ scale: 0.9 }}
-              className="p-3 bg-[var(--bg-main)] hover:bg-white hover:text-black rounded-xl transition-all duration-500 text-[var(--text-heading)] shadow-lg border border-[var(--border-soft)]"
+              className="p-3 bg-[var(--bg-main)] hover:bg-white hover:text-black rounded-md transition-all duration-500 text-[var(--text-heading)] shadow-lg border border-[var(--border-soft)]"
             >
               <ArrowUpRight size={20} />
             </motion.button>
@@ -251,7 +252,7 @@ const NFTFloorPrice = () => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className='w-full min-h-screen flex flex-col gap-3 sm:gap-12 p-2 sm:p-8 pb-32 overflow-x-hidden rounded-xl bg-main'
+      className='w-full min-h-screen flex flex-col gap-3 sm:gap-12 p-2 sm:p-8 pb-32 overflow-x-hidden rounded-md bg-main'
     >
       <div className='w-full'>
         <Breadcrumbs crumbs={[{ label: 'NFTs', path: '/nft-floor' }, { label: 'Explore' }]} />
@@ -279,11 +280,11 @@ const NFTFloorPrice = () => {
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xxl:grid-cols-5 gap-3 sm:gap-6 px-1">
           {Array(8).fill(0).map((_, i) => (
-            <div key={i} className="animate-pulse bg-[#0b0e11] border border-white/5 rounded-[1.2rem] sm:rounded-[2.5rem] aspect-[1/1] sm:aspect-[4/5]" />
+            <div key={i} className="animate-pulse bg-[#0b0e11] border border-white/5 rounded-md aspect-[1/1] sm:aspect-[4/5]" />
           ))}
         </div>
       ) : error ? (
-        <div className="flex flex-col items-center justify-center py-20 sm:py-32 gap-8 text-center bg-red-500/5 rounded-[1.5rem] sm:rounded-[3rem] border border-red-500/20 mx-1">
+        <div className="flex flex-col items-center justify-center py-20 sm:py-32 gap-8 text-center bg-red-500/5 rounded-md border border-red-500/20 mx-1">
           <div className="p-8 sm:p-10 bg-red-500/10 rounded-full animate-bounce">
             <RefreshCcw className="text-red-500" size={48} sm:size={64} />
           </div>
@@ -293,7 +294,7 @@ const NFTFloorPrice = () => {
           </div>
           <button
             onClick={() => window.location.reload()}
-            className="px-8 py-3.5 sm:px-10 sm:py-4 bg-white/5 hover:bg-[var(--bg-card)] text-white font-black uppercase tracking-[0.2em] rounded-xl transition-all border border-[var(--border-strong)] hover:border-[var(--text-muted)] shadow-xl active:scale-95 text-[10px] sm:text-xs"
+            className="px-8 py-3.5 sm:px-10 sm:py-4 bg-white/5 hover:bg-[var(--bg-card)] text-white font-black uppercase tracking-[0.2em] rounded-md transition-all border border-[var(--border-strong)] hover:border-[var(--text-muted)] shadow-xl active:scale-95 text-[10px] sm:text-xs"
           >
             Re-initialize sync
           </button>
@@ -301,7 +302,7 @@ const NFTFloorPrice = () => {
       ) : (
         <div className="flex flex-col gap-4 sm:gap-10">
           {filteredList.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-24 sm:py-32 gap-6 border-2 border-dashed border-white/5 rounded-[1.5rem] sm:rounded-[3rem] mx-1">
+            <div className="flex flex-col items-center justify-center py-24 sm:py-32 gap-6 border-2 border-dashed border-white/5 rounded-md mx-1">
               <Search className="text-white/5" size={60} sm:size={80} />
               <p className="text-muted-foreground font-black uppercase tracking-[0.2em] text-[10px] sm:text-sm">No results found</p>
             </div>
@@ -320,7 +321,7 @@ const NFTFloorPrice = () => {
               {hasMore && (
                 <button
                   onClick={() => setVisibleCount(prev => prev + 24)}
-                  className="group w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-3 sm:px-8 sm:py-3.5 bg-white/5 hover:bg-[var(--bg-card)] border border-[var(--border-strong)] hover:border-[var(--text-muted)] rounded-xl transition-all shadow-xl shadow-black/20 active:scale-95"
+                  className="group w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-3 sm:px-8 sm:py-3.5 bg-white/5 hover:bg-[var(--bg-card)] border border-[var(--border-strong)] hover:border-[var(--text-muted)] rounded-md transition-all shadow-xl shadow-black/20 active:scale-95"
                 >
                   <span className="text-[10px] sm:text-[11px] font-black text-white uppercase tracking-[0.2em] sm:tracking-[0.3em] opacity-60 group-hover:opacity-100">Load more collections</span>
                   <ArrowUpRight className="text-[var(--text-muted)] group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" size={16} />
@@ -333,7 +334,7 @@ const NFTFloorPrice = () => {
                     setVisibleCount(24);
                     window.scrollTo({ top: document.getElementById('nft-market-grid')?.offsetTop - 100, behavior: 'smooth' });
                   }}
-                  className="group w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-3 sm:px-8 sm:py-3.5 bg-white/5 hover:bg-[var(--bg-card)] border border-[var(--border-strong)] hover:border-red-500/30 rounded-xl transition-all shadow-xl shadow-black/20 active:scale-95"
+                  className="group w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-3 sm:px-8 sm:py-3.5 bg-white/5 hover:bg-[var(--bg-card)] border border-[var(--border-strong)] hover:border-red-500/30 rounded-md transition-all shadow-xl shadow-black/20 active:scale-95"
                 >
                   <RefreshCcw className="text-[var(--text-muted)] group-hover:text-red-500 group-hover:rotate-180 transition-all duration-500" size={16} />
                   <span className="text-[10px] sm:text-[11px] font-black text-white uppercase tracking-[0.2em] sm:tracking-[0.3em] opacity-60 group-hover:opacity-100">Show less</span>

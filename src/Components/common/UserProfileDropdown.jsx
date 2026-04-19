@@ -54,9 +54,9 @@ const UserProfileDropdown = ({ onClose }) => {
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute top-full right-0 mt-2 w-72 bg-[#0d0e12] border border-gray-800 rounded-2xl shadow-2xl z-[110]"
+            className="absolute top-full right-0 mt-2 w-72 bg-[#0d0e12] border border-gray-800 rounded-md shadow-2xl z-[110]"
         >
-            <div className="relative overflow-hidden rounded-2xl">
+            <div className="relative overflow-hidden rounded-md">
                 {/* User Header */}
                 <div className="p-5 border-b border-gray-800 bg-gradient-to-b from-white/[0.02] to-transparent">
                     <div className="flex items-center gap-4">
@@ -82,15 +82,15 @@ const UserProfileDropdown = ({ onClose }) => {
                                     strokeDasharray={circumference}
                                     strokeDashoffset={offset}
                                     strokeLinecap="round"
-                                    className="text-emerald-500 transition-all duration-1000 ease-out"
+                                    className="text-white transition-all duration-1000 ease-out drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]"
                                 />
                             </svg>
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center shadow-lg overflow-hidden">
+                                <div className="w-10 h-10 bg-gradient-to-br from-white to-gray-400 rounded-full flex items-center justify-center shadow-neutral-900 overflow-hidden">
                                     {profileData?.avatar_url ? (
                                         <img src={profileData.avatar_url} alt="Profile" className="w-full h-full object-cover" />
                                     ) : (
-                                        <User size={20} className="text-white" />
+                                        <User size={20} className="text-black" />
                                     )}
                                 </div>
                             </div>
@@ -105,7 +105,7 @@ const UserProfileDropdown = ({ onClose }) => {
                                         e.stopPropagation();
                                         setIsEditModalOpen(true);
                                     }}
-                                    className="p-1.5 hover:bg-white/10 rounded-lg text-muted-foreground hover:text-emerald-500 transition-all"
+                                    className="p-1.5 hover:bg-white/10 rounded-md text-muted-foreground hover:text-white transition-all shadow-white/5 shadow-inner"
                                     title="Edit Profile"
                                 >
                                     <Edit3 size={14} />
@@ -117,16 +117,16 @@ const UserProfileDropdown = ({ onClose }) => {
                         </div>
                     </div>
 
-                    <div className="mt-4 p-2 bg-white/[0.03] rounded-lg border border-white/[0.05]">
+                    <div className="mt-4 p-2 bg-white/[0.03] rounded-md border border-white/[0.05]">
                         <div className="flex justify-between items-center text-[10px] mb-1">
                             <span className="text-muted-foreground font-bold">Profile Completion</span>
-                            <span className="text-emerald-400 font-black">{completionPercentage}%</span>
+                            <span className="text-white font-black">{completionPercentage}%</span>
                         </div>
                         <div className="w-full bg-gray-800 h-1 rounded-full overflow-hidden">
                             <motion.div
                                 initial={{ width: 0 }}
                                 animate={{ width: `${completionPercentage}%` }}
-                                className="bg-emerald-500 h-full"
+                                className="bg-white h-full shadow-[0_0_10px_rgba(255,255,255,0.4)]"
                             />
                         </div>
                     </div>
@@ -141,10 +141,10 @@ const UserProfileDropdown = ({ onClose }) => {
                                 navigate(item.path);
                                 onClose();
                             }}
-                            className="w-full flex items-center justify-between p-3 hover:bg-white/[0.05] rounded-xl transition-all duration-200 group"
+                            className="w-full flex items-center justify-between p-3 hover:bg-white/[0.05] rounded-md transition-all duration-200 group"
                         >
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-white/[0.03] rounded-lg text-muted-foreground group-hover:text-white group-hover:bg-emerald-500/10 transition-colors">
+                                <div className="p-2 bg-white/[0.03] rounded-md text-muted-foreground group-hover:text-black group-hover:bg-white transition-colors">
                                     {item.icon}
                                 </div>
                                 <span className="text-sm font-semibold text-muted-foreground group-hover:text-white transition-colors">
@@ -160,9 +160,9 @@ const UserProfileDropdown = ({ onClose }) => {
                 <div className="p-2 bg-white/[0.02] border-t border-gray-800">
                     <button
                         onClick={handleSignOut}
-                        className="w-full flex items-center gap-3 p-3 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition-all duration-200"
+                        className="w-full flex items-center gap-3 p-3 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-md transition-all duration-200"
                     >
-                        <div className="p-2 bg-red-500/10 rounded-lg">
+                        <div className="p-2 bg-red-500/10 rounded-md">
                             <LogOut size={16} />
                         </div>
                         <span className="text-sm font-bold uppercase tracking-wider">Sign Out</span>

@@ -73,7 +73,7 @@ const GlobalMarketGraph = ({ apiKey }) => {
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-[#1a1c23]/95 backdrop-blur-xl border border-white/10 p-2 sm:p-4 rounded-xl sm:rounded-2xl shadow-2xl min-w-[140px] sm:min-w-[200px]">
+                <div className="bg-[#1a1c23]/95 backdrop-blur-xl border border-white/10 p-2 sm:p-4 rounded-md shadow-2xl min-w-[140px] sm:min-w-[200px]">
                     <p className="text-xs sm:text-sm text-gray-400 font-bold uppercase mb-2 opacity-60 tracking-wider">
                         {new Date(label).toLocaleDateString(undefined, {
                             weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
@@ -91,7 +91,7 @@ const GlobalMarketGraph = ({ apiKey }) => {
     };
 
     return (
-        <div className="w-full h-full flex flex-col gap-4 sm:gap-6 p-2 sm:p-6 bg-[#0d0e12] rounded-3xl border border-white/5 relative overflow-hidden">
+        <div className="w-full h-full flex flex-col gap-4 sm:gap-6 p-2 sm:p-6 sm:pb-4 bg-[#0d0e12] rounded-md border border-white/5 relative overflow-hidden">
             {/* Header & Controls */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/5 pb-4">
                 <div>
@@ -100,12 +100,12 @@ const GlobalMarketGraph = ({ apiKey }) => {
                         Bitcoin market cap history as global trend reference.
                     </p>
                 </div>
-                <div className="flex items-center bg-white/5 p-0.5 sm:p-1 rounded-xl w-full sm:w-auto overflow-x-auto no-scrollbar">
+                <div className="flex items-center bg-white/5 p-0.5 sm:p-1 rounded-md w-full sm:w-auto overflow-x-auto no-scrollbar">
                     {timeframes.map((tf) => (
                         <button
                             key={tf.label}
                             onClick={() => setTimeframe(tf)}
-                            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all ${timeframe.label === tf.label ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20' : 'text-gray-400 hover:text-white'}`}
+                            className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-bold transition-all ${timeframe.label === tf.label ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20' : 'text-gray-400 hover:text-white'}`}
                         >
                             {tf.label}
                         </button>
@@ -166,7 +166,7 @@ const GlobalMarketGraph = ({ apiKey }) => {
                             />
                             <Brush
                                 dataKey="time"
-                                height={30}
+                                height={20}
                                 stroke="#22c55e"
                                 fill="#0b0e11"
                                 tickFormatter={() => ''}

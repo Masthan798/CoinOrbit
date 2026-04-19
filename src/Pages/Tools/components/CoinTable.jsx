@@ -12,7 +12,7 @@ const CoinTable = ({
     navigate
 }) => {
     return (
-        <div className='w-full overflow-x-auto rounded-xl border border-white/5 relative'>
+        <div className='w-full overflow-x-auto rounded-md border border-white/5 relative'>
             <table className='w-full min-w-[1200px] text-left text-sm'>
                 <thead className='border-b border-gray-800 text-muted bg-[#0b0e11] sticky top-0 z-20'>
                     <tr>

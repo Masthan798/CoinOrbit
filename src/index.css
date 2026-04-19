@@ -32,6 +32,11 @@
     --btn-primary-hover: #1A1A1A;
     --btn-secondary: #141414;
     --btn-secondary-hover: #1F1F1F;
+    
+    /* Monochromatic Brand Theme */
+    --brand-primary: #FFFFFF;
+    --brand-primary-hover: #F0F0F0;
+    --brand-glow: rgba(255, 255, 255, 0.1);
 }
 
 /* ================================
@@ -165,7 +170,7 @@ html.light {
         background-color: var(--btn-primary);
         color: #ffffff;
         border: 1px solid var(--border-strong);
-        @apply px-4 py-2 rounded-lg transition;
+        @apply px-4 py-2 rounded-md transition;
     }
 
     .btn-primary:hover {
@@ -176,7 +181,7 @@ html.light {
         background-color: var(--btn-secondary);
         color: var(--text-body);
         border: 1px solid var(--border-soft);
-        @apply px-4 py-2 rounded-lg transition;
+        @apply px-4 py-2 rounded-md transition;
     }
 
     .btn-secondary:hover {

@@ -38,7 +38,7 @@ const PopularComparisons = ({ onSelect, coinsList }) => {
     }, []);
 
     return (
-        <div className="w-full bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col h-full">
+        <div className="w-full bg-[#0b0e11] border border-gray-800 rounded-md p-6 flex flex-col h-full">
             <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xl font-bold text-white">Popular comparisons</h3>
                 <span className="text-xs text-muted">Updates every 10m</span>
@@ -56,7 +56,7 @@ const PopularComparisons = ({ onSelect, coinsList }) => {
                         <div
                             key={`${pair.id1}-${pair.id2}-${index}`}
                             onClick={() => onSelect(pair.id1, pair.id2)}
-                            className="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 cursor-pointer group transition-all"
+                            className="flex items-center justify-between p-3 rounded-md hover:bg-white/5 cursor-pointer group transition-all"
                         >
                             <div className="flex items-center gap-3 flex-1">
                                 <img src={c1.image} alt={c1.name} className="w-8 h-8 rounded-sm" />

@@ -77,7 +77,7 @@ const Breadcrumbs = ({ crumbs }) => {
                             setIsProfileOpen(!isProfileOpen);
                             setIsMoreOpen(false);
                         }}
-                        className={`flex p-2 hover:bg-white/5 rounded-lg transition-colors group ${isProfileOpen ? 'bg-white/10 text-white' : 'text-muted-foreground hover:text-white'}`}
+                        className={`flex p-2 hover:bg-white/5 rounded-md transition-colors group ${isProfileOpen ? 'bg-white/10 text-white' : 'text-muted-foreground hover:text-white'}`}
                     >
                         <User size={18} className="group-hover:scale-110 transition-transform" />
                     </button>
@@ -90,10 +90,10 @@ const Breadcrumbs = ({ crumbs }) => {
                 </div>
 
                 {/* Fixed Icons: Desktop only */}
-                <button className="hidden sm:flex p-2 hover:bg-white/5 rounded-lg transition-colors text-muted-foreground hover:text-white group">
+                <button className="hidden sm:flex p-2 hover:bg-white/5 rounded-md transition-colors text-muted-foreground hover:text-white group">
                     <Share2 size={18} className="group-hover:scale-110 transition-transform" />
                 </button>
-                <button className="hidden sm:flex p-2 hover:bg-white/5 rounded-lg transition-colors text-muted-foreground hover:text-white group">
+                <button className="hidden sm:flex p-2 hover:bg-white/5 rounded-md transition-colors text-muted-foreground hover:text-white group">
                     <Bell size={18} className="group-hover:scale-110 transition-transform" />
                 </button>
 
@@ -104,7 +104,7 @@ const Breadcrumbs = ({ crumbs }) => {
                             setIsMoreOpen(!isMoreOpen);
                             setShowCurrencySub(false);
                         }}
-                        className={`p-2 hover:bg-white/5 rounded-lg transition-colors group ${isMoreOpen ? 'bg-white/10 text-white' : 'text-muted-foreground hover:text-white'}`}
+                        className={`p-2 hover:bg-white/5 rounded-md transition-colors group ${isMoreOpen ? 'bg-white/10 text-white' : 'text-muted-foreground hover:text-white'}`}
                     >
                         <MoreHorizontal size={18} className="group-hover:scale-110 transition-transform" />
                     </button>
@@ -116,13 +116,13 @@ const Breadcrumbs = ({ crumbs }) => {
                                 initial={{ opacity: 0, x: 20, scale: 0.95 }}
                                 animate={{ opacity: 1, x: 0, scale: 1 }}
                                 exit={{ opacity: 0, x: -20, scale: 0.95 }}
-                                className="absolute top-full right-0 mt-2 w-56 bg-card border border-soft rounded-xl shadow-2xl overflow-hidden z-[110]"
+                                className="absolute top-full right-0 mt-2 w-56 bg-card border border-soft rounded-md shadow-2xl overflow-hidden z-[110]"
                             >
                                 {showCurrencySub ? (
                                     <div className="p-2">
                                         <button
                                             onClick={() => setShowCurrencySub(false)}
-                                            className="w-full flex items-center gap-2 p-2 mb-2 hover:bg-white/5 rounded-lg text-muted hover:text-white transition-colors border-b border-soft pb-3"
+                                            className="w-full flex items-center gap-2 p-2 mb-2 hover:bg-white/5 rounded-md text-muted hover:text-white transition-colors border-b border-soft pb-3"
                                         >
                                             <ChevronLeft size={16} />
                                             <span className="text-xs font-black uppercase tracking-widest">Select Currency</span>
@@ -136,7 +136,7 @@ const Breadcrumbs = ({ crumbs }) => {
                                                         setIsMoreOpen(false);
                                                         setShowCurrencySub(false);
                                                     }}
-                                                    className={`w-full flex items-center justify-between p-3 rounded-lg transition-all ${currency.code === c.code ? 'bg-white/10 text-white' : 'hover:bg-white/5 text-muted-foreground hover:text-white'}`}
+                                                    className={`w-full flex items-center justify-between p-3 rounded-md transition-all ${currency.code === c.code ? 'bg-white/10 text-white' : 'hover:bg-white/5 text-muted-foreground hover:text-white'}`}
                                                 >
                                                     <div className="flex items-center gap-3">
                                                         <span className="w-5 text-center font-black text-sm">{c.symbol}</span>
@@ -145,7 +145,7 @@ const Breadcrumbs = ({ crumbs }) => {
                                                             <span className="text-[10px] opacity-40 font-bold">{c.name}</span>
                                                         </div>
                                                     </div>
-                                                    {currency.code === c.code && <Check size={14} className="text-emerald-500" />}
+                                                    {currency.code === c.code && <Check size={14} className="text-white" />}
                                                 </button>
                                             ))}
                                         </div>
@@ -154,13 +154,13 @@ const Breadcrumbs = ({ crumbs }) => {
                                     <div className="p-2 space-y-1">
                                         {/* Mobile Only: Share & Notifications */}
                                         <div className="sm:hidden space-y-1 mb-1 pb-1 border-b border-soft">
-                                            <button className="w-full flex items-center justify-between p-3 hover:bg-white/5 rounded-lg transition-colors group">
+                                            <button className="w-full flex items-center justify-between p-3 hover:bg-white/5 rounded-md transition-colors group">
                                                 <div className="flex items-center gap-3">
                                                     <Share2 size={16} className="text-muted-foreground group-hover:text-white" />
                                                     <span className="text-sm font-bold text-muted-foreground group-hover:text-white">Share</span>
                                                 </div>
                                             </button>
-                                            <button className="w-full flex items-center justify-between p-3 hover:bg-white/5 rounded-lg transition-colors group">
+                                            <button className="w-full flex items-center justify-between p-3 hover:bg-white/5 rounded-md transition-colors group">
                                                 <div className="flex items-center gap-3">
                                                     <Bell size={16} className="text-muted-foreground group-hover:text-white" />
                                                     <span className="text-sm font-bold text-muted-foreground group-hover:text-white">Notifications</span>
@@ -169,7 +169,7 @@ const Breadcrumbs = ({ crumbs }) => {
                                         </div>
 
                                         {/* App Settings */}
-                                        <button className="w-full flex items-center justify-between p-3 hover:bg-white/5 rounded-lg transition-colors group">
+                                        <button className="w-full flex items-center justify-between p-3 hover:bg-white/5 rounded-md transition-colors group">
                                             <div className="flex items-center gap-3">
                                                 <Globe size={16} className="text-muted-foreground group-hover:text-white" />
                                                 <span className="text-sm font-bold text-muted-foreground group-hover:text-white">Language</span>
@@ -182,7 +182,7 @@ const Breadcrumbs = ({ crumbs }) => {
 
                                         <button
                                             onClick={() => setShowCurrencySub(true)}
-                                            className="w-full flex items-center justify-between p-3 hover:bg-white/5 rounded-lg transition-colors group"
+                                            className="w-full flex items-center justify-between p-3 hover:bg-white/5 rounded-md transition-colors group"
                                         >
                                             <div className="flex items-center gap-3">
                                                 <DollarSign size={16} className="text-muted-foreground group-hover:text-white" />

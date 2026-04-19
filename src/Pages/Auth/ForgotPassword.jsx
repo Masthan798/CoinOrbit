@@ -38,7 +38,7 @@ const ForgotPassword = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="max-w-md w-full"
             >
-                <div className="bg-card backdrop-blur-xl border border-soft rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+                <div className="bg-card backdrop-blur-xl border border-soft rounded-md p-6 sm:p-8 shadow-2xl relative overflow-hidden">
                     <div className="text-center mb-8 sm:mb-10">
                         <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Forgot Password</h1>
                         <p className="text-muted text-xs sm:text-sm">Enter your email to receive a recovery code</p>
@@ -53,7 +53,7 @@ const ForgotPassword = () => {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full bg-transparent border border-soft rounded-xl py-2.5 sm:py-3 pl-10 sm:pl-12 pr-4 text-white text-sm sm:text-base focus:outline-none focus:border-white/20 transition-all font-sans"
+                                    className="w-full bg-transparent border border-soft rounded-md py-2.5 sm:py-3 pl-10 sm:pl-12 pr-4 text-white text-sm sm:text-base focus:outline-none focus:border-white/20 transition-all font-sans"
                                     placeholder="name@example.com"
                                     required
                                 />
@@ -63,7 +63,7 @@ const ForgotPassword = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-card border border-soft text-white font-bold py-3 sm:py-3.5 rounded-xl hover:bg-hover-soft hover:border-white/20 transition-all shadow-lg flex items-center justify-center gap-2 mt-2 sm:mt-4 text-sm sm:text-base"
+                            className="w-full bg-card border border-soft text-white font-bold py-3 sm:py-3.5 rounded-md hover:bg-hover-soft hover:border-white/20 transition-all shadow-lg flex items-center justify-center gap-2 mt-2 sm:mt-4 text-sm sm:text-base"
                         >
                             {loading ? (
                                 <div className="w-4 h-4 sm:w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>

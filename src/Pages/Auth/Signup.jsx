@@ -30,10 +30,16 @@ const Signup = () => {
         setLoading(true);
 
         try {
-            const { error } = await signUp(email, password);
+            const { data, error } = await signUp(email, password);
             if (error) throw error;
-            toast.success('Registration successful! Please check your email.');
-            navigate('/login');
+
+            if (data?.session) {
+                toast.success('Registration successful! Welcome to CoinOrbit.');
+                navigate('/', { replace: true });
+            } else {
+                toast.success('Registration successful! Please check your email.');
+                navigate('/login');
+            }
         } catch (err) {
             toast.error(err.message);
         } finally {
@@ -50,7 +56,7 @@ const Signup = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="max-w-md w-full"
             >
-                <div className="bg-card backdrop-blur-xl border border-soft rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+                <div className="bg-card backdrop-blur-xl border border-soft rounded-md p-6 sm:p-8 shadow-2xl relative overflow-hidden">
                     <div className="text-center mb-8 sm:mb-10">
                         <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Create Account</h1>
                         <p className="text-muted text-xs sm:text-sm">Join CoinOrbit and start your crypto journey</p>
@@ -65,7 +71,7 @@ const Signup = () => {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full bg-transparent border border-soft rounded-xl py-2.5 sm:py-3 pl-10 sm:pl-12 pr-4 text-white text-sm sm:text-base focus:outline-none focus:border-white/20 transition-all font-sans"
+                                    className="w-full bg-transparent border border-soft rounded-md py-2.5 sm:py-3 pl-10 sm:pl-12 pr-4 text-white text-sm sm:text-base focus:outline-none focus:border-white/20 transition-all font-sans"
                                     placeholder="name@example.com"
                                     required
                                 />
@@ -80,7 +86,7 @@ const Signup = () => {
                                     type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full bg-transparent border border-soft rounded-xl py-2.5 sm:py-3 pl-10 sm:pl-12 pr-10 sm:pr-12 text-white text-sm sm:text-base focus:outline-none focus:border-white/20 transition-all font-sans"
+                                    className="w-full bg-transparent border border-soft rounded-md py-2.5 sm:py-3 pl-10 sm:pl-12 pr-10 sm:pr-12 text-white text-sm sm:text-base focus:outline-none focus:border-white/20 transition-all font-sans"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -102,7 +108,7 @@ const Signup = () => {
                                     type={showConfirmPassword ? "text" : "password"}
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
-                                    className="w-full bg-transparent border border-soft rounded-xl py-2.5 sm:py-3 pl-10 sm:pl-12 pr-10 sm:pr-12 text-white text-sm sm:text-base focus:outline-none focus:border-white/20 transition-all font-sans"
+                                    className="w-full bg-transparent border border-soft rounded-md py-2.5 sm:py-3 pl-10 sm:pl-12 pr-10 sm:pr-12 text-white text-sm sm:text-base focus:outline-none focus:border-white/20 transition-all font-sans"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -119,7 +125,7 @@ const Signup = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-card border border-soft text-white font-bold py-3 sm:py-3.5 rounded-xl hover:bg-hover-soft hover:border-white/20 transition-all shadow-lg flex items-center justify-center gap-2 mt-2 sm:mt-4 text-sm sm:text-base"
+                            className="w-full bg-card border border-soft text-white font-bold py-3 sm:py-3.5 rounded-md hover:bg-hover-soft hover:border-white/20 transition-all shadow-lg flex items-center justify-center gap-2 mt-2 sm:mt-4 text-sm sm:text-base"
                         >
                             {loading ? (
                                 <div className="w-4 h-4 sm:w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>

@@ -164,7 +164,7 @@ const NFTDetailGraph = ({ address: propAddress }) => {
             const data = payload[0].payload;
             const value = dataType === 'prices' ? data.price : data.market_cap;
             return (
-                <div className="bg-[#1a1c23]/95 backdrop-blur-xl border border-white/10 p-2 sm:p-4 rounded-xl sm:rounded-2xl shadow-2xl min-w-[140px] sm:min-w-[200px] z-50">
+                <div className="bg-[#1a1c23]/95 backdrop-blur-xl border border-white/10 p-2 sm:p-4 rounded-md shadow-2xl min-w-[140px] sm:min-w-[200px] z-50">
                     <p className="text-[9px] sm:text-[10px] text-gray-400 font-bold uppercase mb-2 opacity-60 tracking-wider">
                         {new Date(data.time).toLocaleString(undefined, {
                             month: 'short', day: 'numeric', year: 'numeric',
@@ -195,7 +195,7 @@ const NFTDetailGraph = ({ address: propAddress }) => {
     };
 
     return (
-        <div className="w-full h-auto flex flex-col gap-4 sm:gap-6 p-2 sm:p-6 bg-[#0d0e12] rounded-2xl sm:rounded-3xl border border-white/5">
+        <div className="w-full h-auto flex flex-col gap-4 sm:gap-6 p-2 sm:p-6 sm:pb-4 bg-[#0d0e12] rounded-md border border-white/5">
             <div className="flex flex-col gap-4 border-b border-white/5 pb-4">
                 <div className="flex flex-col gap-1">
                     <h3 className="text-base sm:text-lg font-bold text-white px-2">Price & Market Cap Chart</h3>
@@ -203,33 +203,33 @@ const NFTDetailGraph = ({ address: propAddress }) => {
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
-                    <div className="flex bg-white/5 p-1 rounded-xl w-full sm:w-auto">
+                    <div className="flex bg-white/5 p-1 rounded-md w-full sm:w-auto">
                         <button
                             onClick={() => setDataType('prices')}
-                            className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${dataType === 'prices' ? 'bg-white text-black shadow-xl scale-102' : 'text-muted-foreground hover:text-white'}`}
+                            className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-md text-xs font-bold transition-all ${dataType === 'prices' ? 'bg-white text-black shadow-xl scale-102' : 'text-muted-foreground hover:text-white'}`}
                         >
                             Price
                         </button>
                         <button
                             onClick={() => setDataType('market_caps')}
-                            className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${dataType === 'market_caps' ? 'bg-white text-black shadow-xl scale-102' : 'text-muted-foreground hover:text-white'}`}
+                            className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-md text-xs font-bold transition-all ${dataType === 'market_caps' ? 'bg-white text-black shadow-xl scale-102' : 'text-muted-foreground hover:text-white'}`}
                         >
                             Market Cap
                         </button>
                     </div>
 
                     <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
-                        <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl">
+                        <div className="flex items-center gap-1 bg-white/5 p-1 rounded-md">
                             <button
                                 onClick={() => setChartType('line')}
-                                className={`p-1.5 rounded-lg transition-all ${chartType === 'line' ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-500 hover:text-white'}`}
+                                className={`p-1.5 rounded-md transition-all ${chartType === 'line' ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-500 hover:text-white'}`}
                                 title="Line Chart"
                             >
                                 <TrendingUp size={14} />
                             </button>
                             <button
                                 onClick={() => setChartType('ohlc')}
-                                className={`p-1.5 rounded-lg transition-all ${chartType === 'ohlc' ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-500 hover:text-white'}`}
+                                className={`p-1.5 rounded-md transition-all ${chartType === 'ohlc' ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-500 hover:text-white'}`}
                                 title="OHLC Chart"
                             >
                                 <BarChart3 size={14} />
@@ -238,12 +238,12 @@ const NFTDetailGraph = ({ address: propAddress }) => {
 
                         <div className="w-[1px] h-4 bg-white/10 mx-1 hidden sm:block" />
 
-                        <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl overflow-x-auto no-scrollbar max-w-[200px] sm:max-w-none">
+                        <div className="flex items-center gap-1 bg-white/5 p-1 rounded-md overflow-x-auto no-scrollbar max-w-[200px] sm:max-w-none">
                             {timeframes.map((tf) => (
                                 <button
                                     key={tf.label}
                                     onClick={() => setTimeframe(tf)}
-                                    className={`px-2 py-1.5 rounded-lg text-[9px] sm:text-[10px] font-black transition-all ${timeframe.label === tf.label ? 'bg-white text-black shadow-xl' : 'text-muted-foreground hover:text-white'}`}
+                                    className={`px-2 py-1.5 rounded-md text-[9px] sm:text-[10px] font-black transition-all ${timeframe.label === tf.label ? 'bg-white text-black shadow-xl' : 'text-muted-foreground hover:text-white'}`}
                                 >
                                     {tf.label}
                                 </button>
@@ -253,15 +253,15 @@ const NFTDetailGraph = ({ address: propAddress }) => {
                 </div>
             </div>
 
-            <div className={`w-full ${isMobile ? 'h-[300px]' : 'h-[500px]'} relative bg-[#07080a] rounded-3xl border border-white/5 overflow-hidden group shadow-2xl`}>
+            <div className={`w-full ${isMobile ? 'h-[300px]' : 'h-[500px]'} relative bg-[#07080a] rounded-md border border-white/5 overflow-hidden group shadow-2xl`}>
                 {loading && (
-                    <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-2xl">
+                    <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-md">
                         <div className="w-10 h-10 border-2 border-white/10 border-t-white rounded-full animate-spin"></div>
                     </div>
                 )}
 
                 {error ? (
-                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-[#0d0e12] rounded-2xl border border-white/5 p-8 text-center">
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-[#0d0e12] rounded-md border border-white/5 p-8 text-center">
                         <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center">
                             <BarChart3 size={32} className="text-red-500 opacity-50" />
                         </div>
@@ -279,7 +279,7 @@ const NFTDetailGraph = ({ address: propAddress }) => {
                         </button>
                     </div>
                 ) : chartData.length === 0 && !loading ? (
-                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-[#0d0e12] rounded-2xl border border-white/5 p-8 text-center">
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-[#0d0e12] rounded-md border border-white/5 p-8 text-center">
                         <BarChart3 size={32} className="text-gray-600 opacity-50" />
                         <p className="text-sm text-gray-500 italic">No historical data available for this collection.</p>
                     </div>
@@ -350,7 +350,7 @@ const NFTDetailGraph = ({ address: propAddress }) => {
                             />
                             <Brush
                                 dataKey="time"
-                                height={30}
+                                height={20}
                                 stroke="#10b981"
                                 fill="#0b0e11"
                                 tickFormatter={() => ''}

@@ -163,7 +163,7 @@ const HighlightsDetail = () => {
 
 
     return (
-        <div className="w-full flex flex-col justify-start items-center bg-black min-h-full p-2 sm:p-4 pb-8 rounded-xl gap-8 text-white">
+        <div className="w-full flex flex-col justify-start items-center bg-black min-h-full p-2 sm:p-4 pb-8 rounded-md gap-8 text-white">
             <div className="w-full flex flex-col gap-4">
                 <Breadcrumbs
                     crumbs={[
@@ -195,7 +195,7 @@ const HighlightsDetail = () => {
                 />
             </div>
 
-            <div className='w-full overflow-x-auto rounded-xl border border-gray-800/50'>
+            <div className='w-full overflow-x-auto rounded-md border border-gray-800/50'>
                 <table className='w-full min-w-[1000px] text-left text-sm'>
                     <thead className='border-b border-gray-800 text-muted bg-[#0b0e11] sticky top-0 z-20'>
                         <tr>

@@ -28,7 +28,7 @@ const ExchangeTrustStats = ({ exchange, tickers }) => {
     return (
         <div className="flex flex-col lg:flex-row gap-6 w-full mt-8">
             {/* Left Card: Trust Score Breakdown */}
-            <div className="w-full lg:w-1/3 bg-[#0d0e12] border border-white/5 rounded-2xl p-6 flex flex-col">
+            <div className="w-full lg:w-1/3 bg-[#0d0e12] border border-white/5 rounded-md p-6 flex flex-col">
                 <div className="flex items-center gap-2 mb-2">
                     <h3 className="text-white font-bold text-lg">{exchange.name} Trust Score</h3>
                     <Info size={14} className="text-gray-500 cursor-pointer hover:text-white transition-colors" />
@@ -55,7 +55,7 @@ const ExchangeTrustStats = ({ exchange, tickers }) => {
             <div className="flex-1 flex flex-col gap-6">
 
                 {/* Liquidity Card */}
-                <div className="bg-[#0d0e12] border border-white/5 rounded-2xl p-6">
+                <div className="bg-[#0d0e12] border border-white/5 rounded-md p-6">
                     <h3 className="text-white font-bold text-lg mb-4">Liquidity</h3>
 
                     <div className="flex flex-col gap-4">
@@ -85,7 +85,7 @@ const ExchangeTrustStats = ({ exchange, tickers }) => {
 
                             {/* Hover Tooltip */}
                             <div className="absolute bottom-full right-0 mb-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                                <div className="bg-[#1a1c23] border border-white/10 px-3 py-1.5 rounded-lg shadow-xl text-xs font-bold text-white flex items-center gap-2">
+                                <div className="bg-[#1a1c23] border border-white/10 px-3 py-1.5 rounded-md shadow-xl text-xs font-bold text-white flex items-center gap-2">
                                     <ShieldCheck size={12} className={scoreColor} />
                                     <span>{exchange.trust_score}/10</span>
                                     <span className="text-gray-400">({(exchange.trust_score * 10).toFixed(0)}%)</span>
@@ -97,7 +97,7 @@ const ExchangeTrustStats = ({ exchange, tickers }) => {
                 </div>
 
                 {/* Scale & Security Card */}
-                <div className="bg-[#0d0e12] border border-white/5 rounded-2xl p-6 flex flex-col gap-6">
+                <div className="bg-[#0d0e12] border border-white/5 rounded-md p-6 flex flex-col gap-6">
                     <div>
                         <h3 className="text-white font-bold text-lg mb-4">Scale</h3>
                         <div className="flex justify-between items-center py-2 border-b border-white/5">

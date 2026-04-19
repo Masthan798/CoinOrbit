@@ -130,7 +130,7 @@ const CompareGraph = ({ coin1Id, coin2Id, coin1Name, coin2Name, coin1Color = "#e
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-[#1a1c23]/95 backdrop-blur-xl border border-white/10 p-2 sm:p-4 rounded-xl sm:rounded-2xl shadow-2xl min-w-[140px] sm:min-w-[200px]">
+                <div className="bg-[#1a1c23]/95 backdrop-blur-xl border border-white/10 p-2 sm:p-4 rounded-md shadow-2xl min-w-[140px] sm:min-w-[200px]">
                     <p className="text-[9px] sm:text-[10px] text-gray-400 font-bold uppercase mb-2 opacity-60 tracking-wider">
                         {new Date(label).toLocaleString(undefined, {
                             month: 'short', day: 'numeric',
@@ -154,7 +154,7 @@ const CompareGraph = ({ coin1Id, coin2Id, coin1Name, coin2Name, coin1Color = "#e
     };
 
     return (
-        <div className="w-full h-full flex flex-col gap-4 sm:gap-6 p-2 sm:p-4 bg-[#0d0e12] rounded-2xl sm:rounded-3xl border border-white/5">
+        <div className="w-full h-full flex flex-col gap-4 sm:gap-6 p-2 sm:p-4 bg-[#0d0e12] rounded-md border border-white/5">
             <div className="flex flex-col sm:flex-row flex-wrap items-center justify-between gap-4 border-b border-white/5 pb-4">
                 <div className="flex items-center gap-4">
                     <h3 className="text-lg font-bold text-white px-2">
@@ -163,13 +163,13 @@ const CompareGraph = ({ coin1Id, coin2Id, coin1Name, coin2Name, coin1Color = "#e
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1 bg-main p-1 rounded-xl border border-white/5 w-full sm:w-auto overflow-x-auto no-scrollbar">
+                    <div className="flex items-center gap-1 bg-main p-1 rounded-md border border-white/5 w-full sm:w-auto overflow-x-auto no-scrollbar">
                         <div className="flex items-center gap-1 min-w-max">
                             {timeframes.map((tf) => (
                                 <button
                                     key={tf.label}
                                     onClick={() => setTimeframe(tf)}
-                                    className={`whitespace-nowrap px-3 py-1.5 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-tight transition-all duration-300 border ${timeframe.label === tf.label
+                                    className={`whitespace-nowrap px-3 py-1.5 rounded-md text-[10px] sm:text-xs font-black uppercase tracking-tight transition-all duration-300 border ${timeframe.label === tf.label
                                         ? 'bg-card text-white border-white/10 shadow-lg'
                                         : 'text-gray-500 border-transparent hover:text-white hover:bg-white/5'}`}
                                 >
@@ -183,13 +183,13 @@ const CompareGraph = ({ coin1Id, coin2Id, coin1Name, coin2Name, coin1Color = "#e
 
             <div className={`flex-1 w-full ${chartHeight} relative`}>
                 {loading && (
-                    <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-2xl">
+                    <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-md">
                         <div className="w-10 h-10 border-2 border-white/10 border-t-white rounded-full animate-spin"></div>
                     </div>
                 )}
 
                 {error ? (
-                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-[#0d0e12] rounded-2xl border border-white/5 p-8 text-center">
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-[#0d0e12] rounded-md border border-white/5 p-8 text-center">
                         <p className="text-red-500">{error}</p>
                     </div>
                 ) : (

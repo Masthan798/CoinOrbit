@@ -61,7 +61,7 @@ const Pagination = ({
                 <button
                     onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
                     disabled={currentPage === 1}
-                    className='p-1 sm:p-2 hover:bg-card rounded-lg transition-colors disabled:opacity-30'
+                    className='p-1 sm:p-2 hover:bg-card rounded-md transition-colors disabled:opacity-30'
                 >
                     <ArrowLeftIcon className='w-3 h-3 sm:w-4 sm:h-4' />
                 </button>
@@ -81,7 +81,7 @@ const Pagination = ({
                             <button
                                 key={page}
                                 onClick={() => handlePageChange(page)}
-                                className={`w-8 h-8 sm:w-10 sm:h-10 items-center justify-center rounded-lg transition-colors text-sm sm:text-base ${showOnMobile ? 'flex' : 'hidden md:flex'
+                                className={`w-8 h-8 sm:w-10 sm:h-10 items-center justify-center rounded-md transition-colors text-sm sm:text-base ${showOnMobile ? 'flex' : 'hidden md:flex'
                                     } ${currentPage === page
                                         ? 'bg-card text-white font-black'
                                         : 'text-muted hover:bg-card hover:text-white font-bold'
@@ -96,7 +96,7 @@ const Pagination = ({
                 <button
                     onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
                     disabled={currentPage === totalPages}
-                    className='p-1 sm:p-2 hover:bg-card rounded-lg transition-colors disabled:opacity-30'
+                    className='p-1 sm:p-2 hover:bg-card rounded-md transition-colors disabled:opacity-30'
                 >
                     <ArrowRightIcon className='w-3 h-3 sm:w-4 sm:h-4' />
                 </button>
@@ -108,7 +108,7 @@ const Pagination = ({
                 <div className='relative'>
                     <button
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                        className='flex items-center gap-1 sm:gap-2 bg-card px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-gray-700 hover:border-gray-500 transition-colors text-white font-medium min-w-[50px] sm:min-w-[80px] justify-between text-[10px] sm:text-xs font-bold'
+                        className='flex items-center gap-1 sm:gap-2 bg-card px-2 sm:px-3 py-1 sm:py-1.5 rounded-md border border-gray-700 hover:border-gray-500 transition-colors text-white font-medium min-w-[50px] sm:min-w-[80px] justify-between text-[10px] sm:text-xs font-bold'
                     >
                         <span>{perPage}</span>
                         {isDropdownOpen ? <ChevronUp className='w-3 h-3 sm:w-4 sm:h-4' /> : <ChevronDown className='w-3 h-3 sm:w-4 sm:h-4' />}
@@ -120,7 +120,7 @@ const Pagination = ({
                                 className='fixed inset-0 z-40'
                                 onClick={() => setIsDropdownOpen(false)}
                             />
-                            <div className='absolute bottom-full mb-2 right-0 w-24 sm:w-32 bg-card border border-gray-700 rounded-xl overflow-hidden shadow-2xl z-50'>
+                            <div className='absolute bottom-full mb-2 right-0 w-24 sm:w-32 bg-card border border-gray-700 rounded-md overflow-hidden shadow-2xl z-50'>
                                 {[10, 50, 100, 200].map((value) => (
                                     <button
                                         key={value}

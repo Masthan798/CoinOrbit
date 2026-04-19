@@ -26,7 +26,7 @@ import { Star, RefreshCw } from 'lucide-react';
 const WatchingSkeleton = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {[1, 2, 3].map(i => (
-            <div key={i} className="bg-white/[0.02] border border-white/5 p-5 rounded-2xl animate-pulse">
+            <div key={i} className="bg-white/[0.02] border border-white/5 p-5 rounded-md animate-pulse">
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-white/5" />
@@ -35,7 +35,7 @@ const WatchingSkeleton = () => (
                             <div className="w-12 h-2 bg-white/5 rounded" />
                         </div>
                     </div>
-                    <div className="w-8 h-8 rounded-lg bg-white/5" />
+                    <div className="w-8 h-8 rounded-md bg-white/5" />
                 </div>
                 <div className="flex items-end justify-between">
                     <div className="flex flex-col gap-2">
@@ -93,8 +93,8 @@ const Portfolio = () => {
                                 price: data.floor_price?.[currency.code] || data.floor_price?.usd || 0,
                                 change: data.floor_price_in_usd_24h_percentage_change || 0
                             };
-                        } catch (e) { 
-                            console.error(`Error fetching NFT price for ${nft.id}:`, e); 
+                        } catch (e) {
+                            console.error(`Error fetching NFT price for ${nft.id}:`, e);
                         }
                     }
                 }
@@ -185,18 +185,18 @@ const Portfolio = () => {
             if (watchlistNftTotal > 0) chartData.push({ name: 'Watched NFTs', value: watchlistNftTotal });
         }
 
-        return { 
-            total: finalTotal, 
-            change24h, 
-            chartData, 
-            watchlistTotal: finalWatchlistTotal 
+        return {
+            total: finalTotal,
+            change24h,
+            chartData,
+            watchlistTotal: finalWatchlistTotal
         };
     }, [portfolioData, livePrices, currency, watchlistData]);
 
-    const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#ef4444'];
+    const COLORS = ['#FFFFFF', '#E5E5E5', '#A1A1A1', '#737373', '#404040', '#262626'];
 
     return (
-        <div className='w-full flex flex-col justify-start bg-main min-h-full p-2 sm:p-8 pb-12 rounded-xl gap-8'>
+        <div className='w-full flex flex-col justify-start bg-main min-h-full p-2 sm:p-8 pb-12 rounded-md gap-8'>
             {/* Header section */}
             <div className="w-full">
                 <Breadcrumbs crumbs={[{ label: 'Home', path: '/' }, { label: 'Portfolio' }]} />
@@ -206,7 +206,7 @@ const Portfolio = () => {
                 <h1 className='text-3xl md:text-4xl font-bold tracking-tight text-white'>My Portfolio</h1>
                 <button
                     onClick={() => setIsModalOpen(true)}
-                    className="flex items-center justify-center gap-3 bg-white text-black hover:bg-gray-200 px-8 py-3 rounded-xl font-bold uppercase tracking-widest transition-all active:scale-95 text-xs"
+                    className="flex items-center justify-center gap-3 bg-white text-black hover:bg-gray-200 px-8 py-3 rounded-md font-bold uppercase tracking-widest transition-all active:scale-95 text-xs"
                 >
                     <Plus className="w-4 h-4" />
                     Add New Asset
@@ -241,7 +241,7 @@ const Portfolio = () => {
                                 {formatPrice(stats.total > 0 ? stats.total : stats.watchlistTotal)}
                             </h2>
                         </div>
-                        
+
                         {stats.total > 0 ? (
                             <div className={`flex items-center gap-2 font-bold text-lg ${stats.change24h >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
                                 {stats.change24h >= 0 ? <TrendingUp className="w-5 h-5" /> : <TrendingDown className="w-5 h-5" />}
@@ -265,18 +265,18 @@ const Portfolio = () => {
                     </div>
 
                     <div className="flex gap-4 mt-8">
-                        <div className="px-6 py-3 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-sm">
+                        <div className="px-6 py-3 bg-white/5 border border-white/10 rounded-md backdrop-blur-sm">
                             <p className="text-[10px] text-muted uppercase font-bold tracking-widest">Crypto Share</p>
                             <p className="text-xl font-black">
-                                {Math.round(((portfolioData.crypto.length + watchlistData.crypto.length) / 
-                                (portfolioData.crypto.length + watchlistData.crypto.length + portfolioData.nfts.length + watchlistData.nfts.length || 1)) * 100)}%
+                                {Math.round(((portfolioData.crypto.length + watchlistData.crypto.length) /
+                                    (portfolioData.crypto.length + watchlistData.crypto.length + portfolioData.nfts.length + watchlistData.nfts.length || 1)) * 100)}%
                             </p>
                         </div>
-                        <div className="px-6 py-3 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-sm">
+                        <div className="px-6 py-3 bg-white/5 border border-white/10 rounded-md backdrop-blur-sm">
                             <p className="text-[10px] text-muted uppercase font-bold tracking-widest">NFT Share</p>
                             <p className="text-xl font-black">
-                                {Math.round(((portfolioData.nfts.length + watchlistData.nfts.length) / 
-                                (portfolioData.crypto.length + watchlistData.crypto.length + portfolioData.nfts.length + watchlistData.nfts.length || 1)) * 100)}%
+                                {Math.round(((portfolioData.nfts.length + watchlistData.nfts.length) /
+                                    (portfolioData.crypto.length + watchlistData.crypto.length + portfolioData.nfts.length + watchlistData.nfts.length || 1)) * 100)}%
                             </p>
                         </div>
                     </div>
@@ -310,7 +310,7 @@ const Portfolio = () => {
                                         ))}
                                     </Pie>
                                     <Tooltip
-                                        contentStyle={{ backgroundColor: '#000', border: 'none', borderRadius: '12px', fontSize: '12px' }}
+                                        contentStyle={{ backgroundColor: '#000', border: 'none', borderRadius: '6px', fontSize: '12px' }}
                                         itemStyle={{ color: '#fff' }}
                                     />
                                 </PieChart>
@@ -335,13 +335,13 @@ const Portfolio = () => {
                             onClick={() => setActiveTab('crypto')}
                             className={`pb-4 text-sm font-bold uppercase tracking-widest transition-all relative ${activeTab === 'crypto' ? 'text-white' : 'text-muted hover:text-white/80'}`}
                         >
-                            Crypto {activeTab === 'crypto' && <motion.div layoutId="tab-underline" className="absolute bottom-0 left-0 right-0 h-1 bg-emerald-500 rounded-full" />}
+                            Crypto {activeTab === 'crypto' && <motion.div layoutId="tab-underline" className="absolute bottom-0 left-0 right-0 h-1 bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.4)]" />}
                         </button>
                         <button
                             onClick={() => setActiveTab('nfts')}
                             className={`pb-4 text-sm font-bold uppercase tracking-widest transition-all relative ${activeTab === 'nfts' ? 'text-white' : 'text-muted hover:text-white/80'}`}
                         >
-                            NFTs {activeTab === 'nfts' && <motion.div layoutId="tab-underline" className="absolute bottom-0 left-0 right-0 h-1 bg-purple-500 rounded-full" />}
+                            NFTs {activeTab === 'nfts' && <motion.div layoutId="tab-underline" className="absolute bottom-0 left-0 right-0 h-1 bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.4)]" />}
                         </button>
                     </div>
                 </div>
@@ -361,7 +361,7 @@ const Portfolio = () => {
                                     <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted">Your Holdings</span>
                                     <div className="h-[1px] flex-1 bg-white/5"></div>
                                 </div>
-                                
+
                                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                                     {portfolioData[activeTab].map((item, idx) => {
                                         const price = activeTab === 'crypto'
@@ -376,14 +376,21 @@ const Portfolio = () => {
                                         return (
                                             <div
                                                 key={item.id + idx}
-                                                className="bg-[#121212]/50 border border-white/5 p-6 rounded-md hover:border-white/10 hover:bg-white/5 transition-all group flex flex-col gap-6 relative"
+                                                onClick={() => {
+                                                    if (activeTab === 'crypto') {
+                                                        navigate(`/marketcap/${item.id}`);
+                                                    } else {
+                                                        navigate(`/nft-detail/${item.id}`);
+                                                    }
+                                                }}
+                                                className="bg-[#121212]/50 border border-white/5 p-6 rounded-md hover:border-white/10 hover:bg-white/5 transition-all group flex flex-col gap-6 relative cursor-pointer"
                                             >
                                                 <div className="flex items-start justify-between">
                                                     <div className="flex items-center gap-4">
                                                         <img src={item.thumb} alt="" className="w-12 h-12 rounded-full shadow-lg shadow-black/50" />
                                                         <div className="flex flex-col">
                                                             <div className="flex items-center gap-2">
-                                                                <span className={`font-bold text-xl text-white group-hover:text-${activeTab === 'crypto' ? 'emerald' : 'purple'}-400 transition-colors`}>{item.name}</span>
+                                                                <span className="font-bold text-xl text-white group-hover:text-white transition-colors">{item.name}</span>
                                                                 {(activeTab === 'crypto' ? coinWishlist.includes(item.id) : nftWishlist.includes(item.id)) && (
                                                                     <Star size={12} className="text-yellow-400 fill-yellow-400" />
                                                                 )}
@@ -393,7 +400,7 @@ const Portfolio = () => {
                                                     </div>
                                                     <button
                                                         onClick={() => removeAsset(item.id, activeTab)}
-                                                        className="p-2 text-muted hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all opacity-0 group-hover:opacity-100"
+                                                        className="p-2 text-muted hover:text-red-500 hover:bg-red-500/10 rounded-md transition-all opacity-0 group-hover:opacity-100"
                                                     >
                                                         <Trash2 className="w-4 h-4" />
                                                     </button>
@@ -421,10 +428,10 @@ const Portfolio = () => {
                                         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted">Your Holdings</span>
                                         <div className="h-[1px] flex-1 bg-white/5"></div>
                                     </div>
-                                    <div className="col-span-full py-16 flex flex-col items-center justify-center gap-4 bg-white/[0.01] border border-dashed border-white/5 rounded-3xl text-center group hover:bg-white/[0.02] transition-colors">
+                                    <div className="col-span-full py-16 flex flex-col items-center justify-center gap-4 bg-white/[0.01] border border-dashed border-white/5 rounded-md text-center group hover:bg-white/[0.02] transition-colors">
                                         <Plus className="w-8 h-8 text-muted/20" />
                                         <p className="text-xs font-bold uppercase tracking-widest text-muted/50">No holdings in this category</p>
-                                        <button onClick={() => setIsModalOpen(true)} className="text-[10px] font-black uppercase tracking-widest text-emerald-500 hover:text-emerald-400 transition-colors">Add your first asset +</button>
+                                        <button onClick={() => setIsModalOpen(true)} className="text-[10px] font-black uppercase tracking-widest text-white hover:text-gray-300 transition-colors underline decoration-white/20 underline-offset-4">Add your first asset +</button>
                                     </div>
                                 </div>
                             )
@@ -445,7 +452,11 @@ const Portfolio = () => {
                                 ) : activeTab === 'crypto' ? (
                                     watchlistData.crypto.length > 0 ? (
                                         watchlistData.crypto.map((coin) => (
-                                            <div key={coin.id} className="bg-white/[0.02] border border-white/5 p-5 rounded-2xl hover:border-yellow-500/20 transition-all group relative overflow-hidden">
+                                            <div 
+                                                key={coin.id} 
+                                                onClick={() => navigate(`/marketcap/${coin.id}`)}
+                                                className="bg-white/[0.02] border border-white/5 p-5 rounded-md hover:border-yellow-500/20 transition-all group relative overflow-hidden cursor-pointer"
+                                            >
                                                 <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-10 transition-opacity">
                                                     <Star size={64} className="fill-current" />
                                                 </div>
@@ -457,7 +468,7 @@ const Portfolio = () => {
                                                             <span className="text-[10px] text-muted uppercase font-bold tracking-widest font-mono">{coin.symbol}</span>
                                                         </div>
                                                     </div>
-                                                    <div className="p-2 bg-yellow-500/10 rounded-lg">
+                                                    <div className="p-2 bg-yellow-500/10 rounded-md">
                                                         <Star className="text-yellow-400 fill-yellow-400" size={12} />
                                                     </div>
                                                 </div>
@@ -473,16 +484,20 @@ const Portfolio = () => {
                                             </div>
                                         ))
                                     ) : (
-                                        <div className="col-span-full py-12 flex flex-col items-center justify-center gap-3 border border-dashed border-white/5 rounded-3xl opacity-50">
+                                        <div className="col-span-full py-12 flex flex-col items-center justify-center gap-3 border border-dashed border-white/5 rounded-md opacity-50">
                                             <Star size={20} className="text-muted/20" />
                                             <p className="text-[10px] font-bold uppercase tracking-widest text-muted/30">Not watching any coins yet</p>
-                                            <Link to="/marketcap" className="px-6 py-2 bg-white/5 hover:bg-white/10 text-white text-[10px] font-black uppercase tracking-widest rounded-lg border border-white/5 transition-all mt-2">Browse Market</Link>
+                                            <Link to="/marketcap" className="px-6 py-2 bg-white/5 hover:bg-white/10 text-white text-[10px] font-black uppercase tracking-widest rounded-md border border-white/5 transition-all mt-2">Browse Market</Link>
                                         </div>
                                     )
                                 ) : (
                                     watchlistData.nfts.length > 0 ? (
                                         watchlistData.nfts.map((nft) => (
-                                            <div key={nft.id} className="bg-white/[0.02] border border-white/5 p-5 rounded-2xl hover:border-purple-500/20 transition-all group relative overflow-hidden">
+                                            <div 
+                                                key={nft.id} 
+                                                onClick={() => navigate(`/nft-detail/${nft.id}`)}
+                                                className="bg-white/[0.02] border border-white/5 p-5 rounded-md hover:border-purple-500/20 transition-all group relative overflow-hidden cursor-pointer"
+                                            >
                                                 <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-10 transition-opacity">
                                                     <Star size={64} className="fill-current" />
                                                 </div>
@@ -494,7 +509,7 @@ const Portfolio = () => {
                                                             <span className="text-[10px] text-muted uppercase font-bold tracking-widest font-mono">{nft.symbol}</span>
                                                         </div>
                                                     </div>
-                                                    <div className="p-2 bg-purple-500/10 rounded-lg">
+                                                    <div className="p-2 bg-purple-500/10 rounded-md">
                                                         <Star className="text-purple-400 fill-purple-400" size={12} />
                                                     </div>
                                                 </div>
@@ -510,10 +525,10 @@ const Portfolio = () => {
                                             </div>
                                         ))
                                     ) : (
-                                        <div className="col-span-full py-12 flex flex-col items-center justify-center gap-3 border border-dashed border-white/5 rounded-3xl opacity-50">
+                                        <div className="col-span-full py-12 flex flex-col items-center justify-center gap-3 border border-dashed border-white/5 rounded-md opacity-50">
                                             <Star size={20} className="text-muted/20" />
                                             <p className="text-[10px] font-bold uppercase tracking-widest text-muted/30">Not watching any collections yet</p>
-                                            <Link to="/nft-floor" className="px-6 py-2 bg-white/5 hover:bg-white/10 text-white text-[10px] font-black uppercase tracking-widest rounded-lg border border-white/5 transition-all mt-2">Browse NFTs</Link>
+                                            <Link to="/nft-floor" className="px-6 py-2 bg-white/5 hover:bg-white/10 text-white text-[10px] font-black uppercase tracking-widest rounded-md border border-white/5 transition-all mt-2">Browse NFTs</Link>
                                         </div>
                                     )
                                 )}
@@ -523,12 +538,16 @@ const Portfolio = () => {
                 </AnimatePresence>
             </div>
 
-            <AddAssetModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                type={activeTab === 'crypto' ? 'crypto' : 'nft'}
-                onAdd={addAsset}
-            />
+            <AnimatePresence>
+                {isModalOpen && (
+                    <AddAssetModal
+                        isOpen={isModalOpen}
+                        onClose={() => setIsModalOpen(false)}
+                        type={activeTab === 'crypto' ? 'crypto' : 'nft'}
+                        onAdd={addAsset}
+                    />
+                )}
+            </AnimatePresence>
         </div>
     );
 };

@@ -145,7 +145,7 @@ const CryptoTreasuries = () => {
   const currentItems = sortedTreasuriesList.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible" className='w-full flex flex-col justify-start items-center bg-main min-h-full p-4 pb-8 rounded-xl gap-8'>
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" className='w-full flex flex-col justify-start items-center bg-main min-h-full p-4 pb-8 rounded-md gap-8'>
 
       <div className='w-full'>
         <Breadcrumbs
@@ -163,21 +163,21 @@ const CryptoTreasuries = () => {
           ))
         ) : (
           <>
-            <div className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-xl bg-card/30 hover:bg-card/50 transition-all duration-300'>
+            <div className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-md bg-card/30 hover:bg-card/50 transition-all duration-300'>
               <p className='text-2xl font-bold sm:text-3xl text-white'>
                 {treasuries.length || 0}
               </p>
               <span className='text-sm text-muted'>Total Entities</span>
             </div>
 
-            <div className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-xl bg-card/30 hover:bg-card/50 transition-all duration-300'>
+            <div className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-md bg-card/30 hover:bg-card/50 transition-all duration-300'>
               <p className='text-2xl font-bold sm:text-3xl text-white'>
                 {[...new Set(treasuries.filter(t => t.country).map(t => t.country))].length}
               </p>
               <span className='text-sm text-muted'>Countries</span>
             </div>
 
-            <div className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-xl bg-card/30 hover:bg-card/50 transition-all duration-300'>
+            <div className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-md bg-card/30 hover:bg-card/50 transition-all duration-300'>
               <p className='text-2xl font-bold sm:text-3xl text-white'>
                 {Number(summary.total_holdings || 0).toLocaleString()}
               </p>
@@ -187,7 +187,7 @@ const CryptoTreasuries = () => {
               </div>
             </div>
 
-            <div className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-xl bg-card/30 hover:bg-card/50 transition-all duration-300'>
+            <div className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-md bg-card/30 hover:bg-card/50 transition-all duration-300'>
               <p className='text-2xl font-bold sm:text-3xl text-white'>
                 ${(Number(summary.total_value_usd || 0) / 1e9).toFixed(1)}B
               </p>
@@ -197,7 +197,7 @@ const CryptoTreasuries = () => {
               </div>
             </div>
 
-            <div className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-xl bg-card/30 hover:bg-card/50 transition-all duration-300'>
+            <div className='flex flex-col gap-2 justify-center items-start p-6 border-gray-700 border rounded-md bg-card/30 hover:bg-card/50 transition-all duration-300'>
               <p className='text-2xl font-bold sm:text-3xl text-white'>
                 {summary.market_cap || "0"}%
               </p>

@@ -309,15 +309,15 @@ const ExchangeDetail = () => {
                         <div className="h-10 w-24 bg-gray-800 rounded-full"></div>
                         <div className="h-10 w-24 bg-gray-800 rounded-full"></div>
                     </div>
-                    <div className="h-[400px] bg-gray-800/20 rounded-xl w-full"></div>
+                    <div className="h-[400px] bg-gray-800/20 rounded-md w-full"></div>
                 </div>
 
                 {/* Info & Trust Stats Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Info Section */}
-                    <div className="lg:col-span-2 h-64 bg-gray-800/20 rounded-xl"></div>
+                    <div className="lg:col-span-2 h-64 bg-gray-800/20 rounded-md"></div>
                     {/* Trust Score Section */}
-                    <div className="h-64 bg-gray-800/20 rounded-xl"></div>
+                    <div className="h-64 bg-gray-800/20 rounded-md"></div>
                 </div>
             </div>
         );
@@ -328,7 +328,7 @@ const ExchangeDetail = () => {
     }
 
     return (
-        <motion.div variants={containerVariants} initial='hidden' animate='visible' className="p-2 sm:p-6 bg-main rounded-xl min-h-screen">
+        <motion.div variants={containerVariants} initial='hidden' animate='visible' className="p-2 sm:p-6 bg-main rounded-md min-h-screen">
             {/* Breadcrumbs */}
 
             <div className="flex flex-col gap-8">
@@ -365,7 +365,7 @@ const ExchangeDetail = () => {
                 >
                     {/* first card of the exchage detailes based of the binance  */}
                     <motion.div variants={itemVariants} className='flex flex-col gap-2 h-[210px]'>
-                        <div className={`flex items-center justify-between border-gray-800 border-2 rounded-2xl px-6 py-4 flex-1 bg-card/20 backdrop-blur-md transition-all duration-300 ${getVolumeTrendColor()}`}>
+                        <div className={`flex items-center justify-between border-gray-800 border-2 rounded-md px-6 py-4 flex-1 bg-card/20 backdrop-blur-md transition-all duration-300 ${getVolumeTrendColor()}`}>
                             <div className='flex flex-col items-start justify-center'>
                                 <p className='text-3xl font-bold tracking-tight'>
                                     {formatPrice(exchange.trade_volume_24h_btc_normalized || exchange.trade_volume_24h_btc || 0, { currency: 'BTC', style: 'decimal' })} ₿
@@ -380,7 +380,7 @@ const ExchangeDetail = () => {
                                 )}
                             </div>
                         </div>
-                        <div className='flex flex-col items-start border-gray-800 border-2 rounded-2xl px-6 py-4 flex-1 justify-center bg-card/20 backdrop-blur-md hover:border-gray-700 transition-colors'>
+                        <div className='flex flex-col items-start border-gray-800 border-2 rounded-md px-6 py-4 flex-1 justify-center bg-card/20 backdrop-blur-md hover:border-gray-700 transition-colors'>
                             <p className='text-3xl font-bold text-green-500'>{exchange.trust_score || 0}/10</p>
                             <div className='flex items-center gap-2 text-muted'>
                                 <span className='text-sm'>Trust Score</span>
@@ -391,7 +391,7 @@ const ExchangeDetail = () => {
 
                     {/* second card for new listings */}
                     <motion.div variants={itemVariants} className='h-[210px]'>
-                        <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col h-[210px] transition-all duration-300 group">
+                        <div className="bg-[#0b0e11] border border-gray-800 rounded-md p-6 flex flex-col h-[210px] transition-all duration-300 group">
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-2">
                                     <span className='text-yellow-500 text-2xl'>✨</span>
@@ -403,7 +403,7 @@ const ExchangeDetail = () => {
                                     .sort((a, b) => new Date(b.last_traded_at) - new Date(a.last_traded_at))
                                     .slice(0, 3)
                                     .map((ticker, i) => (
-                                        <div key={i} className='flex items-center justify-between p-2 border-b border-gray-800 last:border-0 hover:bg-card transition-colors cursor-pointer rounded-lg' onClick={() => navigate(`/cryptocurrencies/marketcap/${ticker.coin_id}`)}>
+                                        <div key={i} className='flex items-center justify-between p-2 border-b border-gray-800 last:border-0 hover:bg-card transition-colors cursor-pointer rounded-md' onClick={() => navigate(`/cryptocurrencies/marketcap/${ticker.coin_id}`)}>
                                             <div className='flex items-center gap-3'>
                                                 <span className='text-sm font-medium text-gray-300 group-hover:text-white transition-colors'>{ticker.base}/{ticker.target}</span>
                                             </div>
@@ -421,7 +421,7 @@ const ExchangeDetail = () => {
 
                     {/* Thrid card for new Largest Gainers */}
                     <motion.div variants={itemVariants} className='h-[210px]'>
-                        <div className="bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-col h-[210px] transition-all duration-300 group">
+                        <div className="bg-[#0b0e11] border border-gray-800 rounded-md p-6 flex flex-col h-[210px] transition-all duration-300 group">
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-2">
                                     <span className='text-blue-400 text-2xl'>🚀</span>
@@ -433,7 +433,7 @@ const ExchangeDetail = () => {
                                     .sort((a, b) => (b.converted_volume?.usd || 0) - (a.converted_volume?.usd || 0))
                                     .slice(0, 3)
                                     .map((ticker, i) => (
-                                        <div key={i} className='flex items-center justify-between p-2 border-b border-gray-800 last:border-0 hover:bg-card transition-colors cursor-pointer rounded-lg' onClick={() => navigate(`/cryptocurrencies/marketcap/${ticker.coin_id}`)}>
+                                        <div key={i} className='flex items-center justify-between p-2 border-b border-gray-800 last:border-0 hover:bg-card transition-colors cursor-pointer rounded-md' onClick={() => navigate(`/cryptocurrencies/marketcap/${ticker.coin_id}`)}>
                                             <div className='flex items-center gap-3'>
                                                 <span className='text-sm font-medium text-gray-300 group-hover:text-white transition-colors'>{ticker.base}/{ticker.target}</span>
                                             </div>

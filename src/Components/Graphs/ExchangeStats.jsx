@@ -29,7 +29,7 @@ const StatCard = ({ title, data }) => {
     };
 
     return (
-        <div className="bg-[#0d0e12] border border-white/5 rounded-2xl p-4 sm:p-6 flex flex-col h-auto sm:h-[320px]">
+        <div className="bg-[#0d0e12] border border-white/5 rounded-md p-4 sm:p-6 flex flex-col h-auto sm:h-[320px]">
             <h2 className="text-white font-bold text-base sm:text-lg mb-4">{title}</h2>
 
             {data && data.length > 0 ? (
@@ -57,7 +57,7 @@ const StatCard = ({ title, data }) => {
                                         if (active && payload && payload.length) {
                                             const data = payload[0].payload;
                                             return (
-                                                <div className="bg-[#1a1c23] border border-white/10 p-2 rounded-lg shadow-xl">
+                                                <div className="bg-[#1a1c23] border border-white/10 p-2 rounded-md shadow-xl">
                                                     <span className="text-gray-200 font-bold text-xs">
                                                         {data.name}: <span className="text-white">{data.percent.toFixed(2)}%</span>
                                                     </span>

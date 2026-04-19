@@ -33,7 +33,7 @@ const NFTWatchlist = () => {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="w-full min-h-screen flex flex-col gap-8 pb-32 bg-main rounded-xl px-4 sm:px-10 lg:px-12"
+            className="w-full min-h-screen flex flex-col gap-8 pb-32 bg-main rounded-md px-4 sm:px-10 lg:px-12"
         >
             <div className="w-full">
                 <Breadcrumbs
@@ -47,7 +47,7 @@ const NFTWatchlist = () => {
             <motion.div variants={itemVariants} className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
                 <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-3">
-                        <div className="p-2 bg-yellow-400/10 rounded-lg">
+                        <div className="p-2 bg-yellow-400/10 rounded-md">
                             <Star className="text-yellow-400" size={24} fill="currentColor" />
                         </div>
                         <h1 className="text-3xl sm:text-5xl font-black text-white uppercase tracking-tighter">Your Saved NFTs</h1>
@@ -57,8 +57,8 @@ const NFTWatchlist = () => {
                     </p>
                 </div>
 
-                <div className="flex items-center gap-3 bg-white/5 p-1 rounded-xl border border-white/10">
-                    <button className="p-2 bg-white/10 rounded-lg text-white">
+                <div className="flex items-center gap-3 bg-white/5 p-1 rounded-md border border-white/10">
+                    <button className="p-2 bg-white/10 rounded-md text-white">
                         <LayoutGrid size={20} />
                     </button>
                     <Link to="/nft-floor" className="px-4 py-2 text-xs font-black uppercase tracking-widest text-muted hover:text-white transition-colors">
@@ -70,7 +70,7 @@ const NFTWatchlist = () => {
             {nftWishlist.length === 0 ? (
                 <motion.div 
                     variants={itemVariants} 
-                    className="flex-1 flex flex-col items-center justify-center py-20 border-2 border-dashed border-white/5 rounded-[2rem] gap-6"
+                    className="flex-1 flex flex-col items-center justify-center py-20 border-2 border-dashed border-white/5 rounded-md gap-6"
                 >
                     <div className="p-10 bg-white/5 rounded-full">
                         <Star size={64} className="text-white/10" />
@@ -81,7 +81,7 @@ const NFTWatchlist = () => {
                     </div>
                     <Link 
                         to="/nft-floor" 
-                        className="px-8 py-4 bg-white text-black font-black uppercase tracking-widest rounded-2xl hover:bg-emerald-400 transition-all active:scale-95 shadow-2xl shadow-emerald-500/20"
+                        className="px-8 py-4 bg-white text-black font-black uppercase tracking-widest rounded-md hover:bg-emerald-400 transition-all active:scale-95 shadow-2xl shadow-emerald-500/20"
                     >
                         Browse Collections
                     </Link>
@@ -96,7 +96,7 @@ const NFTWatchlist = () => {
                 </div>
             )}
 
-            <motion.div variants={itemVariants} className="mt-auto p-6 bg-emerald-500/5 border border-emerald-500/10 rounded-3xl flex items-center gap-4">
+            <motion.div variants={itemVariants} className="mt-auto p-6 bg-emerald-500/5 border border-emerald-500/10 rounded-md flex items-center gap-4">
                 <Info className="text-emerald-500 shrink-0" size={24} />
                 <p className="text-xs sm:text-sm text-emerald-500/80 font-bold leading-relaxed">
                     Watchlist data is synchronized with your Supabase account. Access your saved assets across any device by logging in.

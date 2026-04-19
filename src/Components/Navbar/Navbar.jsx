@@ -203,7 +203,7 @@ const Navbar = () => {
                                                         item.path && navigate(item.path);
                                                         setIsMobileMenuOpen(false);
                                                     }}
-                                                    className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 border ${isActive(item.path)
+                                                    className={`w-full flex items-center gap-3 p-3 rounded-md transition-all duration-300 border ${isActive(item.path)
                                                         ? 'bg-card text-white border-white/10 shadow-lg'
                                                         : 'text-muted border-transparent hover:bg-white/5 hover:text-white'}`}
                                                 >
@@ -224,7 +224,7 @@ const Navbar = () => {
                                             item.path && navigate(item.path);
                                             setIsMobileMenuOpen(false);
                                         }}
-                                        className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 border ${isActive(item.path)
+                                        className={`w-full flex items-center gap-3 p-3 rounded-md transition-all duration-300 border ${isActive(item.path)
                                             ? 'bg-card text-white border-white/10 shadow-lg'
                                             : 'text-muted border-transparent hover:bg-white/5 hover:text-white'}`}
                                     >
@@ -243,7 +243,7 @@ const Navbar = () => {
                                         }
                                         setIsMobileMenuOpen(false);
                                     }}
-                                    className="w-full flex items-center gap-3 p-3 rounded-xl text-muted hover:text-white transition-all hover-soft"
+                                    className="w-full flex items-center gap-3 p-3 rounded-md text-muted hover:text-white transition-all hover-soft"
                                 >
                                     {user ? <LogOut size={20} /> : <LogIn size={20} />}
                                     <span className="font-bold text-base">{user ? "Sign Out" : "Sign In"}</span>
@@ -292,7 +292,7 @@ const Navbar = () => {
                     </AnimatePresence>
                     <button
                         onClick={() => setIsCollapsed(!isCollapsed)}
-                        className={`p-2 rounded-lg hover-soft text-muted hover:text-white transition-colors flex-shrink-0 ${isCollapsed ? 'mx-auto' : ''}`}
+                        className={`p-2 rounded-md hover-soft text-muted hover:text-white transition-colors flex-shrink-0 ${isCollapsed ? 'mx-auto' : ''}`}
                     >
                         {isCollapsed ? <PanelLeftOpen size={22} /> : <PanelLeftClose size={22} />}
                     </button>
@@ -326,7 +326,7 @@ const Navbar = () => {
                                             onClick={() => item.path && navigate(item.path)}
                                             onMouseEnter={(e) => handleMouseEnter(e, item.label)}
                                             onMouseLeave={handleMouseLeave}
-                                            className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 border ${isActive(item.path)
+                                            className={`w-full flex items-center gap-3 p-3 rounded-md transition-all duration-300 border ${isActive(item.path)
                                                 ? 'bg-card text-white border-white/10 shadow-lg'
                                                 : 'text-muted border-transparent hover:bg-white/5 hover:text-white'} ${isCollapsed ? 'justify-center mx-auto' : ''}`}
                                         >
@@ -365,7 +365,7 @@ const Navbar = () => {
                                 onClick={() => item.path && navigate(item.path)}
                                 onMouseEnter={(e) => handleMouseEnter(e, item.label)}
                                 onMouseLeave={handleMouseLeave}
-                                className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 border ${isActive(item.path)
+                                className={`w-full flex items-center gap-3 p-3 rounded-md transition-all duration-300 border ${isActive(item.path)
                                     ? 'bg-card text-white border-white/10 shadow-lg'
                                     : 'text-muted border-transparent hover:bg-white/5 hover:text-white'} ${isCollapsed ? 'justify-center mx-auto' : ''}`}
                             >
@@ -404,7 +404,7 @@ const Navbar = () => {
                             }}
                             onMouseEnter={(e) => handleMouseEnter(e, user ? "Sign Out" : "Sign In")}
                             onMouseLeave={handleMouseLeave}
-                            className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all hover-soft text-muted hover:text-white ${isCollapsed ? 'justify-center mx-auto' : ''}`}
+                            className={`w-full flex items-center gap-3 p-3 rounded-md transition-all hover-soft text-muted hover:text-white ${isCollapsed ? 'justify-center mx-auto' : ''}`}
                         >
                             <motion.span
                                 variants={itemVariants}
@@ -438,7 +438,7 @@ const Navbar = () => {
                                 initial={{ opacity: 0, x: -10, y: "-50%" }}
                                 animate={{ opacity: 1, x: 0, y: "-50%" }}
                                 exit={{ opacity: 0, x: -10, y: "-50%" }}
-                                className="fixed px-3 py-2 bg-[#1a1a1a] text-white text-xs font-medium rounded-lg shadow-2xl border border-white/10 z-[99999] pointer-events-none whitespace-nowrap"
+                                className="fixed px-3 py-2 bg-[#1a1a1a] text-white text-xs font-medium rounded-md shadow-2xl border border-white/10 z-[99999] pointer-events-none whitespace-nowrap"
                                 style={{
                                     top: hoveredItem.top,
                                     left: hoveredItem.left,

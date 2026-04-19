@@ -26,7 +26,7 @@ import { useWishlist } from '../../Context/WishlistContext';
 import { toast } from 'react-hot-toast';
 
 const StatRow = ({ label, value, change, isPositive, tooltip }) => (
-    <div className="flex items-center justify-between py-2 sm:py-3 border-b border-gray-800/20 last:border-0 hover:bg-white/[0.03] px-2 sm:px-3 rounded-lg sm:rounded-xl transition-all duration-300 group">
+    <div className="flex items-center justify-between py-2 sm:py-3 border-b border-gray-800/20 last:border-0 hover:bg-white/[0.03] px-2 sm:px-3 rounded-md transition-all duration-300 group">
         <div className="flex items-center gap-2">
             <span className="text-sm sm:text-base text-muted font-bold group-hover:text-white/80 transition-colors uppercase tracking-tight">{label}</span>
             {tooltip && <span className='text-[10px] sm:text-xs text-muted/30 cursor-help' title={tooltip}>ⓘ</span>}
@@ -94,7 +94,7 @@ const NFTDetail = () => {
 
     if (error || !nftData) return (
         <div className="min-h-screen bg-[#0b0e11] p-8 text-center flex flex-col items-center justify-center">
-            <div className="p-10 bg-rose-500/5 rounded-3xl border border-gray-800 max-w-md w-full">
+            <div className="p-10 bg-rose-500/5 rounded-md border border-gray-800 max-w-md w-full">
                 <Info size={48} className="text-rose-500 mx-auto mb-4 opacity-50" />
                 <h2 className="text-xl font-bold text-white mb-2">Collection Not Found</h2>
                 <Link to="/nft-floor" className="text-emerald-500 font-bold hover:underline">Go to Market</Link>
@@ -121,7 +121,7 @@ const NFTDetail = () => {
                 <div className="lg:col-span-4 xl:col-span-3 space-y-6">
 
                     {/* Header Info Block */}
-                    <div className="p-4 sm:p-8 border-gray-800 border-2 rounded-3xl bg-card/20 backdrop-blur-md flex flex-col gap-4 sm:gap-6 shadow-2xl shadow-black/20">
+                    <div className="p-4 sm:p-8 border-gray-800 border-2 rounded-md bg-card/20 backdrop-blur-md flex flex-col gap-4 sm:gap-6 shadow-2xl shadow-black/20">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3 sm:gap-4">
                                 <div className="p-1 bg-white/5 rounded-full border border-white/10">
@@ -139,7 +139,7 @@ const NFTDetail = () => {
                                     </div>
                                 </div>
                             </div>
-                            <button className='p-2 sm:p-3 bg-white/5 hover:bg-white/10 rounded-xl sm:rounded-2xl border border-white/10 transition-all text-muted hover:text-white group'>
+                            <button className='p-2 sm:p-3 bg-white/5 hover:bg-white/10 rounded-md border border-white/10 transition-all text-muted hover:text-white group'>
                                 <Bell size={18} className='group-hover:scale-110 transition-transform sm:w-5 sm:h-5' />
                             </button>
                         </div>
@@ -149,7 +149,7 @@ const NFTDetail = () => {
                                 <span className="text-3xl sm:text-5xl font-black tracking-tighter text-white">
                                     {nftData.floor_price?.native_currency?.toLocaleString()} {nftData.native_currency_symbol?.toUpperCase()}
                                 </span>
-                                <div className={`text-xs sm:text-base font-bold px-2.5 py-1 rounded-lg ${isPositive ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`}>
+                                <div className={`text-xs sm:text-base font-bold px-2.5 py-1 rounded-md ${isPositive ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`}>
                                     {isPositive ? '+' : ''}{priceChange.toFixed(2)}%
                                 </div>
                             </div>
@@ -163,7 +163,7 @@ const NFTDetail = () => {
                                 onClick={async () => {
                                     await toggleNftWishlist(nftData.id || contractAddress, nftData.name);
                                 }}
-                                className="flex-1 flex items-center justify-center gap-2 p-3 sm:p-4 bg-card hover:bg-white/5 text-white text-xs sm:text-sm font-extrabold rounded-xl sm:rounded-2xl border border-white/10 transition-all active:scale-[0.98] shadow-lg shadow-black/20 group"
+                                className="flex-1 flex items-center justify-center gap-2 p-3 sm:p-4 bg-card hover:bg-white/5 text-white text-xs sm:text-sm font-extrabold rounded-md border border-white/10 transition-all active:scale-[0.98] shadow-lg shadow-black/20 group"
                             >
                                 <Star
                                     size={16}
@@ -207,7 +207,7 @@ const NFTDetail = () => {
                         />
                         <StatRow label="Total Assets" value={nftData.total_supply?.toLocaleString() || '-'} />
 
-                        <div className="flex items-center justify-between py-2 sm:py-3 border-b border-gray-800/20 last:border-0 hover:bg-white/[0.03] px-2 sm:px-3 rounded-lg sm:rounded-xl transition-all duration-300 group">
+                        <div className="flex items-center justify-between py-2 sm:py-3 border-b border-gray-800/20 last:border-0 hover:bg-white/[0.03] px-2 sm:px-3 rounded-md transition-all duration-300 group">
                             <div className="flex items-center gap-2">
                                 <span className="text-xs text-muted font-black uppercase tracking-tighter">All-Time High</span>
                             </div>
@@ -224,7 +224,7 @@ const NFTDetail = () => {
                     </div>
 
                     {/* Info Block */}
-                    <div className="p-6 border-gray-800 border-2 rounded-2xl bg-card/5 space-y-5">
+                    <div className="p-6 border-gray-800 border-2 rounded-md bg-card/5 space-y-5">
                         <h3 className="text-[10px] uppercase tracking-[0.2em] text-emerald-400 font-black">Info</h3>
 
                         <div className="flex flex-col gap-4">
@@ -238,7 +238,7 @@ const NFTDetail = () => {
 
                             <div className="flex items-center justify-between">
                                 <span className="text-[11px] text-muted-foreground font-semibold uppercase">Website</span>
-                                <a href={nftData.links?.homepage} target="_blank" rel="noreferrer" className="text-[11px] font-bold text-white flex items-center gap-1 hover:text-emerald-400 transition-colors bg-white/5 px-3 py-1 rounded-lg border border-white/10">
+                                <a href={nftData.links?.homepage} target="_blank" rel="noreferrer" className="text-[11px] font-bold text-white flex items-center gap-1 hover:text-emerald-400 transition-colors bg-white/5 px-3 py-1 rounded-md border border-white/10">
                                     {nftData.links?.homepage ? new URL(nftData.links.homepage).hostname.replace('www.', '') : 'Website'}
                                     <ExternalLink size={10} />
                                 </a>
@@ -248,18 +248,18 @@ const NFTDetail = () => {
                                 <span className="text-[11px] text-muted-foreground font-semibold uppercase">Explorers</span>
                                 <button
                                     onClick={() => setShowExplorers(!showExplorers)}
-                                    className="text-[10px] font-bold text-white px-3 py-1 bg-white/5 border border-white/10 rounded-lg flex items-center gap-2 hover:bg-white/10 transition-all"
+                                    className="text-[10px] font-bold text-white px-3 py-1 bg-white/5 border border-white/10 rounded-md flex items-center gap-2 hover:bg-white/10 transition-all"
                                 >
                                     Etherscan <ChevronDown size={12} className={showExplorers ? 'rotate-180' : ''} />
                                 </button>
                                 {showExplorers && (
-                                    <div className="absolute right-0 top-full mt-2 w-48 bg-[#1a1a1a] border border-gray-800 rounded-xl shadow-2xl z-50 p-1.5 animate-in fade-in zoom-in-95 duration-200">
+                                    <div className="absolute right-0 top-full mt-2 w-48 bg-[#1a1a1a] border border-gray-800 rounded-md shadow-2xl z-50 p-1.5 animate-in fade-in zoom-in-95 duration-200">
                                         {nftData.explorers?.map((exp, idx) => (
-                                            <a key={idx} href={exp.link} target="_blank" rel="noreferrer" className="w-full flex items-center justify-between p-2 hover:bg-white/5 rounded-lg text-[10px] text-white font-bold transition-colors">
+                                            <a key={idx} href={exp.link} target="_blank" rel="noreferrer" className="w-full flex items-center justify-between p-2 hover:bg-white/5 rounded-md text-[10px] text-white font-bold transition-colors">
                                                 {exp.name} <ExternalLink size={10} className="text-muted-foreground" />
                                             </a>
                                         ))}
-                                        <a href={`https://etherscan.io/address/${contractAddress}`} target="_blank" rel="noreferrer" className="w-full flex items-center justify-between p-2 hover:bg-white/5 rounded-lg text-[10px] text-white font-bold transition-colors">Etherscan <ExternalLink size={10} /></a>
+                                        <a href={`https://etherscan.io/address/${contractAddress}`} target="_blank" rel="noreferrer" className="w-full flex items-center justify-between p-2 hover:bg-white/5 rounded-md text-[10px] text-white font-bold transition-colors">Etherscan <ExternalLink size={10} /></a>
                                     </div>
                                 )}
                             </div>
@@ -267,14 +267,14 @@ const NFTDetail = () => {
                             <div className="flex items-center justify-between">
                                 <span className="text-[11px] text-muted-foreground font-semibold uppercase">Community</span>
                                 <div className="flex gap-2">
-                                    <a href={nftData.links?.twitter} target="_blank" rel="noreferrer" className="p-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-white transition-all"><Twitter size={14} /></a>
-                                    <a href={nftData.links?.discord} target="_blank" rel="noreferrer" className="p-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-white transition-all"><MessageCircle size={14} /></a>
+                                    <a href={nftData.links?.twitter} target="_blank" rel="noreferrer" className="p-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-md text-white transition-all"><Twitter size={14} /></a>
+                                    <a href={nftData.links?.discord} target="_blank" rel="noreferrer" className="p-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-md text-white transition-all"><MessageCircle size={14} /></a>
                                 </div>
                             </div>
 
                             <div className="flex items-center justify-between">
                                 <span className="text-[11px] text-muted-foreground font-semibold uppercase">API ID</span>
-                                <button onClick={() => handleCopy(nftData.id)} className="flex items-center gap-1.5 bg-white/5 px-3 py-1 rounded-lg border border-white/10 hover:text-emerald-400 transition-colors">
+                                <button onClick={() => handleCopy(nftData.id)} className="flex items-center gap-1.5 bg-white/5 px-3 py-1 rounded-md border border-white/10 hover:text-emerald-400 transition-colors">
                                     <span className="text-[10px] font-bold text-white/50">{nftData.id}</span>
                                     {copied ? <Check size={10} className="text-emerald-400" /> : <Copy size={10} className="text-muted-foreground" />}
                                 </button>
@@ -307,13 +307,13 @@ const NFTDetail = () => {
 
 
                             {/* Main Chart Area */}
-                            <div className="p-2 border-gray-800 border-2 rounded-3xl bg-card/5 overflow-hidden">
+                            <div className="p-2 border-gray-800 border-2 rounded-md bg-card/5 overflow-hidden">
                                 <NFTDetailGraph address={contractAddress} />
                             </div>
 
                             <div className="flex items-center justify-between p-2 flex-wrap gap-4">
-                                <div className="flex items-center gap-2 group cursor-pointer bg-white/5 px-3 py-1.5 rounded-lg border border-white/10 hover:bg-white/10 transition-colors">
-                                    <input type="checkbox" id="usd-compare" className="w-3.5 h-3.5 rounded border-gray-800 bg-transparent text-emerald-500 focus:ring-emerald-500" />
+                                <div className="flex items-center gap-2 group cursor-pointer bg-white/5 px-3 py-1.5 rounded-md border border-white/10 hover:bg-white/10 transition-colors">
+                                    <input type="checkbox" id="usd-compare" className="w-3.5 h-3.5 rounded border-gray-800 bg-transparent text-white focus:ring-white/20" />
                                     <label htmlFor="usd-compare" className="text-[11px] font-bold text-muted-foreground group-hover:text-white cursor-pointer uppercase tracking-wider">Compare with: <span className="text-emerald-400">USD</span></label>
                                 </div>
                                 <div className="text-[10px] text-muted font-bold uppercase tracking-widest flex items-center gap-1">
@@ -322,7 +322,7 @@ const NFTDetail = () => {
                             </div>
 
                             {/* Performance Grid */}
-                            <div className="bg-card/10 border-gray-800 border-2 rounded-2xl overflow-hidden mt-4">
+                            <div className="bg-card/10 border-gray-800 border-2 rounded-md overflow-hidden mt-4">
                                 <div className="grid grid-cols-6 border-b border-gray-800 bg-white/[0.02]">
                                     {['24h', '7d', '14d', '30d', '60d', '1y'].map(time => (
                                         <div key={time} className="py-2.5 text-center border-r border-gray-800 last:border-0">
@@ -352,7 +352,7 @@ const NFTDetail = () => {
                                 <h2 className="text-2xl font-black text-white tracking-tight">What is {nftData.name}?</h2>
                                 <div className="space-y-5 text-muted-foreground text-[14px] font-medium leading-[1.8]">
                                     <p>{nftData.description || `The ${nftData.name} collection is one of the premier digital assets on the ${nftData.asset_platform_id?.toUpperCase()} blockchain.`}</p>
-                                    <div className="p-6 bg-emerald-500/[0.02] border border-emerald-500/10 rounded-2xl space-y-3">
+                                    <div className="p-6 bg-emerald-500/[0.02] border border-emerald-500/10 rounded-md space-y-3">
                                         <div className="flex items-center gap-2 text-emerald-500">
                                             <Info size={14} />
                                             <span className="text-[11px] font-black uppercase tracking-widest">Market Insight</span>
@@ -368,7 +368,7 @@ const NFTDetail = () => {
                     )}
 
                     {activeTab === 'About' && (
-                        <div className="bg-card/10 rounded-3xl p-10 border-gray-800 border-2 space-y-8 animate-in fade-in duration-500">
+                        <div className="bg-card/10 rounded-md p-10 border-gray-800 border-2 space-y-8 animate-in fade-in duration-500">
                             <h1 className="text-3xl font-black text-white tracking-tighter">About {nftData.name}</h1>
                             <div className="text-[15px] text-muted-foreground leading-[1.9] font-medium space-y-6">
                                 {nftData.description?.split('\n').map((para, i) => para.trim() && <p key={i}>{para}</p>)}

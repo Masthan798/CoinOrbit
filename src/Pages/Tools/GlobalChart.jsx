@@ -68,7 +68,7 @@ const GlobalChart = () => {
 
     return (
       <div
-        className={`bg-[#0b0e11] p-4 sm:p-6 rounded-3xl flex items-center justify-between gap-4 group transition-all relative overflow-hidden h-40 border-2`}
+        className={`bg-[#0b0e11] p-4 sm:p-6 rounded-md flex items-center justify-between gap-4 group transition-all relative overflow-hidden h-40 border-2`}
         style={{
           borderColor: `${trendColor}20`,
         }}
@@ -148,7 +148,7 @@ const GlobalChart = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {loading ? (
             [...Array(4)].map((_, i) => (
-              <div key={i} className="bg-[#0b0e11] border border-gray-800 p-6 rounded-3xl flex items-center justify-between gap-4 h-40 animate-pulse relative overflow-hidden">
+              <div key={i} className="bg-[#0b0e11] border border-gray-800 p-6 rounded-md flex items-center justify-between gap-4 h-40 animate-pulse relative overflow-hidden">
                 <div className="flex flex-col h-full justify-between z-10 w-full">
                   <div className="space-y-2">
                     <div className="h-4 w-24 bg-gray-800 rounded"></div>
@@ -156,7 +156,7 @@ const GlobalChart = () => {
                   </div>
                   <div className="h-3 w-16 bg-gray-800 rounded"></div>
                 </div>
-                <div className="w-12 h-12 shrink-0 rounded-2xl bg-gray-800 self-start"></div>
+                <div className="w-12 h-12 shrink-0 rounded-md bg-gray-800 self-start"></div>
                 <div className="absolute inset-x-0 bottom-0 h-16 bg-gray-800/10"></div>
               </div>
             ))
@@ -198,7 +198,7 @@ const GlobalChart = () => {
 
         {/* DeFi Stats Section (If requested) or Extra Details */}
         {defiData && (
-          <div className="w-full bg-[#0b0e11] border border-gray-800 rounded-3xl p-6 flex flex-wrap gap-8 items-center justify-between">
+          <div className="w-full bg-[#0b0e11] border border-gray-800 rounded-md p-6 flex flex-wrap gap-8 items-center justify-between">
             <div>
               <h4 className="text-lg font-bold text-white mb-1">DeFi Market Cap</h4>
               <p className="text-2xl font-bold text-blue-400">{formatPrice(Number(defiData.defi_market_cap))}</p>

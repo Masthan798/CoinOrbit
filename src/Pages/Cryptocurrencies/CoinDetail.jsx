@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { coingeckoFetch } from '../../api/coingeckoClient';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { CoinDetailData } from '../../services/AllcoinsData';
 import { BellIcon, StarIcon } from 'lucide-react';
 import CoinDetailGraph from '../../Components/Graphs/CoinDetailGraph';
@@ -11,6 +11,8 @@ import Breadcrumbs from '../../Components/common/Breadcrumbs';
 import { useCurrency } from '../../Context/CurrencyContext';
 import { useWishlist } from '../../Context/WishlistContext';
 import { toast } from 'react-hot-toast';
+import CoinPortfolioCard from '../../Components/Coins/CoinPortfolioCard';
+import AddAssetModal from '../../Components/Portfolio/AddAssetModal';
 
 
 const containerVariants = {
@@ -41,6 +43,7 @@ const CoinDetail = () => {
     const [coin, setCoin] = useState(null);
     const [loading, setLoading] = useState(true);
     const [coincardsData, setCoinsCardData] = useState(null);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchCoinDetail = async () => {
@@ -81,14 +84,14 @@ const CoinDetail = () => {
 
     if (loading) {
         return (
-            <div className="p-6 bg-main rounded-xl min-h-screen flex flex-col gap-8 animate-pulse">
+            <div className="p-6 bg-main rounded-md min-h-screen flex flex-col gap-8 animate-pulse">
                 {/* Breadcrumbs Skeleton */}
                 <div className="h-4 bg-gray-800 rounded w-64"></div>
 
                 {/* Header Grid Skeleton */}
                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 w-full'>
                     {/* Main Info Card Skeleton */}
-                    <div className="p-6 border-gray-800 border-2 rounded-2xl bg-card/30 h-32 flex flex-col justify-between">
+                    <div className="p-6 border-gray-800 border-2 rounded-md bg-card/30 h-32 flex flex-col justify-between">
                         <div className="flex items-center gap-3">
                             <div className="w-12 h-12 bg-gray-800 rounded-full"></div>
                             <div className="flex flex-col gap-2">
@@ -99,7 +102,7 @@ const CoinDetail = () => {
                     </div>
                     {/* 4 Stats Cards Skeletons */}
                     {[...Array(4)].map((_, i) => (
-                        <div key={i} className="p-6 border-gray-800 border-2 rounded-2xl bg-card/10 h-32 flex flex-col justify-center gap-3">
+                        <div key={i} className="p-6 border-gray-800 border-2 rounded-md bg-card/10 h-32 flex flex-col justify-center gap-3">
                             <div className="h-6 w-3/4 bg-gray-800 rounded"></div>
                             <div className="h-3 w-1/2 bg-gray-800 rounded"></div>
                         </div>
@@ -110,18 +113,18 @@ const CoinDetail = () => {
                 <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
                     {/* Left Stats Column Skeleton */}
                     <div className='flex flex-col gap-6 w-full'>
-                        <div className='w-full p-8 border-gray-800 border-2 rounded-3xl bg-card/20 h-[600px]'></div>
+                        <div className='w-full p-8 border-gray-800 border-2 rounded-md bg-card/20 h-[600px]'></div>
                     </div>
                     {/* Right Chart Column Skeleton */}
                     <div className='lg:col-span-2 flex flex-col gap-6'>
-                        <div className='p-2 border-gray-800 border-2 rounded-3xl bg-card/5 h-[600px]'></div>
+                        <div className='p-2 border-gray-800 border-2 rounded-md bg-card/5 h-[600px]'></div>
                     </div>
                 </div>
 
                 {/* Bottom Info Grid Skeleton */}
                 <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
-                    <div className='md:col-span-1 border-gray-800 border-2 rounded-3xl bg-[#0b0e11] h-64'></div>
-                    <div className='md:col-span-2 border-gray-800 border-2 rounded-3xl bg-[#0b0e11] h-64'></div>
+                    <div className='md:col-span-1 border-gray-800 border-2 rounded-md bg-[#0b0e11] h-64'></div>
+                    <div className='md:col-span-2 border-gray-800 border-2 rounded-md bg-[#0b0e11] h-64'></div>
                 </div>
             </div>
         );
@@ -136,7 +139,7 @@ const CoinDetail = () => {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="p-2 sm:p-6 bg-main rounded-xl min-h-full overflow-y-auto no-scrollbar flex flex-col gap-8"
+            className="p-2 sm:p-6 bg-main rounded-md min-h-full overflow-y-auto no-scrollbar flex flex-col gap-4"
         >
             {/* Breadcrumbs */}
             <Breadcrumbs
@@ -154,7 +157,7 @@ const CoinDetail = () => {
                     className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 w-full'
                 >
                     {/* Main Coin Info Card (First in the row) */}
-                    <motion.div variants={itemVariants} className='flex flex-col items-start justify-center gap-3 p-4 sm:p-6 border-gray-800 border-2 rounded-2xl bg-card/30 backdrop-blur-sm h-full'>
+                    <motion.div variants={itemVariants} className='flex flex-col items-start justify-center gap-3 p-4 sm:p-6 border-gray-800 border-2 rounded-md bg-card/30 backdrop-blur-sm h-full'>
                         <div className='flex items-center gap-3 w-full'>
                             <img src={coin.image.large} alt={coin.name} className='w-10 h-10 sm:w-12 sm:h-12 rounded-sm' />
                             <div className='flex flex-col min-w-0'>
@@ -180,7 +183,7 @@ const CoinDetail = () => {
                         { val: coincardsData?.[`${currency.code}_24h_vol`], label: '24h Volume' },
                         { val: coincardsData?.[`${currency.code}_24h_change`], label: '24h Change', isPerc: true }
                     ].map((card, idx) => (
-                        <motion.div key={idx} variants={itemVariants} className='flex flex-col gap-1 sm:gap-2 justify-center items-start p-4 sm:p-6 border-gray-800 border-2 rounded-2xl bg-card/10 hover:bg-card/20 transition-all duration-300 group h-full overflow-hidden'>
+                        <motion.div key={idx} variants={itemVariants} className='flex flex-col gap-1 sm:gap-2 justify-center items-start p-4 sm:p-6 border-gray-800 border-2 rounded-md bg-card/10 hover:bg-card/20 transition-all duration-300 group h-full overflow-hidden'>
                             {card.val !== undefined && card.val !== null ? (
                                 <p className='text-2xl sm:text-3xl font-black tracking-tight whitespace-nowrap truncate w-full'>
                                     {card.isPerc ? (
@@ -200,16 +203,16 @@ const CoinDetail = () => {
                 </motion.div>
             </motion.div>
 
-            {/* Advanced Overview/Portfolio Section */}
+            {/* Advanced Overview & Performance Grid Combined */}
             <motion.div variants={itemVariants} className='w-full'>
                 <motion.div
                     variants={containerVariants}
-                    className='grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6'
+                    className='grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 items-start'
                 >
-                    {/* Compact Coin Stats Card */}
-                    <div className='flex flex-col gap-8 w-full'>
+                    {/* Left Column: Stats & Basic Info */}
+                    <div className='flex flex-col gap-4 sm:gap-6 w-full'>
                         {/* Compact Coin Stats Card */}
-                        <div className='w-full p-4 sm:p-8 border-gray-800 border-2 rounded-3xl bg-card/20 backdrop-blur-md flex flex-col gap-4 sm:gap-6 shadow-2xl shadow-black/20'>
+                        <div className='w-full p-4 sm:p-8 border-gray-800 border-2 rounded-md bg-card/20 backdrop-blur-md flex flex-col gap-4 sm:gap-6 shadow-2xl shadow-black/20'>
                             <div className='flex items-center justify-between'>
                                 <div className='flex items-center gap-3 sm:gap-4'>
                                     <div className='p-1 bg-white/5 rounded-full border border-white/10'>
@@ -223,7 +226,7 @@ const CoinDetail = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <button className='p-2 sm:p-3 bg-white/5 hover:bg-white/10 rounded-xl sm:rounded-2xl border border-white/10 transition-all text-muted hover:text-white group'>
+                                <button className='p-2 sm:p-3 bg-white/5 hover:bg-white/10 rounded-md border border-white/10 transition-all text-muted hover:text-white group'>
                                     <BellIcon size={18} className='group-hover:scale-110 transition-transform sm:w-5 sm:h-5' />
                                 </button>
                             </div>
@@ -231,7 +234,7 @@ const CoinDetail = () => {
                             <div className='flex flex-col gap-1'>
                                 <div className='flex items-baseline gap-2'>
                                     <span className='text-3xl sm:text-5xl font-black tracking-tighter text-white'>{formatPrice(coin.market_data.current_price[currency.code])}</span>
-                                    <span className={coin.market_data.price_change_percentage_24h > 0 ? 'text-xs sm:text-base font-bold bg-green-500/10 px-2.5 py-1 rounded-lg text-green-500' : 'text-xs sm:text-base font-bold bg-red-500/10 px-2.5 py-1 rounded-lg text-red-500'}>
+                                    <span className={coin.market_data.price_change_percentage_24h > 0 ? 'text-xs sm:text-base font-bold bg-green-500/10 px-2.5 py-1 rounded-md text-green-500' : 'text-xs sm:text-base font-bold bg-red-500/10 px-2.5 py-1 rounded-md text-red-500'}>
                                         {coin.market_data.price_change_percentage_24h > 0 ? '+' : ''}{coin.market_data.price_change_percentage_24h.toFixed(2)}%
                                     </span>
                                 </div>
@@ -264,7 +267,7 @@ const CoinDetail = () => {
                                     onClick={async () => {
                                         await toggleCoinWishlist(coin.id, coin.name);
                                     }}
-                                    className={`flex-1 flex items-center justify-center gap-2 p-3 sm:p-4 bg-card hover:bg-white/5 text-white text-xs sm:text-sm font-extrabold rounded-xl sm:rounded-2xl border border-white/10 transition-all active:scale-[0.98] shadow-lg shadow-black/20 group`}
+                                    className={`flex-1 flex items-center justify-center gap-2 p-3 sm:p-4 bg-card hover:bg-white/5 text-white text-xs sm:text-sm font-extrabold rounded-md border border-white/10 transition-all active:scale-[0.98] shadow-lg shadow-black/20 group`}
                                 >
                                     <StarIcon
                                         size={16}
@@ -274,10 +277,20 @@ const CoinDetail = () => {
                                     <span>{coinWishlist.includes(coin.id) ? 'In Watchlist' : 'Add to Watchlist'}</span>
                                 </button>
                             </div>
+
+                            <AnimatePresence>
+                                {coinWishlist.includes(coin.id) && (
+                                    <CoinPortfolioCard
+                                        coin={coin}
+                                        currentPrice={coin.market_data.current_price[currency.code]}
+                                        onAddClick={() => setIsAddModalOpen(true)}
+                                    />
+                                )}
+                            </AnimatePresence>
                         </div>
 
                         {/* Stats List */}
-                        <div className='w-full flex flex-col gap-0.5 sm:gap-1 mt-4 sm:mt-0'>
+                        <div className='w-full flex flex-col gap-0.5 sm:gap-1 p-2 border-gray-800 border-2 rounded-md bg-card/5'>
                             {[
                                 { label: 'Market Cap', value: coin.market_data.market_cap[currency.code], tooltip: 'Current price multiplied by circulating supply.' },
                                 { label: 'Fully Diluted Valuation', value: coin.market_data.fully_diluted_valuation[currency.code], tooltip: 'Market cap if max supply was in circulation.' },
@@ -287,45 +300,72 @@ const CoinDetail = () => {
                                 { label: 'All-Time High', value: coin.market_data.ath[currency.code], isPrice: true, date: coin.market_data.ath_date[currency.code] },
                                 { label: 'All-Time Low', value: coin.market_data.atl[currency.code], isPrice: true, date: coin.market_data.atl_date[currency.code] },
                             ].map((stat, idx) => (
-                                <div key={idx} className='flex items-center justify-between py-2 sm:py-3 border-b border-gray-800/20 last:border-0 hover:bg-white/[0.03] px-2 sm:px-3 rounded-lg sm:rounded-xl transition-all duration-300 group'>
+                                <div key={idx} className='flex items-center justify-between py-2 sm:py-3 border-b border-gray-800/20 last:border-0 hover:bg-white/[0.03] px-2 sm:px-3 rounded-md transition-all duration-300 group'>
                                     <div className='flex items-center gap-2'>
-                                        <p className='text-sm sm:text-base text-muted font-bold group-hover:text-white/80 transition-colors'>{stat.label}</p>
+                                        <p className='text-xs sm:text-sm text-muted font-bold group-hover:text-white/80 transition-colors'>{stat.label}</p>
                                         {stat.tooltip && <span className='text-[10px] sm:text-xs text-muted/30 cursor-help' title={stat.tooltip}>ⓘ</span>}
                                     </div>
                                     <div className='flex flex-col items-end'>
-                                        <p className='text-sm sm:text-base font-black tracking-tight text-white'>
+                                        <p className='text-[11px] sm:text-sm font-black tracking-tight text-white'>
                                             {stat.isPrice ? formatPrice(stat.value) :
                                                 stat.useLocal ? `${stat.value?.toLocaleString() ?? '∞'} ${stat.symbol}` :
                                                     stat.value ? formatPrice(stat.value, { notation: 'compact' }) : 'N/A'}
                                         </p>
-                                        {stat.date && <span className='text-xs text-muted/40 font-bold uppercase'>{new Date(stat.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>}
+                                        {stat.date && <span className='text-[9px] sm:text-[10px] text-muted/40 font-bold uppercase'>{new Date(stat.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>}
                                     </div>
                                 </div>
                             ))}
                         </div>
+
+                        {/* Coin Info Block Moved Here */}
+                        <div className='w-full border-gray-800 border-2 rounded-md bg-[#0b0e11] overflow-hidden p-4 sm:p-6'>
+                            <CoinInfoBlock coin={coin} />
+                        </div>
                     </div>
 
-                    {/* Chart Component Container */}
-                    <div className='lg:col-span-2 flex flex-col gap-6'>
-                        <div className='p-2 border-gray-800 border-2 rounded-3xl bg-card/5 overflow-hidden h-full'>
+                    {/* Right Column: Chart & Performance */}
+                    <div className='lg:col-span-2 flex flex-col gap-4 sm:gap-6'>
+                        {/* Chart Component */}
+                        <div className='border-gray-800 border-2 rounded-md bg-card/5 overflow-hidden'>
                             <CoinDetailGraph />
+                        </div>
+
+                        {/* Performance & News Block Moved Here */}
+                        <div className='border-gray-800 border-2 rounded-md bg-[#0b0e11] overflow-hidden p-4 sm:p-6'>
+                            <CoinPerformanceBlock coin={coin} />
                         </div>
                     </div>
                 </motion.div>
-
-                {/* New Info & Performance Grid - Separate Row below */}
-                <motion.div variants={containerVariants} className='grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mt-6'>
-                    {/* Left: Coin Info (1 col) */}
-                    <div className='md:col-span-1 border-gray-800 border-2 rounded-3xl bg-[#0b0e11] overflow-hidden p-4 sm:p-6'>
-                        <CoinInfoBlock coin={coin} />
-                    </div>
-
-                    {/* Right: Performance & News (2 cols) */}
-                    <div className='md:col-span-2 border-gray-800 border-2 rounded-3xl bg-[#0b0e11] overflow-hidden p-4 sm:p-6'>
-                        <CoinPerformanceBlock coin={coin} />
-                    </div>
-                </motion.div>
             </motion.div>
+
+            <AddAssetModal 
+                isOpen={isAddModalOpen}
+                onClose={() => setIsAddModalOpen(false)}
+                type="crypto"
+                onAdd={(asset) => {
+                    const saved = localStorage.getItem('userPortfolio');
+                    const portfolio = saved ? JSON.parse(saved) : { crypto: [], nfts: [] };
+
+                    const existingIndex = portfolio.crypto.findIndex(c => c.id === asset.id);
+                    if (existingIndex > -1) {
+                        portfolio.crypto[existingIndex].amount += asset.amount;
+                    } else {
+                        portfolio.crypto.push({
+                            id: asset.id,
+                            name: asset.name,
+                            symbol: asset.symbol,
+                            thumb: asset.thumb,
+                            amount: asset.amount,
+                            type: 'crypto'
+                        });
+                    }
+
+                    localStorage.setItem('userPortfolio', JSON.stringify(portfolio));
+                    // Dispatch custom event to notify the portfolio card
+                    window.dispatchEvent(new Event('portfolioUpdated'));
+                    toast.success(`Added ${asset.amount} ${asset.symbol.toUpperCase()} to portfolio`);
+                }}
+            />
         </motion.div>
     );
 };

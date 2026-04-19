@@ -32,12 +32,12 @@ const TableFilterHeader = ({
             {showTabs && (
                 <div className="flex items-center flex-1 min-w-0">
                     {/* Desktop Tabs */}
-                    <div className="hidden sm:flex items-center gap-1 bg-main p-1 rounded-xl border border-white/5 overflow-x-auto no-scrollbar max-w-full">
+                    <div className="hidden sm:flex items-center gap-1 bg-main p-1 rounded-md border border-white/5 overflow-x-auto no-scrollbar max-w-full">
                         {tabs.map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => onTabChange && onTabChange(tab)}
-                                className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm sm:text-base font-black uppercase tracking-tight transition-all duration-300 border ${activeTab === tab
+                                className={`whitespace-nowrap px-4 py-2 rounded-md text-sm sm:text-base font-black uppercase tracking-tight transition-all duration-300 border ${activeTab === tab
                                     ? 'bg-card text-white border-white/10 shadow-lg'
                                     : 'text-gray-500 border-transparent hover:text-white hover:bg-white/5'}`}
                             >
@@ -50,7 +50,7 @@ const TableFilterHeader = ({
                     <div className="relative sm:hidden w-full max-w-[150px]" ref={dropdownRef}>
                         <button
                             onClick={() => setIsOpen(!isOpen)}
-                            className="w-full bg-card border border-white/10 rounded-xl py-2.5 px-3 flex items-center justify-between text-sm font-black uppercase tracking-tight text-white focus:outline-none transition-all duration-300"
+                            className="w-full bg-card border border-white/10 rounded-md py-2.5 px-3 flex items-center justify-between text-sm font-black uppercase tracking-tight text-white focus:outline-none transition-all duration-300"
                         >
                             <span className="truncate">{activeTab}</span>
                             <ChevronDown size={14} className={`text-gray-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
@@ -62,7 +62,7 @@ const TableFilterHeader = ({
                                     initial={{ opacity: 0, y: -10, scale: 0.95 }}
                                     animate={{ opacity: 1, y: 5, scale: 1 }}
                                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                                    className="absolute top-full left-0 w-full bg-main border border-white/10 rounded-xl shadow-2xl py-2 z-50 overflow-hidden"
+                                    className="absolute top-full left-0 w-full bg-main border border-white/10 rounded-md shadow-2xl py-2 z-50 overflow-hidden"
                                 >
                                     {tabs.map((tab) => (
                                         <button
@@ -93,7 +93,7 @@ const TableFilterHeader = ({
                     placeholder={placeholder}
                     value={searchQuery}
                     onChange={(e) => onSearchChange && onSearchChange(e.target.value)}
-                    className="w-full bg-main border border-white/5 rounded-xl py-2 pl-9 pr-3 text-sm sm:text-lg text-white focus:outline-none focus:border-white/20 transition-all font-medium placeholder:text-gray-600"
+                    className="w-full bg-main border border-white/5 rounded-md py-2 pl-9 pr-3 text-sm sm:text-lg text-white focus:outline-none focus:border-white/20 transition-all font-medium placeholder:text-gray-600"
                 />
             </div>
         </div>

@@ -40,15 +40,15 @@ const Auth = () => {
     return (
         <div className="min-h-screen bg-[#06070a] flex items-center justify-center p-4 relative overflow-hidden font-outfit">
             {/* Background Glows */}
-            <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full"></div>
-            <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-600/10 blur-[120px] rounded-full"></div>
+            <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-white/5 blur-[120px] rounded-full"></div>
+            <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/5 blur-[120px] rounded-full"></div>
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="max-w-md w-full"
             >
-                <div className="bg-[#0d1117]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+                <div className="bg-[#0d1117]/80 backdrop-blur-xl border border-white/10 rounded-md p-8 shadow-2xl relative overflow-hidden">
                     {/* Header */}
                     <div className="text-center mb-8">
                         <h1 className="text-3xl font-bold text-white mb-2">
@@ -60,7 +60,7 @@ const Auth = () => {
                     </div>
 
                     {error && (
-                        <div className="bg-red-500/10 border border-red-500/20 text-red-500 px-4 py-3 rounded-xl mb-6 text-sm">
+                        <div className="bg-red-500/10 border border-red-500/20 text-red-500 px-4 py-3 rounded-md mb-6 text-sm">
                             {error}
                         </div>
                     )}
@@ -69,12 +69,12 @@ const Auth = () => {
                         <div className="space-y-2">
                             <label className="text-sm text-slate-300 ml-1">Email Address</label>
                             <div className="relative group">
-                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-blue-500 transition-colors" />
+                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-white transition-colors" />
                                 <input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full bg-[#161b22] border border-white/5 rounded-xl py-3 pl-12 pr-4 text-white focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all"
+                                    className="w-full bg-[#161b22] border border-white/5 rounded-md py-3 pl-12 pr-4 text-white focus:outline-none focus:border-white/40 focus:ring-1 focus:ring-white/20 transition-all"
                                     placeholder="name@example.com"
                                     required
                                 />
@@ -84,12 +84,12 @@ const Auth = () => {
                         <div className="space-y-2">
                             <label className="text-sm text-slate-300 ml-1">Password</label>
                             <div className="relative group">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-blue-500 transition-colors" />
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-white transition-colors" />
                                 <input
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full bg-[#161b22] border border-white/5 rounded-xl py-3 pl-12 pr-4 text-white focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all"
+                                    className="w-full bg-[#161b22] border border-white/5 rounded-md py-3 pl-12 pr-4 text-white focus:outline-none focus:border-white/40 focus:ring-1 focus:ring-white/20 transition-all"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -99,7 +99,7 @@ const Auth = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2 mt-6"
+                            className="w-full bg-white hover:bg-gray-200 text-black font-extrabold py-3 rounded-md transition-all shadow-lg shadow-white/5 flex items-center justify-center gap-2 mt-6 uppercase tracking-widest text-xs"
                         >
                             {loading ? (
                                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -124,11 +124,11 @@ const Auth = () => {
 
                     {/* Social Logins */}
                     <div className="grid grid-cols-2 gap-4 mb-8">
-                        <button className="flex items-center justify-center gap-2 bg-[#161b22] border border-white/5 hover:bg-[#1c2128] text-white py-2.5 rounded-xl transition-all">
+                        <button className="flex items-center justify-center gap-2 bg-[#161b22] border border-white/5 hover:bg-[#1c2128] text-white py-2.5 rounded-md transition-all">
                             <Github className="w-5 h-5" />
                             <span className="text-sm">Github</span>
                         </button>
-                        <button className="flex items-center justify-center gap-2 bg-[#161b22] border border-white/5 hover:bg-[#1c2128] text-white py-2.5 rounded-xl transition-all">
+                        <button className="flex items-center justify-center gap-2 bg-[#161b22] border border-white/5 hover:bg-[#1c2128] text-white py-2.5 rounded-md transition-all">
                             <Chrome className="w-5 h-5" />
                             <span className="text-sm">Google</span>
                         </button>
@@ -139,7 +139,7 @@ const Auth = () => {
                         {isLogin ? "Don't have an account?" : "Already have an account?"}{' '}
                         <button
                             onClick={() => setIsLogin(!isLogin)}
-                            className="text-blue-500 hover:text-blue-400 font-semibold transition-colors"
+                            className="text-white hover:text-gray-300 font-bold transition-colors underline decoration-white/20 underline-offset-4"
                         >
                             {isLogin ? 'Create one' : 'Sign In'}
                         </button>

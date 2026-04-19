@@ -196,7 +196,7 @@ const CompareCoins = () => {
   };
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="hidden" className='w-full flex flex-col justify-start items-start bg-main min-h-full p-2 sm:p-4 pb-8 rounded-xl gap-8'>
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="hidden" className='w-full flex flex-col justify-start items-start bg-main min-h-full p-2 sm:p-4 pb-8 rounded-md gap-8'>
       <Breadcrumbs
         crumbs={[
           { label: 'Tools', path: '/' },
@@ -213,12 +213,12 @@ const CompareCoins = () => {
         </div>
 
         <div className='w-full md:w-auto overflow-x-auto no-scrollbar'>
-          <div className='flex flex-nowrap md:flex-wrap items-center gap-1 bg-main p-1 rounded-xl border border-white/5 min-w-max'>
+          <div className='flex flex-nowrap md:flex-wrap items-center gap-1 bg-main p-1 rounded-md border border-white/5 min-w-max'>
             {TabsData.map((tab, index) => (
               <button
                 key={index}
                 onClick={() => setSelectTab(tab)}
-                className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm sm:text-base font-black uppercase tracking-tight transition-all duration-300 border ${selectTab === tab
+                className={`whitespace-nowrap px-4 py-2 rounded-md text-sm sm:text-base font-black uppercase tracking-tight transition-all duration-300 border ${selectTab === tab
                   ? 'bg-card text-white border-white/10 shadow-lg'
                   : 'text-gray-500 border-transparent hover:text-white hover:bg-white/5'}`}
               >
@@ -283,14 +283,14 @@ const CompareCoins = () => {
                   </div>
 
                   <div className='flex flex-col w-full gap-2 border-t border-gray-800 pt-4 mt-2'>
-                    <div className='flex justify-between items-center px-4 py-3 border border-gray-800 rounded-xl hover:bg-card/30 transition-colors'>
+                    <div className='flex justify-between items-center px-4 py-3 border border-gray-800 rounded-md hover:bg-card/30 transition-colors'>
                       <div className='flex items-center gap-1.5 sm:gap-2 mr-2 overflow-hidden'>
                         <span className='text-xs sm:text-base text-muted font-bold truncate'>{coin1Data.symbol.toUpperCase()} {metrics.subLabel}</span>
                         <span className='px-1.5 py-0.5 text-xs bg-white/10 rounded text-gray-300 font-bold flex-shrink-0'>#{coin1Data.market_cap_rank}</span>
                       </div>
                       <span className='text-white font-mono text-base sm:text-lg font-bold whitespace-nowrap'>{formatMetricValue(metrics.subValue1, selectTab)}</span>
                     </div>
-                    <div className='flex justify-between items-center px-4 py-3 border border-gray-800 rounded-xl hover:bg-card/30 transition-colors'>
+                    <div className='flex justify-between items-center px-4 py-3 border border-gray-800 rounded-md hover:bg-card/30 transition-colors'>
                       <div className='flex items-center gap-1.5 sm:gap-2 mr-2 overflow-hidden'>
                         <span className='text-xs sm:text-base text-muted font-bold truncate'>{coin2Data.symbol.toUpperCase()} {metrics.subLabel}</span>
                         <span className='px-1.5 py-0.5 text-xs bg-white/10 rounded text-gray-300 font-bold flex-shrink-0'>#{coin2Data.market_cap_rank}</span>

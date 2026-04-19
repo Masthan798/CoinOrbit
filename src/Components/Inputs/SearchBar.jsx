@@ -20,7 +20,7 @@ const SearchBar = ({ value, onChange, placeholder = "Search...", onClose, autoFo
                 type="text"
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
-                className="block w-full pl-10 pr-10 py-2 bg-[#121212] border border-gray-800 rounded-xl text-sm text-white placeholder-muted focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                className="block w-full pl-10 pr-10 py-2 bg-[#121212] border border-gray-800 rounded-md text-sm text-white placeholder-muted focus:outline-none focus:ring-1 focus:ring-white/20 focus:border-white/50 transition-all duration-300"
                 placeholder={placeholder}
             />
             {onClose && (
