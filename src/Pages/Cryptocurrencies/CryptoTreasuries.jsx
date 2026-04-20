@@ -220,7 +220,7 @@ const CryptoTreasuries = () => {
       />
 
 
-      <motion.div variants={itemVariants} className='w-full overflow-x-auto h-[600px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative'>
+      <motion.div variants={itemVariants} className='w-full overflow-x-auto relative [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]'>
         <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
           <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
             <tr>

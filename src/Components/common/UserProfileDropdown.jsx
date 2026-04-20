@@ -86,9 +86,9 @@ const UserProfileDropdown = ({ onClose }) => {
                                 />
                             </svg>
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-10 h-10 bg-gradient-to-br from-white to-gray-400 rounded-full flex items-center justify-center shadow-neutral-900 overflow-hidden">
-                                    {profileData?.avatar_url ? (
-                                        <img src={profileData.avatar_url} alt="Profile" className="w-full h-full object-cover" />
+                                <div className="w-10 h-10 bg-gradient-to-br from-white to-gray-400 rounded-md flex items-center justify-center shadow-neutral-900 overflow-hidden">
+                                    {profileData?.profile_img ? (
+                                        <img src={profileData.profile_img} alt="Profile" className="w-full h-full object-cover" />
                                     ) : (
                                         <User size={20} className="text-black" />
                                     )}
