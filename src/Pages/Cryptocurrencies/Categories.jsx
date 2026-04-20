@@ -326,7 +326,7 @@ const Categories = () => {
             exit="hidden"
             className='w-full'
           >
-            <div className='w-full overflow-x-auto min-h-[400px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative rounded-md border border-white/5'>
+            <div className='w-full overflow-x-auto relative rounded-md border border-white/5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]'>
               <table className='w-full min-w-[900px] md:min-w-[1100px] text-left text-sm'>
                 <thead className='border-b border-gray-700 text-muted sticky top-0 bg-main z-20'>
                   <tr>

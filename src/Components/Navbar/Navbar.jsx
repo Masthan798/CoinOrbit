@@ -122,7 +122,6 @@ const Navbar = () => {
 
     const bottomNavItems = [
         { icon: <Briefcase size={20} />, label: "My Portfolio", path: "/myportfolio" },
-        { icon: <HelpCircle size={20} />, label: "Help & Support", path: "/support" },
     ];
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -232,22 +231,6 @@ const Navbar = () => {
                                         <span className="font-bold text-base">{item.label}</span>
                                     </button>
                                 ))}
-                                <button
-                                    onClick={async () => {
-                                        if (user) {
-                                            await signOut();
-                                            navigate("/login", { replace: true });
-                                            toast.success('Successfully logged out!');
-                                        } else {
-                                            navigate("/login");
-                                        }
-                                        setIsMobileMenuOpen(false);
-                                    }}
-                                    className="w-full flex items-center gap-3 p-3 rounded-md text-muted hover:text-white transition-all hover-soft"
-                                >
-                                    {user ? <LogOut size={20} /> : <LogIn size={20} />}
-                                    <span className="font-bold text-base">{user ? "Sign Out" : "Sign In"}</span>
-                                </button>
                             </div>
                         </motion.div>
                     </>
@@ -391,42 +374,6 @@ const Navbar = () => {
                             </button>
                         </div>
                     ))}
-                    <div className="relative group">
-                        <button
-                            onClick={async () => {
-                                if (user) {
-                                    await signOut();
-                                    navigate("/login", { replace: true });
-                                    toast.success('Successfully logged out!');
-                                } else {
-                                    navigate("/login");
-                                }
-                            }}
-                            onMouseEnter={(e) => handleMouseEnter(e, user ? "Sign Out" : "Sign In")}
-                            onMouseLeave={handleMouseLeave}
-                            className={`w-full flex items-center gap-3 p-3 rounded-md transition-all hover-soft text-muted hover:text-white ${isCollapsed ? 'justify-center mx-auto' : ''}`}
-                        >
-                            <motion.span
-                                variants={itemVariants}
-                                className="flex-shrink-0 flex items-center justify-center w-6"
-                            >
-                                {user ? <LogOut size={20} /> : <LogIn size={20} />}
-                            </motion.span>
-                            <AnimatePresence>
-                                {!isCollapsed && (
-                                    <motion.span
-                                        variants={contentVariants}
-                                        initial="collapsed"
-                                        animate="expanded"
-                                        exit="collapsed"
-                                        className="font-bold whitespace-nowrap text-lg"
-                                    >
-                                        {user ? "Sign Out" : "Sign In"}
-                                    </motion.span>
-                                )}
-                            </AnimatePresence>
-                        </button>
-                    </div>
                 </div>
 
                 {/* Floating Tooltip with Portal */}

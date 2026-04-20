@@ -27,10 +27,10 @@ const TableFilterHeader = ({
     }, []);
 
     return (
-        <div className={`w-full flex items-center justify-between gap-2 sm:gap-4 py-4 px-1 ${className}`}>
+        <div className={`w-full flex flex-row-reverse sm:flex-row items-center justify-between gap-2 sm:gap-4 py-4 px-1 ${className}`}>
             {/* Left Side: Tabs / Mobile Custom Dropdown */}
             {showTabs && (
-                <div className="flex items-center flex-1 min-w-0">
+                <div className="flex items-center w-1/4 sm:flex-1 min-w-0">
                     {/* Desktop Tabs */}
                     <div className="hidden sm:flex items-center gap-1 bg-main p-1 rounded-md border border-white/5 overflow-x-auto no-scrollbar max-w-full">
                         {tabs.map((tab) => (
@@ -47,13 +47,13 @@ const TableFilterHeader = ({
                     </div>
 
                     {/* Mobile Custom Dropdown */}
-                    <div className="relative sm:hidden w-full max-w-[150px]" ref={dropdownRef}>
+                    <div className="relative sm:hidden w-full" ref={dropdownRef}>
                         <button
                             onClick={() => setIsOpen(!isOpen)}
-                            className="w-full bg-card border border-white/10 rounded-md py-2.5 px-3 flex items-center justify-between text-sm font-black uppercase tracking-tight text-white focus:outline-none transition-all duration-300"
+                            className="w-full h-full bg-card border border-white/10 rounded-md py-3 px-3 flex items-center justify-between text-xs font-bold uppercase tracking-tight text-white focus:outline-none transition-all duration-300"
                         >
-                            <span className="truncate">{activeTab}</span>
-                            <ChevronDown size={14} className={`text-gray-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+                            <span className="truncate mr-1">{activeTab}</span>
+                            <ChevronDown size={12} className={`text-gray-400 flex-shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
                         </button>
 
                         <AnimatePresence>
@@ -62,7 +62,7 @@ const TableFilterHeader = ({
                                     initial={{ opacity: 0, y: -10, scale: 0.95 }}
                                     animate={{ opacity: 1, y: 5, scale: 1 }}
                                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                                    className="absolute top-full left-0 w-full bg-main border border-white/10 rounded-md shadow-2xl py-2 z-50 overflow-hidden"
+                                    className="absolute top-full right-0 w-[180px] bg-main border border-white/10 rounded-md shadow-2xl py-2 z-50 overflow-hidden"
                                 >
                                     {tabs.map((tab) => (
                                         <button
@@ -71,7 +71,7 @@ const TableFilterHeader = ({
                                                 onTabChange && onTabChange(tab);
                                                 setIsOpen(false);
                                             }}
-                                            className={`w-full px-4 py-2.5 text-left text-sm font-bold uppercase tracking-tight transition-all duration-200 border-l-2 ${activeTab === tab
+                                            className={`w-full px-4 py-2 text-left text-xs font-bold uppercase tracking-tight transition-all duration-200 border-l-2 ${activeTab === tab
                                                 ? 'bg-card text-white border-white'
                                                 : 'text-gray-400 border-transparent hover:bg-white/5 hover:text-white'}`}
                                         >
@@ -86,14 +86,14 @@ const TableFilterHeader = ({
             )}
 
             {/* Right Side: Search Bar */}
-            <div className="relative group w-full max-w-[180px] sm:max-w-[320px]">
+            <div className="relative group w-3/4 sm:w-full sm:max-w-[320px]">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-white transition-colors" size={14} />
                 <input
                     type="text"
                     placeholder={placeholder}
                     value={searchQuery}
                     onChange={(e) => onSearchChange && onSearchChange(e.target.value)}
-                    className="w-full bg-main border border-white/5 rounded-md py-2 pl-9 pr-3 text-sm sm:text-lg text-white focus:outline-none focus:border-white/20 transition-all font-medium placeholder:text-gray-600"
+                    className="w-full bg-main border border-white/5 rounded-md py-3 pl-9 pr-3 text-sm sm:text-lg text-white focus:outline-none focus:border-white/20 transition-all font-medium placeholder:text-gray-600"
                 />
             </div>
         </div>
